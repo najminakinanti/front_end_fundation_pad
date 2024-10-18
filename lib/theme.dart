@@ -9,6 +9,8 @@ Color textColor = Color(0xff35393F);
 Color textColor2 = Color(0xff000000);
 Color textColor3 = Color(0xffFFFFFF);
 Color darkGray = Color(0xff565656);
+Color blue = Color(0xff202DA5);
+Color sageGreen = Color(0xffB8C3C2);
 
 
 // warna font
@@ -26,6 +28,10 @@ TextStyle whiteTextStyle = GoogleFonts.poppins(
 
 TextStyle greenTextStyle = GoogleFonts.poppins(
   color: primaryColor,
+);
+
+TextStyle blueTextStyle = GoogleFonts.poppins(
+  color: blue,
 );
 
 // ukuran huruf

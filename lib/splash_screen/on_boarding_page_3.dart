@@ -7,20 +7,18 @@ class OnBoardingPage3 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
-      body: SafeArea(
+      body: Padding(
+        padding: const EdgeInsets.all(20.0), // Padding di sekeliling halaman
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Image or illustration section
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Container(
-                height: 300,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/img_splash_3.png'), // replace with your image
-                    fit: BoxFit.contain,
-                  ),
+            Container(
+              height: 300,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/img_splash_3.png'), // replace with your image
+                  fit: BoxFit.contain,
                 ),
               ),
             ),
@@ -92,7 +90,7 @@ class OnBoardingPage3 extends StatelessWidget {
             Align(
               alignment: Alignment.centerRight,
               child: Padding(
-                padding: const EdgeInsets.only(right: 30, top: 10), // Add padding for right alignment
+                padding: const EdgeInsets.only(right: 15, top: 10), // Add padding for right alignment
                 child: TextButton(
                   onPressed: () {
                     // Handle skip login or guest mode
@@ -133,7 +131,7 @@ class OnBoardingPage3 extends StatelessWidget {
         height: 10,
         decoration: BoxDecoration(
           color: isActive ? primaryColor : darkGray,
-          borderRadius: BorderRadius.circular(50)
+          borderRadius: BorderRadius.circular(50),
         ),
       ),
     );

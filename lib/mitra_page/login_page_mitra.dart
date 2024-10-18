@@ -1,4 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:pad_fundation/splash_screen/on_boarding_page_3.dart';
 import 'package:pad_fundation/theme.dart';
 
 class LoginPageMitra extends StatefulWidget {
@@ -8,6 +10,13 @@ class LoginPageMitra extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPageMitra> {
   bool isRememberMeChecked = false;
+  bool _isObscured = true; // Menambahkan boolean untuk mengatur status kata sandi
+
+  void _toggleObscured() {
+    setState(() {
+      _isObscured = !_isObscured; // Mengubah status ketika ikon mata ditekan
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,23 +31,22 @@ class _LoginPageState extends State<LoginPageMitra> {
               children: [
                 SizedBox(height: 30),
                 Align(
-                  alignment: Alignment.centerLeft, // Align text to the left
+                  alignment: Alignment.centerLeft,
                   child: Text(
                     'Masuk Akun',
-                    style: TextStyle(
+                    style: blackTextStyle.copyWith(
                       fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      fontWeight: bold,
                     ),
                   ),
                 ),
                 SizedBox(height: 5),
                 Text(
                   'Untuk masuk akun, masukkan nama dan kata sandi',
-                  textAlign: TextAlign.start, // Align text to the start
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[700],
+                  textAlign: TextAlign.start,
+                  style: blackTextStyle.copyWith(
+                    fontSize: 14,
+                    fontWeight: reguler,
                   ),
                 ),
                 SizedBox(height: 20),
@@ -57,10 +65,9 @@ class _LoginPageState extends State<LoginPageMitra> {
                 SizedBox(height: 10),
                 Text(
                   'FUNDation',
-                  style: TextStyle(
+                  style: greenTextStyle.copyWith(
                     fontSize: 34,
-                    fontWeight: FontWeight.bold,
-                    color: primaryColor,
+                    fontWeight: bold,
                   ),
                 ),
                 SizedBox(height: 20),
@@ -68,61 +75,61 @@ class _LoginPageState extends State<LoginPageMitra> {
                 SizedBox(
                   width: 329,
                   height: 48,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: primaryColor), // Tambahkan border dengan warna primaryColor
-                      borderRadius: BorderRadius.circular(4), // Radius untuk sudut
-                    ),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        labelStyle: grayTextStyle.copyWith(fontSize: 12),
-                        border: InputBorder.none, // Menghilangkan border default
-                        contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 10), // Padding dalam TextFormField
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      labelStyle: grayTextStyle.copyWith(fontSize: 12),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: primaryColor,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: primaryColor,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: primaryColor,
+                        ),
                       ),
                     ),
                   ),
                 ),
-
-
                 SizedBox(height: 20),
-                // Password field
+                // Password field with toggle visibility
                 SizedBox(
                   width: 329,
                   height: 48,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: primaryColor), // Tambahkan border
-                      borderRadius: BorderRadius.circular(4), // Radius untuk sudut
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Kata sandi',
-                              labelStyle: grayTextStyle.copyWith(fontSize: 12),
-                              border: InputBorder.none, // Menghilangkan border default
-                              contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 10), // Menyesuaikan padding
-                            ),
-                            obscureText: true,
-                          ),
+                  child: TextFormField(
+                    obscureText: _isObscured, // Menggunakan status _isObscured
+                    decoration: InputDecoration(
+                      labelText: 'Kata sandi',
+                      labelStyle: grayTextStyle.copyWith(fontSize: 12),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: primaryColor),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: primaryColor),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: primaryColor),
+                      ),
+                      contentPadding: EdgeInsets.fromLTRB(10, 20, 10, 10),
+                      suffixIcon: IconButton(
+                        icon: Image.asset(
+                          _isObscured
+                              ? 'assets/icon_eye.png' // Ganti dengan gambar mata tertutup
+                              : 'assets/icon_eye.png',   // Ganti dengan gambar mata terbuka
+                          width: 15,
+                          height: 15,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8.0), // Padding di kanan untuk gambar
-                          child: Image.asset(
-                            'assets/icon_eye.png', // gambar
-                            width: 15, // Set lebar gambar
-                            height: 15, // Set tinggi gambar
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ],
+                        onPressed: _toggleObscured, // Mengubah status ketika ikon dipencet
+                      ),
                     ),
                   ),
                 ),
-
-
                 SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -142,67 +149,91 @@ class _LoginPageState extends State<LoginPageMitra> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        // Forgot password functionality here
+                        // Fungsi untuk lupa kata sandi
                       },
                       child: Text(
-                        'Lupa kata sandi ?',
-                        style: TextStyle(
-                          color: Colors.blue,
-                        ),
+                        'Lupa kata sandi?',
+                        style: blueTextStyle, // Pastikan blueTextStyle didefinisikan
                       ),
                     ),
                   ],
                 ),
+
                 SizedBox(height: 20),
                 // Login Button
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal[900],
-                    minimumSize: Size(double.infinity, 50),
-                  ),
-                  onPressed: () {
-                    // Login functionality here
-                  },
-                  child: Text(
-                    'MASUK',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: SizedBox(
+                    width: 330, // Atur lebar tombol
+                    height: 50, // Atur tinggi tombol
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryColor, // Use buttonColor from theme.dart
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onPressed: () {
+                        // Navigate to the next page
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => OnBoardingPage3()),
+                        );
+                      },
+                      child: Center(
+                        child: Text(
+                          'M A S U K',
+                          style: whiteTextStyle.copyWith(
+                            fontSize: 20,
+                            fontWeight: bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
                 SizedBox(height: 10),
-                GestureDetector(
-                  onTap: () {
-                    // Navigation to sign up page
-                  },
-                  child: Text(
-                    'Belum punya akun ? Daftar',
-                    style: TextStyle(
-                      color: Colors.blue,
-                    ),
+                SizedBox(height: 10),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Belum punya akun? ',
+                        style: blackTextStyle.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      TextSpan(
+                        text: 'Daftar',
+                        style: greenTextStyle.copyWith(fontWeight: FontWeight.bold),
+                        recognizer: TapGestureRecognizer()..onTap = () {
+                          // Navigasi ke halaman pendaftaran
+                        },
+                      ),
+                    ],
                   ),
                 ),
+
                 SizedBox(height: 20),
                 Container(
                   padding: EdgeInsets.all(20),
-                  color: Colors.grey[200],
+                  color: sageGreen,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start, // Align the content to the left
                     children: [
                       Text(
                         'Punya Event?',
-                        style: TextStyle(
-                          fontSize: 18,
+                        style: blackTextStyle.copyWith(
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
                         ),
                       ),
                       SizedBox(height: 10),
                       Text(
                         'Daftar sekarang dan rasakan keuntungan menjadi bagian dari kami',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.grey[700],
+                        textAlign: TextAlign.left, // Align text to the left
+                        style: blackTextStyle.copyWith(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       SizedBox(height: 15),
@@ -212,7 +243,7 @@ class _LoginPageState extends State<LoginPageMitra> {
                           minimumSize: Size(double.infinity, 50),
                         ),
                         onPressed: () {
-                          // Register event functionality here
+                          // Fungsi pendaftaran event di sini
                         },
                         child: Text(
                           'DAFTAR SEKARANG',
@@ -225,6 +256,7 @@ class _LoginPageState extends State<LoginPageMitra> {
                     ],
                   ),
                 ),
+
               ],
             ),
           ),
