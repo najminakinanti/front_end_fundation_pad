@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+double defaultMargin = 30.0;
+
 Color primaryColor = Color(0xff1B3E3B);
 Color secondaryColor = Color(0xffF39320);
 Color buttonColor = Color(0xffB0830F);
@@ -11,6 +13,10 @@ Color textColor3 = Color(0xffFFFFFF);
 Color darkGray = Color(0xff565656);
 Color blue = Color(0xff202DA5);
 Color sageGreen = Color(0xffB8C3C2);
+Color sageGreen2 = Color(0xff96A6A5);
+Color sageGreen3 = Color(0xff496562);
+Color lineColor = Color(0xff496562);
+Color lineColor2 = Color(0xffB8C3C2);
 
 
 // warna font
@@ -40,3 +46,4 @@ FontWeight reguler = FontWeight.w400;
 FontWeight medium = FontWeight.w500;
 FontWeight semiBold = FontWeight.w600;
 FontWeight bold = FontWeight.w700;
+FontWeight extraBold = FontWeight.w900;

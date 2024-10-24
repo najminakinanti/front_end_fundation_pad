@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pad_fundation/mitra_page/login_page_mitra.dart';
 import 'package:pad_fundation/theme.dart';
 
 class ChooseRole extends StatelessWidget {
@@ -9,97 +8,132 @@ class ChooseRole extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'FUNDation',
-                style: TextStyle(
-                  fontSize: 34,
-                  fontWeight: FontWeight.bold,
-                  color: primaryColor,
-                ),
-              ),
-
-              SizedBox(height: 30),
-
-              Text(
-                'Pilih Peran Anda',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: primaryColor,
-                ),
-              ),
-
-              SizedBox(height: 40),
-
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange,
-                  minimumSize: Size(229, 38),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10), // Set the radius here
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: 400,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 100,
+                  height: 96.5,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(
+                        'assets/img_logo_2.png',
+                      ),
+                    ),
                   ),
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginPageMitra()),
-                  );
-                },
-                child: Text(
-                  'M I T R A',
-                  style: TextStyle(
+                SizedBox(height: 6),
+                Text(
+                  'FUNDation',
+                  style: greenTextStyle.copyWith(
+                    fontSize: 34,
+                    fontWeight: extraBold,
+                  ),
+                ),
+                SizedBox(height: 65),
+                Text(
+                  'Pilih Peran Anda',
+                  style: greenTextStyle.copyWith(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    fontWeight: bold,
                   ),
                 ),
-              ),
+                SizedBox(height: 33),
 
-              SizedBox(height: 20),
-
-              Text(
-                'Dukung Event sebagai Mitra Sponsor',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey[700],
-                ),
-              ),
-
-              SizedBox(height: 20),
-
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal[900],
-                  minimumSize: Size(229, 38),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10), // Set the radius here
+                // Button Mitra
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: 230,
+                    ),
+                    child: SizedBox(
+                      height: 45,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: secondaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () {
+                          // Navigate to the next page
+                          Navigator.pushNamed(context, '/login-mitra');
+                        },
+                        child: Center(
+                          child: Text(
+                            'M I T R A',
+                            style: whiteTextStyle.copyWith(
+                              fontSize: 16,
+                              fontWeight: bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-                onPressed: () {
-                  // Add your action here
-                },
-                child: Text(
-                  'O R G A N I Z E R',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
+
+                SizedBox(height: 5),
+                Text(
+                  'Dukung Event sebagai Mitra Sponsor',
+                  style: grayTextStyle.copyWith(
+                    fontSize: 12,
+                  ),
+                  textAlign: TextAlign.center, // Menambahkan textAlign untuk center
+                ),
+                SizedBox(height: 25),
+
+                // Button Organizer
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: 230,
+                    ),
+                    child: SizedBox(
+                      height: 45,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () {
+                          // Navigate to the next page
+                          Navigator.pushNamed(context, '/login-organizer');
+                        },
+                        child: Center(
+                          child: Text(
+                            'O R G A N I Z E R',
+                            style: whiteTextStyle.copyWith(
+                              fontSize: 16,
+                              fontWeight: bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
 
-              SizedBox(height: 10),
-
-              Text(
-                'Rencanakan Event Anda sebagai Organizer',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey[700],
+                SizedBox(height: 5),
+                Text(
+                  'Rencanakan Event Anda sebagai Organizer',
+                  style: grayTextStyle.copyWith(
+                    fontSize: 12,
+                  ),
+                  textAlign: TextAlign.center, // Menambahkan textAlign untuk center
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

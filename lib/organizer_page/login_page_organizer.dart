@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 
-class LoginPageMitra extends StatefulWidget {
+class LoginPageOrganizer extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPageMitra> {
+class _LoginPageState extends State<LoginPageOrganizer> {
   bool _isObscured = true;
   bool _rememberMe = false;
 
@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPageMitra> {
 
   void _toggleRememberMe(bool? value) {
     setState(() {
-      _rememberMe = value ?? false; // Update checkbox state
+      _rememberMe = value ?? false;
     });
   }
 
@@ -184,7 +184,7 @@ class _LoginPageState extends State<LoginPageMitra> {
 
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/forgot-password');
+                Navigator.pushNamed(context, '/forgot-password-organizer');
               },
               child: Text(
                 'Lupa kata sandi?',
@@ -239,7 +239,7 @@ class _LoginPageState extends State<LoginPageMitra> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/register-mitra');
+                Navigator.pushNamed(context, '/register-organizer');
               },
               style: TextButton.styleFrom(
                 padding: EdgeInsets.zero,
@@ -257,7 +257,6 @@ class _LoginPageState extends State<LoginPageMitra> {
         ),
       );
     }
-
 
     Widget footer() {
       return Container(
