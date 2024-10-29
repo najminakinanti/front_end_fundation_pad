@@ -6,15 +6,45 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    Widget homepageButton() {
-      return FloatingActionButton(
-        onPressed: () {},
-      );
+    Widget bottomNav() {
+      return BottomNavigationBar(
+          backgroundColor: navbarColor,
+          type: BottomNavigationBarType.fixed,
+          items: [
+            BottomNavigationBarItem(
+              icon: Image.asset(
+                'assets/icon_event.png',
+                width: 24,
+              ),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: Image.asset(
+                'assets/icon_eye.png',
+                width: 24,
+              ),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: Image.asset(
+                'assets/icon_eye.png',
+                width: 24,
+              ),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: Image.asset(
+                'assets/icon_eye.png',
+                width: 24,
+              ),
+              label: '',
+            ),
+          ]);
     }
 
     return Scaffold(
       backgroundColor: backgroundColor,
-      floatingActionButton: homepageButton(),
+      bottomNavigationBar: bottomNav(),
       body: Center(
           child: Text(
             'Main Page',

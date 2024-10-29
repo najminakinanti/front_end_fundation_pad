@@ -15,7 +15,7 @@ class _SplashPageState extends State<SplashPage> {
     // mengatur pindah halaman dari logo selama 3 detik
     Timer(
       Duration(seconds: 3),
-          () => Navigator.pushNamed(context, '/home'),
+          () => Navigator.pushNamed(context, '/boarding-1'),
     );
 
     super.initState();
@@ -28,15 +28,14 @@ class _SplashPageState extends State<SplashPage> {
       body: Center(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            // Mengatur lebar maksimal logo agar tetap proporsi
-            double logoWidth = constraints.maxWidth * 0.7; // 70% dari lebar layar
-            if (logoWidth > 263) { // Batas maksimal 263px
+            double logoWidth = constraints.maxWidth * 0.7;
+            if (logoWidth > 263) {
               logoWidth = 263;
             }
 
             return Container(
               width: logoWidth,
-              height: logoWidth / (263 / 70), // Menjaga aspek rasio
+              height: logoWidth / (263 / 70),
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage(

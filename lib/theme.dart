@@ -7,6 +7,7 @@ Color primaryColor = Color(0xff1B3E3B);
 Color secondaryColor = Color(0xffF39320);
 Color buttonColor = Color(0xffB0830F);
 Color backgroundColor = Color(0xffF5F5F7);
+Color navbarColor = Color(0xffFFFFFF);
 Color textColor = Color(0xff35393F);
 Color textColor2 = Color(0xff000000);
 Color textColor3 = Color(0xffFFFFFF);

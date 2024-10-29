@@ -107,7 +107,7 @@ class OnBoardingPage3 extends StatelessWidget {
                       padding: const EdgeInsets.only(right: 15, top: 10),
                       child: TextButton(
                         onPressed: () {
-                          // guest mode
+                          Navigator.pushNamed(context, '/home');
                         },
                         child: Text(
                           'Masuk Tanpa Akun',
@@ -128,11 +128,9 @@ class OnBoardingPage3 extends StatelessWidget {
     );
   }
 
-  // build tappable dots
   Widget buildDot(BuildContext context, {required bool isActive, required int page}) {
     return GestureDetector(
       onTap: () {
-        // Navigate to the specific page when the dot is tapped
         if (page == 1) {
           Navigator.pushReplacementNamed(context, '/boarding-1');
         } else if (page == 2) {

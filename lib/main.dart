@@ -40,7 +40,6 @@ class MyApp extends StatelessWidget {
         '/new-password': (context) => NewPasswordMitra(),
         '/register-mitra': (context) => RegisterPageMitra(),
         '/add-mitra': (context) => AddMitra(),
-        '/home': (context) => MainPage(),
 
         //role organizer
         '/login-organizer': (context) => LoginPageOrganizer(),
@@ -49,6 +48,9 @@ class MyApp extends StatelessWidget {
         '/new-password-organizer': (context) => NewPasswordOrganizer(),
         '/register-organizer': (context) => RegisterPageOrganizer(),
         '/add-organizer': (context) => AddOrganizer(),
+
+        //home nav
+        '/home': (context) => MainPage(),
       },
     );
   }
