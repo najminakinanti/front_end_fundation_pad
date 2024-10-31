@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
+import 'package:pad_fundation/widgets/event_card.dart';
+import 'package:pad_fundation/widgets/event_tile.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -162,7 +164,7 @@ class HomePage extends StatelessWidget {
 
     Widget categories() {
       return Container(
-        margin: EdgeInsets.only(top: 20),
+        margin: EdgeInsets.only(top: 18),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -305,10 +307,120 @@ class HomePage extends StatelessWidget {
       );
     }
 
+    Widget popularEventTitle() {
+      return Container(
+        margin: EdgeInsets.only(top: 28),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Event Populer',
+              style: blackTextStyle.copyWith(
+                fontSize: 16,
+                fontWeight: medium,
+              ),
+            ),
+
+            Container(
+              child: TextButton(
+                onPressed: () {},
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Lihat Semua',
+                      style: grayTextStyle.copyWith(
+                        fontSize: 10,
+                        fontWeight: regular,
+                      ),
+                    ),
+                    SizedBox(width: 2),
+                    Image.asset(
+                      'assets/icon_tanda_panah_kanan.png',
+                      width: 15,
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      );
+    }
+
     Widget popularEvent() {
       return Container(
+        margin: EdgeInsets.only(top: 10),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+                EventCard(),
+                EventCard(),
+                EventCard(),
+            ],
+          ),
+        ),
+      );
+    }
 
-      )
+    Widget allEventTitle() {
+      return Container(
+        margin: EdgeInsets.only(top: 15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Semua Event',
+              style: blackTextStyle.copyWith(
+                fontSize: 16,
+                fontWeight: medium,
+              ),
+            ),
+
+            Container(
+              child: TextButton(
+                onPressed: () {},
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Lihat Semua',
+                      style: grayTextStyle.copyWith(
+                        fontSize: 10,
+                        fontWeight: regular,
+                      ),
+                    ),
+                    SizedBox(width: 2),
+                    Image.asset(
+                      'assets/icon_tanda_panah_kanan.png',
+                      width: 15,
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      );
+    }
+
+    Widget allEvent() {
+      return Container(
+        margin: EdgeInsets.only(top: 10),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              EventTile(),
+              EventTile(),
+              EventTile(),
+              EventTile(),
+            ],
+          ),
+        ),
+      );
     }
 
     return ListView(
@@ -317,7 +429,11 @@ class HomePage extends StatelessWidget {
         searchBar(),
         promotion(),
         categories(),
+        popularEventTitle(),
         popularEvent(),
+        allEventTitle(),
+        allEvent(),
+        SizedBox(height: 80),
       ],
     );
   }

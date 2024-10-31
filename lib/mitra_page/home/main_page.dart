@@ -104,13 +104,24 @@ class _MainPageState extends State<MainPage> {
 
     return Scaffold(
       backgroundColor: backgroundColor,
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.symmetric(horizontal: defaultMargin, vertical: defaultMargin / 2),
-        child: bottomNav(),
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: defaultMargin, vertical: defaultMargin),
-        child: body(),
+      body: Stack(
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(
+              defaultMargin,
+              defaultMargin,
+              defaultMargin,
+              0,
+            ),
+            child: body(),
+          ),
+          Positioned(
+            left: defaultMargin,
+            right: defaultMargin,
+            bottom: 10,
+            child: bottomNav(),
+          ),
+        ],
       ),
     );
   }
