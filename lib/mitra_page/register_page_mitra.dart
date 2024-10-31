@@ -60,7 +60,7 @@ class _RegisterPageMitraState extends State<RegisterPageMitra> {
                     'Untuk membuat akun, Isi data berikut',
                     style: blackTextStyle.copyWith(
                       fontSize: 12,
-                      fontWeight: reguler,
+                      fontWeight: regular,
                     ),
                   ),
                 ],

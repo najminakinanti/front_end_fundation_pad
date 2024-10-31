@@ -40,7 +40,7 @@ class AddOrganizer extends StatelessWidget{
                     'Untuk membuat akun, Isi data berikut',
                     style: blackTextStyle.copyWith(
                       fontSize: 12,
-                      fontWeight: reguler,
+                      fontWeight: regular,
                     ),
                   ),
                 ],
@@ -348,7 +348,7 @@ class AddOrganizer extends StatelessWidget{
                           'Unggah',
                           style: greenTextStyle.copyWith(
                             fontSize: 14,
-                            fontWeight: reguler,
+                            fontWeight: regular,
                           ),
                         ),
                       ),

@@ -40,7 +40,7 @@ class ForgotPasswordOrganizer extends StatelessWidget {
           'Kami akan mengirimkan 6 digit kode ke email berikut ini',
           style: grayTextStyle.copyWith(
             fontSize: 13,
-            fontWeight: reguler,
+            fontWeight: regular,
           ),
           textAlign: TextAlign.center,
         ),

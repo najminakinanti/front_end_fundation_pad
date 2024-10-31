@@ -60,7 +60,7 @@ class _RegisterPageOrganizerState extends State<RegisterPageOrganizer> {
                     'Untuk membuat akun, Isi data berikut',
                     style: blackTextStyle.copyWith(
                       fontSize: 12,
-                      fontWeight: reguler,
+                      fontWeight: regular,
                     ),
                   ),
                 ],

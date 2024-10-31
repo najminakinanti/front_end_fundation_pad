@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPageMitra> {
             Text('Untuk masuk akun, masukkan nama dan kata sandi',
               style: blackTextStyle.copyWith(
                 fontSize: 12,
-                fontWeight: reguler,
+                fontWeight: regular,
               )
             ),
           ],
@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPageMitra> {
                 'FUNDation',
                 style: greenTextStyle.copyWith(
                   fontSize: 34,
-                  fontWeight: extraBold,
+                  fontWeight: bold,
                 ),
               ),
             ],
@@ -190,7 +190,7 @@ class _LoginPageState extends State<LoginPageMitra> {
                 'Lupa kata sandi?',
                 style: blueTextStyle.copyWith(
                   fontSize: 12,
-                  fontWeight: reguler,
+                  fontWeight: regular,
                 ),
               ),
             ),
@@ -257,7 +257,6 @@ class _LoginPageState extends State<LoginPageMitra> {
         ),
       );
     }
-
 
     Widget footer() {
       return Container(

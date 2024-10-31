@@ -45,7 +45,7 @@ class OnBoardingPage1 extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: grayTextStyle.copyWith(
                     fontSize: 12,
-                    fontWeight: reguler,
+                    fontWeight: regular,
                   ),
                 ),
                 SizedBox(height: 40),
