@@ -39,7 +39,7 @@ class VerificationMitra extends StatelessWidget{
           'Masukkan kode verifikasi yang telah dikirim ke email Anda',
           style: grayTextStyle.copyWith(
             fontSize: 13,
-            fontWeight: reguler,
+            fontWeight: regular,
           ),
           textAlign: TextAlign.center,
         ),

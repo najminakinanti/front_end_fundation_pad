@@ -71,7 +71,7 @@ class _NewPasswordState extends State<NewPasswordMitra> {
           'Pastikan kata sandi sesuai kriteria keamanan dan belum pernah digunakan',
           style: grayTextStyle.copyWith(
             fontSize: 13,
-            fontWeight: reguler,
+            fontWeight: regular,
           ),
           textAlign: TextAlign.center,
         ),
