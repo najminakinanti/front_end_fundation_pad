@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 
-class EventCard extends StatefulWidget {
+class EventCardBookmark extends StatefulWidget {
   @override
-  _EventCardState createState() => _EventCardState();
+  _EventCardBookmarkState createState() => _EventCardBookmarkState();
 }
 
-class _EventCardState extends State<EventCard> {
+class _EventCardBookmarkState extends State<EventCardBookmark> {
   bool isBookmarked = false;
 
   @override
@@ -17,8 +17,8 @@ class _EventCardState extends State<EventCard> {
         Navigator.pushNamed(context, '/detail-event');
       },
       child: Container(
-        width: 225,
-        margin: EdgeInsets.only(right: 10),
+        width: double.infinity,
+        margin: EdgeInsets.only(bottom: 20),
         decoration: BoxDecoration(
           color: backgroundColor3,
           borderRadius: BorderRadius.circular(5),
@@ -33,11 +33,11 @@ class _EventCardState extends State<EventCard> {
                   child: Image.asset(
                     'assets/img_music_fest.png',
                     width: double.infinity,
-                    height: 100,
+                    height: 230,
                     fit: BoxFit.cover,
                   ),
                 ),
-      
+
                 Positioned(
                   top: 10,
                   left: 10,
@@ -50,13 +50,13 @@ class _EventCardState extends State<EventCard> {
                     child: Text(
                       'OFFLINE',
                       style: orangeTextStyle.copyWith(
-                        fontSize: 10,
+                        fontSize: 14,
                         fontWeight: bold,
                       ),
                     ),
                   ),
                 ),
-                
+
                 Positioned(
                   top: 10,
                   right: 10,
@@ -90,14 +90,23 @@ class _EventCardState extends State<EventCard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Music Fest 2024',
-                    style: grayTextStyle.copyWith(
-                      fontSize: 14,
-                      fontWeight: bold,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        'Music Fest 2024',
+                        style: grayTextStyle.copyWith(
+                          fontSize: 14,
+                          fontWeight: bold,
+                        ),
+                      ),
+                      Spacer(),
+
+                      Image.asset('assets/icon_calendar.png', width: 11),
+                      SizedBox(width: 4),
+                      Text('20 Mei 2024', style: veryLightGrayTextStyle.copyWith(fontSize: 10, fontWeight: regular,),),
+                    ],
                   ),
-      
+
                   Text(
                     'Terkumpul Rp90.000.000',
                     style: lighGrayTextStyle.copyWith(
@@ -105,7 +114,7 @@ class _EventCardState extends State<EventCard> {
                       fontWeight: regular,
                     ),
                   ),
-      
+
                   Row(
                     children: [
                       Expanded(
@@ -128,11 +137,10 @@ class _EventCardState extends State<EventCard> {
                       ),
                     ],
                   ),
-      
+
                   SizedBox(height: 7),
-      
+
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
@@ -141,6 +149,7 @@ class _EventCardState extends State<EventCard> {
                           Text('100 Donorship', style: veryLightGrayTextStyle.copyWith(fontSize: 10, fontWeight: regular,),),
                         ],
                       ),
+                      SizedBox(width: 20,),
                       Row(
                         children: [
                           Image.asset('assets/icon_timer.png', width: 13),
@@ -150,9 +159,9 @@ class _EventCardState extends State<EventCard> {
                       ),
                     ],
                   ),
-      
+
                   SizedBox(height: 7),
-      
+
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Wrap(

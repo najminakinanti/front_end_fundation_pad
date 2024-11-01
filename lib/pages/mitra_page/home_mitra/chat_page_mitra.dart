@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class EventPage extends StatelessWidget {
+class ChatPageMitra extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text('Event'),
+      child: Text('Chat'),
     );
   }
 }

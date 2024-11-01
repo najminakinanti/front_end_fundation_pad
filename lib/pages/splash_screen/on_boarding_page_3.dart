@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pad_fundation/splash_screen/choose_role.dart';
+import 'package:pad_fundation/pages/splash_screen/choose_role.dart';
 import 'package:pad_fundation/theme.dart';
 
 class OnBoardingPage3 extends StatelessWidget {
