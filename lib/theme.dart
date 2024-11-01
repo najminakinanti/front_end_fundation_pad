@@ -18,8 +18,10 @@ Color blue = Color(0xff202DA5);
 Color sageGreen = Color(0xffB8C3C2);
 Color sageGreen2 = Color(0xff96A6A5);
 Color sageGreen3 = Color(0xff496562);
+Color sageGreen4 = Color(0xff667E7C);
 Color lineColor = Color(0xff496562);
 Color lineColor2 = Color(0xffB8C3C2);
+Color border = Color(0xff7A828F);
 
 
 // warna font

@@ -17,6 +17,8 @@ import 'package:pad_fundation/splash_screen/on_boarding_page_1.dart';
 import 'package:pad_fundation/splash_screen/on_boarding_page_2.dart';
 import 'package:pad_fundation/splash_screen/on_boarding_page_3.dart';
 
+import 'mitra_page/home/detail_chat_page.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -51,6 +53,7 @@ class MyApp extends StatelessWidget {
 
         //home nav
         '/home': (context) => MainPage(),
+        '/detail-chat': (context) => DetailChatPage(),
       },
     );
   }
