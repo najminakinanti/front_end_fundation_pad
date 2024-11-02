@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:pad_fundation/mitra_page/home/chat_page.dart';
-import 'package:pad_fundation/mitra_page/home/event_page.dart';
-import 'package:pad_fundation/mitra_page/home/home_page.dart';
-import 'package:pad_fundation/mitra_page/home/profile_page.dart';
+import 'package:pad_fundation/pages/mitra_page/home_mitra/chat_page_mitra.dart';
+import 'package:pad_fundation/pages/mitra_page/event_page_mitra.dart';
+import 'package:pad_fundation/pages/mitra_page/home_mitra/home_page_mitra.dart';
+import 'package:pad_fundation/pages/mitra_page/home_mitra/profile_page_mitra.dart';
+import 'package:pad_fundation/pages/mitra_page/home_mitra/sponsor_page_mitra.dart';
 import 'package:pad_fundation/theme.dart';
 
-class MainPage extends StatefulWidget {
+class MainPageMitra extends StatefulWidget {
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<MainPageMitra> createState() => _MainPageMitraState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageMitraState extends State<MainPageMitra> {
 
   int currentIndex = 0;
 
@@ -49,12 +50,12 @@ class _MainPageState extends State<MainPage> {
               icon: Container(
                 margin: EdgeInsets.only(top: 5),
                 child: Image.asset(
-                  'assets/icon_event.png',
+                  'assets/icon_sponsor.png',
                   width: 24,
                   color: currentIndex == 1 ? textColor2 : gray,
                 ),
               ),
-              label: 'Event',
+              label: 'Sponsor',
             ),
             BottomNavigationBarItem(
               icon: Container(
@@ -86,31 +87,42 @@ class _MainPageState extends State<MainPage> {
     Widget body() {
       switch(currentIndex) {
         case 0:
-          return HomePage();
+          return HomePageMitra();
           break;
         case 1:
-          return EventPage();
+          return SponsorPageMitra();
           break;
         case 2:
-          return ChatPage();
+          return ChatPageMitra();
           break;
         case 3:
-          return ProfilePage();
+          return ProfilePageMitra();
           break;
         default:
-          return HomePage();
+          return HomePageMitra();
       }
     }
 
     return Scaffold(
       backgroundColor: backgroundColor,
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.symmetric(horizontal: defaultMargin, vertical: defaultMargin / 2),
-        child: bottomNav(),
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: defaultMargin, vertical: defaultMargin),
-        child: body(),
+      body: Stack(
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(
+              defaultMargin,
+              defaultMargin,
+              defaultMargin,
+              0,
+            ),
+            child: body(),
+          ),
+          Positioned(
+            left: defaultMargin,
+            right: defaultMargin,
+            bottom: 10,
+            child: bottomNav(),
+          ),
+        ],
       ),
     );
   }

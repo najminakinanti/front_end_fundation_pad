@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pad_fundation/splash_screen/on_boarding_page_2.dart';
+import 'package:pad_fundation/pages/splash_screen/on_boarding_page_2.dart';
 import 'package:pad_fundation/theme.dart';
 
 class OnBoardingPage1 extends StatelessWidget {

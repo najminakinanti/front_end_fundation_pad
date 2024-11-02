@@ -20,7 +20,8 @@ Color sageGreen2 = Color(0xff96A6A5);
 Color sageGreen3 = Color(0xff496562);
 Color lineColor = Color(0xff496562);
 Color lineColor2 = Color(0xffB8C3C2);
-
+Color lineColor3 = Color(0xffCCCCCC);
+Color sageGreen4 = Color(0xff667E7C);
 
 // warna font
 TextStyle blackTextStyle = TextStyle(
