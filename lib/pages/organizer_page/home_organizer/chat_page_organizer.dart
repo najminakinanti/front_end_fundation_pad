@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
-import '../../../widgets/chat_tile.dart';
+import 'package:pad_fundation/widgets/chat_tile_organizer.dart';
 
-class ChatPageMitra extends StatelessWidget {
+class ChatPageOrganizer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
@@ -63,7 +63,7 @@ class ChatPageMitra extends StatelessWidget {
       );
     }
 
-    Widget chatTile() {
+    Widget chatTileEo() {
       return Container(
         margin: EdgeInsets.only(top: 20),
         width: double.infinity,
@@ -71,12 +71,15 @@ class ChatPageMitra extends StatelessWidget {
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           children: [
-            ChatTile(),
-            ChatTile(),
-            ChatTile(),
-            ChatTile(),
-            ChatTile(),
-            ChatTile(),
+            ChatTileOrganizer(),
+            ChatTileOrganizer(),
+            ChatTileOrganizer(),
+            ChatTileOrganizer(),
+            ChatTileOrganizer(),
+            ChatTileOrganizer(),
+            ChatTileOrganizer(),
+            ChatTileOrganizer(),
+            ChatTileOrganizer(),
           ],
         ),
       );
@@ -86,7 +89,7 @@ class ChatPageMitra extends StatelessWidget {
       children: [
         header(),
         searchBar(),
-        chatTile(),
+        chatTileEo(),
       ],
     );
   }

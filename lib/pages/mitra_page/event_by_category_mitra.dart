@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
-import 'package:pad_fundation/widgets/event_card.dart';
-import 'package:pad_fundation/widgets/event_tile.dart';
+import 'package:pad_fundation/widgets/event_card_bookmark.dart';
 import 'package:pad_fundation/widgets/filter_modal.dart';
 
-class EventPage extends StatelessWidget {
+class EventByCategoryMitra extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    Widget header() {
+    Widget title() {
       return Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        margin: EdgeInsets.only(top: 30),
+        child: Row(
           children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Image.asset(
+                'assets/icon_panah_kiri.png',
+                width: 8,
+              ),
+            ),
+            SizedBox(width: 20),
             Text(
               'Events',
               style: blackTextStyle.copyWith(
@@ -78,7 +87,7 @@ class EventPage extends StatelessWidget {
       return Container(
         margin: EdgeInsets.only(top: 24),
         child: Text(
-          'Top Event',
+          'Event Populer',
           style: blackTextStyle.copyWith(
             fontSize: 16,
             fontWeight: medium,
@@ -87,74 +96,51 @@ class EventPage extends StatelessWidget {
       );
     }
 
-    Widget topEvent() {
+    Widget body() {
       return Container(
-        margin: EdgeInsets.only(top: 10),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              GestureDetector(
-                onTap: () {},
-                child: EventCard(),
-              ),
-              GestureDetector(
-                onTap: () {},
-                child: EventCard(),
-              ),
-              GestureDetector(
-                onTap: () {},
-                child: EventCard(),
-              ),
-              GestureDetector(
-                onTap: () {},
-                child: EventCard(),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    Widget allEventTitle() {
-      return Container(
-        margin: EdgeInsets.only(top: 24),
-        child: Text(
-          'Semua Event',
-          style: blackTextStyle.copyWith(
-            fontSize: 16,
-            fontWeight: medium,
-          ),
-        ),
-      );
-    }
-
-    Widget allEvent() {
-      return Container(
-        margin: EdgeInsets.only(top: 10),
+        margin: EdgeInsets.only(top: 17),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              EventTile(),
-              EventTile(),
-              EventTile(),
-              EventTile(),
+              EventCardBookmark(),
+              EventCardBookmark(),
+              EventCardBookmark(),
+              EventCardBookmark(),
             ],
           ),
         ),
       );
     }
 
-    return ListView(
-      children: [
-        header(),
-        searchBar(),
-        topEventTitle(),
-        topEvent(),
-        allEventTitle(),
-        allEvent(),
-        SizedBox(height: 80),
-      ],
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: backgroundColor,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: EdgeInsets.only(
+                  left: defaultMargin,
+                  right: defaultMargin,
+                  bottom: defaultMargin,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    title(),
+                    searchBar(),
+                    topEventTitle(),
+                    body(),
+                  ],
+                ),
+              ),
+              //
+            ],
+          ),
+        ),
+      ),
     );
   }
 

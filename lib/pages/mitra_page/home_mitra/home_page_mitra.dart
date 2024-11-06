@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/event_card.dart';
+import 'package:pad_fundation/widgets/event_card_mitra.dart';
 import 'package:pad_fundation/widgets/event_tile.dart';
+import 'package:pad_fundation/widgets/event_tile_mitra.dart';
 
 class HomePageMitra extends StatelessWidget {
   @override
@@ -112,7 +114,9 @@ class HomePageMitra extends StatelessWidget {
             Column(
               children: [
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/event-by-category-mitra');
+                  },
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -139,7 +143,8 @@ class HomePageMitra extends StatelessWidget {
             Column(
               children: [
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/event-by-category-mitra');},
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -166,7 +171,8 @@ class HomePageMitra extends StatelessWidget {
             Column(
               children: [
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/event-by-category-mitra');},
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -193,7 +199,8 @@ class HomePageMitra extends StatelessWidget {
             Column(
               children: [
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/event-by-category-mitra');},
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -220,7 +227,8 @@ class HomePageMitra extends StatelessWidget {
             Column(
               children: [
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/event-page-by-category-mitra');},
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -265,7 +273,7 @@ class HomePageMitra extends StatelessWidget {
             Container(
               child: TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/event-by-category');
+                  Navigator.pushNamed(context, '/event-by-category-mitra');
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -299,9 +307,9 @@ class HomePageMitra extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              EventCard(),
-              EventCard(),
-              EventCard(),
+              EventCardMitra(),
+              EventCardMitra(),
+              EventCardMitra(),
             ],
           ),
         ),
@@ -358,10 +366,10 @@ class HomePageMitra extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              EventTile(),
-              EventTile(),
-              EventTile(),
-              EventTile(),
+              EventTileMitra(),
+              EventTileMitra(),
+              EventTileMitra(),
+              EventTileMitra(),
             ],
           ),
         ),

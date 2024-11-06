@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pad_fundation/theme.dart';
-import '../../../widgets/chat_tile.dart';
+import 'package:pad_fundation/widgets/chat_tile_organizer.dart';
+import '../../theme.dart';
 
-class ChatPageMitra extends StatelessWidget {
+class DetailChatEventOrganizer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
@@ -12,7 +12,7 @@ class ChatPageMitra extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Pesan',
+              'Chat Event MusicFest',
               style: blackTextStyle.copyWith(
                 fontSize: 20,
                 fontWeight: bold,
@@ -43,9 +43,9 @@ class ChatPageMitra extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Image.asset(
-                    'assets/icon_search.png',
-                    width: 20,
-                    height: 20,
+                    'assets/img_loop.png',
+                    width: 30,
+                    height: 30,
                   ),
                   SizedBox(width: 5),
                   Text(
@@ -63,7 +63,7 @@ class ChatPageMitra extends StatelessWidget {
       );
     }
 
-    Widget chatTile() {
+    Widget chatTileEo() {
       return Container(
         margin: EdgeInsets.only(top: 20),
         width: double.infinity,
@@ -71,12 +71,10 @@ class ChatPageMitra extends StatelessWidget {
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           children: [
-            ChatTile(),
-            ChatTile(),
-            ChatTile(),
-            ChatTile(),
-            ChatTile(),
-            ChatTile(),
+            ChatTileOrganizer(),
+            ChatTileOrganizer(),
+            ChatTileOrganizer(),
+            ChatTileOrganizer(),
           ],
         ),
       );
@@ -86,7 +84,7 @@ class ChatPageMitra extends StatelessWidget {
       children: [
         header(),
         searchBar(),
-        chatTile(),
+        chatTileEo(),
       ],
     );
   }
