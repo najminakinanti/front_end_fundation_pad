@@ -1,36 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:pad_fundation/pages/not_logged_in/home/chat_page.dart';
-import 'package:pad_fundation/pages/not_logged_in/home/event_page.dart';
-import 'package:pad_fundation/pages/not_logged_in/home/home_page.dart';
-import 'package:pad_fundation/pages/not_logged_in/home/profile_page.dart';
+import 'package:pad_fundation/pages/mitra_page/home_mitra/chat_page_mitra.dart';
+import 'package:pad_fundation/pages/mitra_page/event_page_mitra.dart';
+import 'package:pad_fundation/pages/mitra_page/home_mitra/home_page_mitra.dart';
+import 'package:pad_fundation/pages/mitra_page/home_mitra/profile_page_mitra.dart';
+import 'package:pad_fundation/pages/mitra_page/home_mitra/sponsor_page_mitra.dart';
+import 'package:pad_fundation/pages/organizer_page/home_organizer/chat_page_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/home_organizer/home_page_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/home_organizer/profile_page_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/home_organizer/event_page_organizer.dart';
 import 'package:pad_fundation/theme.dart';
 
-class MainPage extends StatefulWidget {
-  final int initialIndex; // Add a parameter to accept initialIndex
-
-  MainPage({this.initialIndex = 0}); // Default to 0 if no initialIndex is provided
+class MainPageOrganizer extends StatefulWidget {
 
   @override
-  _MainPageState createState() => _MainPageState();
+  State<MainPageOrganizer> createState() => _MainPageOrganizerState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageOrganizerState extends State<MainPageOrganizer> {
+
   int currentIndex = 0;
 
   @override
-  void initState() {
-    super.initState();
-    currentIndex = widget.initialIndex; // Set the currentIndex from the parameter
-  }
-
-  void changeTab(int index) {
-    setState(() {
-      currentIndex = index;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+
     Widget bottomNav() {
       return ClipRRect(
         borderRadius: BorderRadius.circular(28),
@@ -38,6 +30,7 @@ class _MainPageState extends State<MainPage> {
           backgroundColor: navbarColor,
           currentIndex: currentIndex,
           onTap: (value) {
+            print(value);
             setState(() {
               currentIndex = value;
             });
@@ -66,7 +59,7 @@ class _MainPageState extends State<MainPage> {
                   color: currentIndex == 1 ? textColor2 : gray,
                 ),
               ),
-              label: 'Event',
+              label: 'Events',
             ),
             BottomNavigationBarItem(
               icon: Container(
@@ -96,17 +89,21 @@ class _MainPageState extends State<MainPage> {
     }
 
     Widget body() {
-      switch (currentIndex) {
+      switch(currentIndex) {
         case 0:
-          return HomePage(onNavigateToEvent: () => changeTab(1));
+          return HomePageOrganizer();
+          break;
         case 1:
-          return EventPage();
+          return EventPageOrganizer();
+          break;
         case 2:
-          return ChatPage();
+          return ChatPageOrganizer();
+          break;
         case 3:
-          return ProfilePage();
+          return ProfilePageOrganizer();
+          break;
         default:
-          return HomePage(onNavigateToEvent: () => changeTab(1));
+          return HomePageOrganizer();
       }
     }
 

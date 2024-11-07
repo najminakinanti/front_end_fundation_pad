@@ -1,19 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
-import 'package:pad_fundation/widgets/event_card.dart';
+import 'package:pad_fundation/widgets/event_card_mitra.dart';
 import 'package:pad_fundation/widgets/event_tile.dart';
+import 'package:pad_fundation/widgets/event_tile_mitra.dart';
 import 'package:pad_fundation/widgets/filter_modal.dart';
 
 class EventPageMitra extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    Widget header() {
+    Widget title() {
       return Container(
         margin: EdgeInsets.only(top: 30),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Image.asset(
+                'assets/icon_panah_kiri.png',
+                width: 8,
+              ),
+            ),
+            SizedBox(width: 20),
             Text(
               'Events',
               style: blackTextStyle.copyWith(
@@ -201,7 +211,7 @@ class EventPageMitra extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category');
+                    Navigator.pushNamed(context, '/event-page-by-category-mitra');
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -281,22 +291,10 @@ class EventPageMitra extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              GestureDetector(
-                onTap: () {},
-                child: EventCard(),
-              ),
-              GestureDetector(
-                onTap: () {},
-                child: EventCard(),
-              ),
-              GestureDetector(
-                onTap: () {},
-                child: EventCard(),
-              ),
-              GestureDetector(
-                onTap: () {},
-                child: EventCard(),
-              ),
+              EventCardMitra(),
+              EventCardMitra(),
+              EventCardMitra(),
+              EventCardMitra(),
             ],
           ),
         ),
@@ -353,10 +351,10 @@ class EventPageMitra extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              EventTile(),
-              EventTile(),
-              EventTile(),
-              EventTile(),
+              EventTileMitra(),
+              EventTileMitra(),
+              EventTileMitra(),
+              EventTileMitra(),
             ],
           ),
         ),
@@ -380,7 +378,7 @@ class EventPageMitra extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    header(),
+                    title(),
                     searchBar(),
                     categories(),
                     topEventTitle(),

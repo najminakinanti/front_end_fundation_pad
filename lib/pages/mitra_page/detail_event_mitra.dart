@@ -5,12 +5,12 @@ import 'package:pad_fundation/widgets/information_detail_galery.dart';
 import 'package:pad_fundation/widgets/kontraprestasi_category.dart';
 import 'package:pad_fundation/widgets/sponsor_card.dart';
 
-class DetailEvent extends StatefulWidget {
+class DetailEventMitra extends StatefulWidget {
   @override
   _DetailEventState createState() => _DetailEventState();
 }
 
-class _DetailEventState extends State<DetailEvent> {
+class _DetailEventState extends State<DetailEventMitra> {
   int currentBatch = 0;
 
   @override
@@ -309,12 +309,29 @@ class _DetailEventState extends State<DetailEvent> {
     Widget sponsorTitle() {
       return Container(
         margin: EdgeInsets.only(top: 20),
-        child: Text(
-          'Sponsor',
-          style: blackTextStyle.copyWith(
-            fontSize: 16,
-            fontWeight: bold,
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Sponsor',
+              style: blackTextStyle.copyWith(
+                fontSize: 16,
+                fontWeight: bold,
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/daftar-sponsor-mitra');
+              },
+              child: Text(
+                'Selengkapnya',
+                style: grayTextStyle.copyWith(
+                  fontSize: 10,
+                  fontWeight: regular,
+                ),
+              ),
+            ),
+          ],
         ),
       );
     }
@@ -403,11 +420,7 @@ class _DetailEventState extends State<DetailEvent> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      '/home',
-                      arguments: 2,
-                    );
+                    Navigator.pushNamed(context, '/detail-chat-event-mitra');
                     print('chat');
                   },
                   style: ElevatedButton.styleFrom(
@@ -428,8 +441,8 @@ class _DetailEventState extends State<DetailEvent> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/login-mitra');
-                      print('ajukan');
+                      Navigator.pushNamed(context, '/kirim-sponsor-mitra');
+                      print('ajukan dari mitra');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primaryColor,
