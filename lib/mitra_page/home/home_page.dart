@@ -308,7 +308,7 @@ class HomePage extends StatelessWidget {
     Widget popularEvent() {
       return Container(
 
-      )
+      );
     }
 
     return ListView(
