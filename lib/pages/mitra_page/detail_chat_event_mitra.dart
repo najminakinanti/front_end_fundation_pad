@@ -102,7 +102,6 @@ class DetailChatEventMitra extends StatelessWidget {
       );
     }
 
-
     Widget content() {
       return ListView(
         padding: EdgeInsets.symmetric(

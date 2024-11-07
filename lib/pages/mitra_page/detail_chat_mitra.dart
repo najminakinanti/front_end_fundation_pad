@@ -142,10 +142,6 @@ class DetailChatMitra extends StatelessWidget {
             isSender: false,
             text: 'Baik, kita tunggu',
           ),
-          ChatBubble(
-            isSender: true,
-            text: 'Baik bu, sebentar',
-          ),
         ],
       );
     }

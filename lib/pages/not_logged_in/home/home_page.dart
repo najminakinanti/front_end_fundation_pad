@@ -296,7 +296,7 @@ class HomePage extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category');
+                    Navigator.pushNamed(context, '/event-page-by-category');
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),

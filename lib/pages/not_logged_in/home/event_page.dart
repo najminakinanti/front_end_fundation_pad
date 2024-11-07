@@ -8,75 +8,90 @@ class EventPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    Widget header() {
-      return Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Events',
-              style: blackTextStyle.copyWith(
-                fontSize: 20,
-                fontWeight: bold,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    Widget searchBar() {
-      return Container(
-        margin: EdgeInsets.only(top: 16),
-        child: Row(
-          children: [
-            Expanded(
-              child: TextButton(
-                onPressed: () {},
-                style: TextButton.styleFrom(
-                  backgroundColor: textColor3,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+    PreferredSize header() {
+      return PreferredSize(
+        preferredSize: Size.fromHeight(110.0),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: backgroundColor,
+          centerTitle: false,
+          flexibleSpace: Container(
+            margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Image.asset(
+                        'assets/icon_panah_kiri.png',
+                        width: 8,
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    Text(
+                      'Events',
+                      style: blackTextStyle.copyWith(
+                        fontSize: 20,
+                        fontWeight: bold,
+                      ),
+                    ),
+                  ],
                 ),
-                child: Container(
-                  child: Row(
-                    children: [
-                      Image.asset('assets/icon_search.png', width: 18,),
-                      SizedBox(width: 5),
-                      Text(
-                        'Cari Event',
-                        style: veryLightGrayTextStyle.copyWith(
-                          fontSize: 16,
-                          fontWeight: medium,
+                SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () {},
+                        style: TextButton.styleFrom(
+                          backgroundColor: textColor3,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Image.asset('assets/icon_search.png', width: 18),
+                            SizedBox(width: 5),
+                            Text(
+                              'Cari Event',
+                              style: veryLightGrayTextStyle.copyWith(
+                                fontSize: 16,
+                                fontWeight: medium,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    SizedBox(width: 5),
+                    TextButton(
+                      onPressed: () {
+                        showModalRightSheet(context);
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: textColor3,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Image.asset('assets/icon_filter.png', width: 24),
+                    ),
+                  ],
                 ),
-              ),
+              ],
             ),
-            SizedBox(width: 5),
-            TextButton(
-              onPressed: () {
-                showModalRightSheet(context);
-              },
-              style: TextButton.styleFrom(
-                backgroundColor: textColor3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: Image.asset('assets/icon_filter.png', width: 24),
-            ),
-          ],
+          ),
         ),
       );
     }
 
     Widget topEventTitle() {
       return Container(
-        margin: EdgeInsets.only(top: 24),
         child: Text(
           'Top Event',
           style: blackTextStyle.copyWith(
@@ -145,16 +160,22 @@ class EventPage extends StatelessWidget {
       );
     }
 
-    return ListView(
-      children: [
-        header(),
-        searchBar(),
-        topEventTitle(),
-        topEvent(),
-        allEventTitle(),
-        allEvent(),
-        SizedBox(height: 80),
-      ],
+    Widget content() {
+      return ListView(
+        children: [
+          topEventTitle(),
+          topEvent(),
+          allEventTitle(),
+          allEvent(),
+          SizedBox(height: 80),
+        ],
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: backgroundColor,
+      appBar: header(),
+      body: content(),
     );
   }
 

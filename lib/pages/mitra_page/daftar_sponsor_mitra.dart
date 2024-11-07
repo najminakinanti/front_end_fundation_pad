@@ -7,36 +7,49 @@ class DaftarSponsorMitra extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    Widget title() {
-      return Container(
-        margin: EdgeInsets.only(top: 30),
-        child: Row(
-          children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Image.asset(
-                'assets/icon_panah_kiri.png',
-                width: 8,
-              ),
+    PreferredSize header() {
+      return PreferredSize(
+        preferredSize: Size.fromHeight(75.0),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: backgroundColor,
+          centerTitle: false,
+          flexibleSpace: Container(
+            margin: EdgeInsets.fromLTRB(defaultMargin, defaultMargin, defaultMargin, 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Image.asset(
+                        'assets/icon_panah_kiri.png',
+                        width: 8,
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    Text(
+                      'Daftar Sponsor Music Fest',
+                      style: blackTextStyle.copyWith(
+                        fontSize: 20,
+                        fontWeight: bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            SizedBox(width: 20),
-            Text(
-              'Daftar Sponsor Music Fest',
-              style: blackTextStyle.copyWith(
-                fontSize: 20,
-                fontWeight: bold,
-              ),
-            ),
-          ],
+          ),
         ),
       );
     }
 
     Widget sponsor() {
       return Container(
-        margin: EdgeInsets.only(top: 10),
+        margin: EdgeInsets.only(top: 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -70,33 +83,22 @@ class DaftarSponsorMitra extends StatelessWidget {
       );
     }
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: backgroundColor,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: EdgeInsets.only(
-                  left: defaultMargin,
-                  right: defaultMargin,
-                  bottom: defaultMargin,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    title(),
-                    sponsor(),
-                  ],
-                ),
-              ),
-              //
-            ],
-          ),
+    Widget content() {
+      return ListView(
+        padding: EdgeInsets.symmetric(
+            horizontal: defaultMargin
         ),
-      ),
+        children: [
+          sponsor(),
+        ],
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: backgroundColor,
+      appBar: header(),
+      body: content(),
     );
+
   }
 }

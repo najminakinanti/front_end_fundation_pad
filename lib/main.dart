@@ -14,6 +14,7 @@ import 'package:pad_fundation/pages/mitra_page/home_mitra/main_page_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/kirim_sponsor_mitra.dart';
 import 'package:pad_fundation/pages/not_logged_in/detail_event.dart';
 import 'package:pad_fundation/pages/not_logged_in/event_by_category.dart';
+import 'package:pad_fundation/pages/not_logged_in/event_page_by_category.dart';
 import 'package:pad_fundation/pages/not_logged_in/home/main_page.dart';
 import 'package:pad_fundation/pages/mitra_page/login_page_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/register_page_mitra.dart';
@@ -86,6 +87,7 @@ class MyApp extends StatelessWidget {
         },
         '/detail-event': (context) => DetailEvent(),
         '/event-by-category': (context) => EventByCategory(),
+        '/event-page-by-category': (context) => EventPageByCategory(),
       },
     );
   }

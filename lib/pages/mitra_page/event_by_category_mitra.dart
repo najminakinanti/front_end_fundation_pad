@@ -1,91 +1,97 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/event_card_bookmark.dart';
+import 'package:pad_fundation/widgets/event_card_bookmark_mitra.dart';
 import 'package:pad_fundation/widgets/filter_modal.dart';
 
 class EventByCategoryMitra extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    Widget title() {
-      return Container(
-        margin: EdgeInsets.only(top: 30),
-        child: Row(
-          children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Image.asset(
-                'assets/icon_panah_kiri.png',
-                width: 8,
-              ),
-            ),
-            SizedBox(width: 20),
-            Text(
-              'Events',
-              style: blackTextStyle.copyWith(
-                fontSize: 20,
-                fontWeight: bold,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    Widget searchBar() {
-      return Container(
-        margin: EdgeInsets.only(top: 16),
-        child: Row(
-          children: [
-            Expanded(
-              child: TextButton(
-                onPressed: () {},
-                style: TextButton.styleFrom(
-                  backgroundColor: textColor3,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+    PreferredSize header() {
+      return PreferredSize(
+        preferredSize: Size.fromHeight(140.0),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: backgroundColor,
+          centerTitle: false,
+          flexibleSpace: Container(
+            margin: EdgeInsets.fromLTRB(defaultMargin, defaultMargin, defaultMargin, 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Image.asset(
+                        'assets/icon_panah_kiri.png',
+                        width: 8,
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    Text(
+                      'Events',
+                      style: blackTextStyle.copyWith(
+                        fontSize: 20,
+                        fontWeight: bold,
+                      ),
+                    ),
+                  ],
                 ),
-                child: Container(
-                  child: Row(
-                    children: [
-                      Image.asset('assets/icon_search.png', width: 18,),
-                      SizedBox(width: 5),
-                      Text(
-                        'Cari Event',
-                        style: veryLightGrayTextStyle.copyWith(
-                          fontSize: 16,
-                          fontWeight: medium,
+                SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () {},
+                        style: TextButton.styleFrom(
+                          backgroundColor: textColor3,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Image.asset('assets/icon_search.png', width: 18),
+                            SizedBox(width: 5),
+                            Text(
+                              'Cari Event',
+                              style: veryLightGrayTextStyle.copyWith(
+                                fontSize: 16,
+                                fontWeight: medium,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    SizedBox(width: 5),
+                    TextButton(
+                      onPressed: () {
+                        showModalRightSheet(context);
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: textColor3,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Image.asset('assets/icon_filter.png', width: 24),
+                    ),
+                  ],
                 ),
-              ),
+              ],
             ),
-            SizedBox(width: 5),
-            TextButton(
-              onPressed: () {
-                showModalRightSheet(context);
-              },
-              style: TextButton.styleFrom(
-                backgroundColor: textColor3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: Image.asset('assets/icon_filter.png', width: 24),
-            ),
-          ],
+          ),
         ),
       );
     }
 
     Widget topEventTitle() {
       return Container(
-        margin: EdgeInsets.only(top: 24),
         child: Text(
           'Event Populer',
           style: blackTextStyle.copyWith(
@@ -102,45 +108,32 @@ class EventByCategoryMitra extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              EventCardBookmark(),
-              EventCardBookmark(),
-              EventCardBookmark(),
-              EventCardBookmark(),
+              EventCardBookmarkMitra(),
+              EventCardBookmarkMitra(),
+              EventCardBookmarkMitra(),
+              EventCardBookmarkMitra(),
             ],
           ),
         ),
       );
     }
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: backgroundColor,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: EdgeInsets.only(
-                  left: defaultMargin,
-                  right: defaultMargin,
-                  bottom: defaultMargin,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    title(),
-                    searchBar(),
-                    topEventTitle(),
-                    body(),
-                  ],
-                ),
-              ),
-              //
-            ],
-          ),
+    Widget content() {
+      return ListView(
+        padding: EdgeInsets.symmetric(
+            horizontal: defaultMargin
         ),
-      ),
+        children: [
+          topEventTitle(),
+          body(),
+        ],
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: backgroundColor,
+      appBar: header(),
+      body: content(),
     );
   }
 
