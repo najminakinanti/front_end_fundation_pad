@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
-import 'package:pad_fundation/widgets/event_tile_mitra.dart';
-
-import '../../widgets/chat_bubble.dart';
+import 'package:pad_fundation/widgets/mitra/event_tile_mitra.dart';
+import 'package:pad_fundation/widgets/mitra/chat_bubble_mitra.dart';
 
 class DetailChatMitra extends StatelessWidget {
   @override
@@ -117,7 +116,6 @@ class DetailChatMitra extends StatelessWidget {
       );
     }
 
-
     Widget content() {
       return ListView(
         padding: EdgeInsets.symmetric(
@@ -126,25 +124,21 @@ class DetailChatMitra extends StatelessWidget {
         children: [
           cardEvent(),
           chatDate(),
-          ChatBubble(
+          ChatBubbleMitra(
             isSender: true,
             text: 'Halo, acaranya kapan ya bu',
           ),
-          ChatBubble(
+          ChatBubbleMitra(
             isSender: false,
             text: 'Acaranya mungkin sebulan lagi, bu',
           ),
-          ChatBubble(
+          ChatBubbleMitra(
             isSender: true,
             text: 'Baik bu, sebentar',
           ),
-          ChatBubble(
+          ChatBubbleMitra(
             isSender: false,
             text: 'Baik, kita tunggu',
-          ),
-          ChatBubble(
-            isSender: true,
-            text: 'Baik bu, sebentar',
           ),
         ],
       );

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
+import 'package:pad_fundation/widgets/guess/event_card_bookmark.dart';
+import 'package:pad_fundation/widgets/mitra/event_card_bookmark_mitra.dart';
+import 'package:pad_fundation/widgets/organizer/event_card_bookmark_organizer.dart';
 
-import '../../widgets/sponsor_card.dart';
+class BookmarkPageOrganizer extends StatelessWidget {
 
-class DaftarSponsorMitra extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
@@ -32,7 +34,7 @@ class DaftarSponsorMitra extends StatelessWidget {
                     ),
                     SizedBox(width: 20),
                     Text(
-                      'Daftar Sponsor Music Fest',
+                      'Bookmarks',
                       style: blackTextStyle.copyWith(
                         fontSize: 20,
                         fontWeight: bold,
@@ -47,38 +49,18 @@ class DaftarSponsorMitra extends StatelessWidget {
       );
     }
 
-    Widget sponsor() {
+    Widget body() {
       return Container(
         margin: EdgeInsets.only(top: 5),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Gold',
-              style: blackTextStyle.copyWith(
-                fontSize: 16,
-                fontWeight: medium,
-              ),
-            ),
-            SponsorCard(),
-            SponsorCard(),
-            SponsorCard(),
-            SponsorCard(),
-            SponsorCard(),
-            SponsorCard(),
-            SizedBox(height: 10),
-            Text(
-              'Silver',
-              style: blackTextStyle.copyWith(
-                fontSize: 16,
-                fontWeight: medium,
-              ),
-            ),
-            SponsorCard(),
-            SponsorCard(),
-            SponsorCard(),
-            SponsorCard(),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              EventCardBookmarkOrganizer(),
+              EventCardBookmarkOrganizer(),
+              EventCardBookmarkOrganizer(),
+              EventCardBookmarkOrganizer(),
+            ],
+          ),
         ),
       );
     }
@@ -89,7 +71,7 @@ class DaftarSponsorMitra extends StatelessWidget {
             horizontal: defaultMargin
         ),
         children: [
-          sponsor(),
+          body(),
         ],
       );
     }
@@ -99,6 +81,5 @@ class DaftarSponsorMitra extends StatelessWidget {
       appBar: header(),
       body: content(),
     );
-
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
-import 'package:pad_fundation/widgets/chat_bubble_organizer.dart';
+import 'package:pad_fundation/widgets/organizer/chat_bubble_organizer.dart';
 
 class DetailChatOrganizer extends StatelessWidget {
   @override

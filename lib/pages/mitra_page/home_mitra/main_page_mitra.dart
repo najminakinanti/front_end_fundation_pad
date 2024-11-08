@@ -7,14 +7,28 @@ import 'package:pad_fundation/pages/mitra_page/home_mitra/sponsor_page_mitra.dar
 import 'package:pad_fundation/theme.dart';
 
 class MainPageMitra extends StatefulWidget {
+  final int initialIndex;
+
+  MainPageMitra({this.initialIndex = 0});
 
   @override
-  State<MainPageMitra> createState() => _MainPageMitraState();
+  _MainPageMitraState createState() => _MainPageMitraState();
 }
 
 class _MainPageMitraState extends State<MainPageMitra> {
-
   int currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    currentIndex = widget.initialIndex;
+  }
+
+  void changeTab(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

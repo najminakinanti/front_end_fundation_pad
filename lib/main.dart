@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/pages/mitra_page/bookmark_page_mitra.dart';
+import 'package:pad_fundation/pages/mitra_page/create_new_password_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/daftar_sponsor_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/detail_chat_event_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/detail_chat_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/detail_event_mitra.dart';
+import 'package:pad_fundation/pages/mitra_page/edit_mitra.dart';
+import 'package:pad_fundation/pages/mitra_page/edit_password_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/event_page_by_category_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/event_page_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/forgot_password_mitra.dart';
@@ -11,18 +14,28 @@ import 'package:pad_fundation/pages/mitra_page/forgot_password_new_password_mitr
 import 'package:pad_fundation/pages/mitra_page/forgot_password_verification_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/event_by_category_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/home_mitra/main_page_mitra.dart';
+import 'package:pad_fundation/pages/mitra_page/home_mitra/profile_page_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/kirim_sponsor_mitra.dart';
+import 'package:pad_fundation/pages/mitra_page/ubah_data_profile.dart';
+import 'package:pad_fundation/pages/mitra_page/ubah_email.dart';
+import 'package:pad_fundation/pages/mitra_page/ubah_nama.dart';
+import 'package:pad_fundation/pages/mitra_page/ubah_nomor.dart';
 import 'package:pad_fundation/pages/not_logged_in/detail_event.dart';
 import 'package:pad_fundation/pages/not_logged_in/event_by_category.dart';
 import 'package:pad_fundation/pages/not_logged_in/home/main_page.dart';
 import 'package:pad_fundation/pages/mitra_page/login_page_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/register_page_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/register_page_mitra_add.dart';
+import 'package:pad_fundation/pages/organizer_page/bookmark_page_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/detail_chat_event_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/detail_chat_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/detail_event_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/event_by_category_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/event_page_by_category_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/forgot_password_new_password_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/forgot_password_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/forgot_password_verification_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/home_organizer/home_page_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/home_organizer/main_page_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/login_page_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/register_page_organizer.dart';
@@ -42,7 +55,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // Route configuration for navigating between pages
       routes: {
         '/': (context) => SplashPage(),
         '/boarding-1': (context) => OnBoardingPage1(),
@@ -57,7 +69,10 @@ class MyApp extends StatelessWidget {
         '/new-password': (context) => NewPasswordMitra(),
         '/register-mitra': (context) => RegisterPageMitra(),
         '/add-mitra': (context) => AddMitra(),
-        '/home-mitra': (context) => MainPageMitra(),
+        '/home-mitra': (context) {
+          final int initialIndex = ModalRoute.of(context)!.settings.arguments as int? ?? 0;
+          return MainPageMitra(initialIndex: initialIndex);
+        },
         '/bookmark-mitra': (context) => BookmarkPageMitra(),
         '/event-mitra': (context) => EventPageMitra(),
         '/event-by-category-mitra': (context) => EventByCategoryMitra(),
@@ -76,8 +91,20 @@ class MyApp extends StatelessWidget {
         '/register-organizer': (context) => RegisterPageOrganizer(),
         '/add-organizer': (context) => AddOrganizer(),
         '/home-organizer': (context) => MainPageOrganizer(),
+        '/bookmark-organizer': (context) => BookmarkPageOrganizer(),
         '/detail-chat-organizer': (context) => DetailChatOrganizer(),
         '/detail-chat-event-organizer': (context) => DetailChatEventOrganizer(),
+        '/event-by-category-organizer' : (context) => EventByCategoryOrganizer(),
+        '/detail-event-organizer': (context) => DetailEventOrganizer(),
+        '/event-page-by-category-organizer': (context) => EventPageByCategoryOrganizer(),
+        '/ubah-data-profile': (context) => UbahDataProfile(),
+        '/profile-page-mitra': (context) => ProfilePageMitra(),
+        '/ubah-nama': (context) => UbahNama(),
+        '/ubah-email': (context) => UbahEmail(),
+        '/ubah-nomor': (context) => UbahNomor(),
+        '/edit-mitra': (context) => EditMitra(),
+        '/edit-password-mitra': (context) => EditPasswordMitra(),
+        '/create-new-password-mitra': (context) => CreateNewPasswordMitra(),
 
         //not logged in
         '/home': (context) {

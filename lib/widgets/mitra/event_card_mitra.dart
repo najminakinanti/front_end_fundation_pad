@@ -91,7 +91,7 @@ class _EventCardState extends State<EventCardMitra> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Music Fest 2024',
+                    'Mufest mitra',
                     style: grayTextStyle.copyWith(
                       fontSize: 14,
                       fontWeight: bold,

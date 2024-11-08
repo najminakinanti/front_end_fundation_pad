@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
+import 'package:pad_fundation/widgets/mitra/chat_bubble_mitra.dart';
 
-import '../../widgets/chat_bubble.dart';
 
 class DetailChatEventMitra extends StatelessWidget {
   @override
@@ -102,7 +102,6 @@ class DetailChatEventMitra extends StatelessWidget {
       );
     }
 
-
     Widget content() {
       return ListView(
         padding: EdgeInsets.symmetric(
@@ -110,28 +109,28 @@ class DetailChatEventMitra extends StatelessWidget {
         ),
         children: [
           chatDate(),
-          ChatBubble(
+          ChatBubbleMitra(
             isSender: true,
             text: 'Halo, acaranya kapan ya bu',
           ),
-          ChatBubble(
+          ChatBubbleMitra(
             isSender: false,
             text: 'Acaranya mungkin sebulan lagi, bu',
           ),
-          ChatBubble(
+          ChatBubbleMitra(
             isSender: true,
             text: 'Baik bu, sebentar',
           ),
-          ChatBubble(
+          ChatBubbleMitra(
             isSender: false,
             text: 'Baik, kita tunggu',
           ),
-          ChatBubble(
+          ChatBubbleMitra(
             isSender: true,
             text: 'Baik bu, sebentar',
           ),
           chatToday(),
-          ChatBubble(
+          ChatBubbleMitra(
             isSender: true,
             text: 'Halo bu',
           ),

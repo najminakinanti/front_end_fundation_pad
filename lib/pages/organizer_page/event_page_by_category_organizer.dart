@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/filter_modal.dart';
+import 'package:pad_fundation/widgets/organizer/event_card_organizer.dart';
 
-import '../../widgets/mitra/event_card_mitra.dart';
-
-class EventPageByCategoryMitra extends StatelessWidget {
+class EventPageByCategoryOrganizer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
@@ -109,10 +108,10 @@ class EventPageByCategoryMitra extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              EventCardMitra(),
-              EventCardMitra(),
-              EventCardMitra(),
-              EventCardMitra(),
+              EventCardOrganizer(),
+              EventCardOrganizer(),
+              EventCardOrganizer(),
+              EventCardOrganizer(),
             ],
           ),
         ),
@@ -139,10 +138,10 @@ class EventPageByCategoryMitra extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              EventCardMitra(),
-              EventCardMitra(),
-              EventCardMitra(),
-              EventCardMitra(),
+              EventCardOrganizer(),
+              EventCardOrganizer(),
+              EventCardOrganizer(),
+              EventCardOrganizer(),
             ],
           ),
         ),
@@ -169,10 +168,10 @@ class EventPageByCategoryMitra extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              EventCardMitra(),
-              EventCardMitra(),
-              EventCardMitra(),
-              EventCardMitra(),
+              EventCardOrganizer(),
+              EventCardOrganizer(),
+              EventCardOrganizer(),
+              EventCardOrganizer(),
             ],
           ),
         ),

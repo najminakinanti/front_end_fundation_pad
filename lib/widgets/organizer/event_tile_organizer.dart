@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 
-class EventTileMitra extends StatelessWidget {
+class EventTileOrganizer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/detail-event-mitra');
+        Navigator.pushNamed(context, '/detail-event-organizer');
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -67,7 +67,7 @@ class EventTileMitra extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          'Music Fest 2024',
+                          'Mufest org',
                           style: grayTextStyle.copyWith(
                             fontSize: 14,
                             fontWeight: bold,

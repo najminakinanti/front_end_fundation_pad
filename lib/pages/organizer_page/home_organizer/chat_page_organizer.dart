@@ -1,62 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
-import 'package:pad_fundation/widgets/chat_tile_organizer.dart';
+import 'package:pad_fundation/widgets/organizer/chat_tile_organizer.dart';
 
 class ChatPageOrganizer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    Widget header() {
-      return Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Pesan',
-              style: blackTextStyle.copyWith(
-                fontSize: 20,
-                fontWeight: bold,
-              ),
-            ),
-            SizedBox(height: 4),
-          ],
-        ),
-      );
-    }
-
-    Widget searchBar() {
-      return Container(
-        margin: EdgeInsets.only(top: 18),
-        child: SizedBox(
-          width: double.infinity,
-          child: TextButton(
-            onPressed: () {},
-            style: TextButton.styleFrom(
-              backgroundColor: textColor3,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            child: Container(
-              alignment: Alignment.centerLeft,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Image.asset(
-                    'assets/icon_search.png',
-                    width: 20,
-                    height: 20,
-                  ),
-                  SizedBox(width: 5),
-                  Text(
-                    'Cari Pesan',
-                    style: veryLightGrayTextStyle.copyWith(
-                      fontSize: 16,
-                      fontWeight: medium,
+    PreferredSize header() {
+      return PreferredSize(
+        preferredSize: Size.fromHeight(105.0),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: backgroundColor,
+          centerTitle: false,
+          flexibleSpace: Container(
+            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Pesan',
+                      style: blackTextStyle.copyWith(
+                        fontSize: 20,
+                        fontWeight: bold,
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+                SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () {},
+                        style: TextButton.styleFrom(
+                          backgroundColor: textColor3,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Image.asset('assets/icon_search.png', width: 18),
+                            SizedBox(width: 5),
+                            Text(
+                              'Cari Pesan',
+                              style: veryLightGrayTextStyle.copyWith(
+                                fontSize: 16,
+                                fontWeight: medium,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
@@ -65,7 +67,7 @@ class ChatPageOrganizer extends StatelessWidget {
 
     Widget chatTileEo() {
       return Container(
-        margin: EdgeInsets.only(top: 20),
+        margin: EdgeInsets.only(top: 0),
         width: double.infinity,
         child: ListView(
           shrinkWrap: true,
@@ -76,21 +78,24 @@ class ChatPageOrganizer extends StatelessWidget {
             ChatTileOrganizer(),
             ChatTileOrganizer(),
             ChatTileOrganizer(),
-            ChatTileOrganizer(),
-            ChatTileOrganizer(),
-            ChatTileOrganizer(),
-            ChatTileOrganizer(),
           ],
         ),
       );
     }
 
-    return ListView(
-      children: [
-        header(),
-        searchBar(),
-        chatTileEo(),
-      ],
+    Widget content() {
+      return ListView(
+        children: [
+          chatTileEo(),
+          SizedBox(height: 80),
+        ],
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: backgroundColor,
+      appBar: header(),
+      body: content(),
     );
   }
 }

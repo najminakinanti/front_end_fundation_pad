@@ -1,9 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pad_fundation/pages/mitra_page/home_mitra/chat_page_mitra.dart';
-import 'package:pad_fundation/pages/mitra_page/event_page_mitra.dart';
-import 'package:pad_fundation/pages/mitra_page/home_mitra/home_page_mitra.dart';
-import 'package:pad_fundation/pages/mitra_page/home_mitra/profile_page_mitra.dart';
-import 'package:pad_fundation/pages/mitra_page/home_mitra/sponsor_page_mitra.dart';
 import 'package:pad_fundation/pages/organizer_page/home_organizer/chat_page_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/home_organizer/home_page_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/home_organizer/profile_page_organizer.dart';

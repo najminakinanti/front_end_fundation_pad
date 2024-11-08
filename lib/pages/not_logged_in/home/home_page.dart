@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
-import 'package:pad_fundation/widgets/event_card.dart';
-import 'package:pad_fundation/widgets/event_tile.dart';
+import 'package:pad_fundation/widgets/guess/event_card.dart';
+import 'package:pad_fundation/widgets/guess/event_tile.dart';
 
 class HomePage extends StatelessWidget {
   final VoidCallback onNavigateToEvent;
@@ -296,7 +296,7 @@ class HomePage extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category');
+                    Navigator.pushNamed(context, '/event-page-by-category');
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),

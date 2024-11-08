@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
-import 'package:pad_fundation/widgets/event_card.dart';
-import 'package:pad_fundation/widgets/event_card_mitra.dart';
-import 'package:pad_fundation/widgets/event_tile.dart';
-import 'package:pad_fundation/widgets/event_tile_mitra.dart';
+import 'package:pad_fundation/widgets/organizer/event_card_organizer.dart';
+import 'package:pad_fundation/widgets/organizer/event_tile_organizer.dart';
 
 class HomePageOrganizer extends StatelessWidget {
   @override
@@ -32,7 +30,7 @@ class HomePageOrganizer extends StatelessWidget {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'ANTIIIIIIIIII',
+                    'ORGANIZER NI BOS',
                     style: greenTextStyle.copyWith(
                       fontSize: 14,
                       fontWeight: bold,
@@ -47,13 +45,13 @@ class HomePageOrganizer extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, '/bookmark-mitra');
+                  Navigator.pushNamed(context, '/bookmark-organizer');
                   print("Bookmark");
                 },
                 child: Image.asset(
-                  'assets/icon_bookmark_off.png',
-                  width: 20,
-                  height: 20,
+                  'assets/icon_bookmark_2.png',
+                  width: 18,
+                  height: 18,
                 ),
               ),
 
@@ -115,7 +113,7 @@ class HomePageOrganizer extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category-mitra');
+                    Navigator.pushNamed(context, '/event-by-category-organizer');
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -144,7 +142,7 @@ class HomePageOrganizer extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category-mitra');},
+                    Navigator.pushNamed(context, '/event-by-category-organizer');},
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -172,7 +170,7 @@ class HomePageOrganizer extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category-mitra');},
+                    Navigator.pushNamed(context, '/event-by-category-organizer');},
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -200,7 +198,7 @@ class HomePageOrganizer extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category-mitra');},
+                    Navigator.pushNamed(context, '/event-by-category-organizer');},
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -228,7 +226,7 @@ class HomePageOrganizer extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category-mitra');},
+                    Navigator.pushNamed(context, '/event-page-by-category-organizer');},
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -273,7 +271,7 @@ class HomePageOrganizer extends StatelessWidget {
             Container(
               child: TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/event-by-category-mitra');
+                  Navigator.pushNamed(context, '/event-by-category-organizer');
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -307,9 +305,9 @@ class HomePageOrganizer extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              EventCardMitra(),
-              EventCardMitra(),
-              EventCardMitra(),
+              EventCardOrganizer(),
+              EventCardOrganizer(),
+              EventCardOrganizer(),
             ],
           ),
         ),
@@ -333,7 +331,6 @@ class HomePageOrganizer extends StatelessWidget {
             Container(
               child: TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/event-mitra');
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -366,10 +363,10 @@ class HomePageOrganizer extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              EventTileMitra(),
-              EventTileMitra(),
-              EventTileMitra(),
-              EventTileMitra(),
+              EventTileOrganizer(),
+              EventTileOrganizer(),
+              EventTileOrganizer(),
+              EventTileOrganizer(),
             ],
           ),
         ),
