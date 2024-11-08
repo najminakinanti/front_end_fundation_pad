@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
-import 'package:pad_fundation/widgets/event_card_mitra.dart';
-import 'package:pad_fundation/widgets/event_tile.dart';
-import 'package:pad_fundation/widgets/event_tile_mitra.dart';
+import 'package:pad_fundation/widgets/mitra/event_card_mitra.dart';
+import 'package:pad_fundation/widgets/guess/event_tile.dart';
+import 'package:pad_fundation/widgets/mitra/event_tile_mitra.dart';
 import 'package:pad_fundation/widgets/filter_modal.dart';
 
 class EventPageMitra extends StatelessWidget {

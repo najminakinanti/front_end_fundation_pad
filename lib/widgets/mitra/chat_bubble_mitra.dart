@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 
-class ChatBubble extends StatelessWidget {
+class ChatBubbleMitra extends StatelessWidget {
   final String text;
   final String time;
   final bool isSender;
 
-  ChatBubble({this.isSender = false, this.text = '', this.time = '08.45 PM'});
+  ChatBubbleMitra({this.isSender = false, this.text = '', this.time = '08.45 PM'});
 
   @override
   Widget build(BuildContext context) {

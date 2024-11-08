@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/guess/event_card_bookmark.dart';
 import 'package:pad_fundation/widgets/mitra/event_card_bookmark_mitra.dart';
+import 'package:pad_fundation/widgets/organizer/event_card_bookmark_organizer.dart';
 
-class BookmarkPageMitra extends StatelessWidget {
+class BookmarkPageOrganizer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +55,10 @@ class BookmarkPageMitra extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              EventCardBookmarkMitra(),
-              EventCardBookmarkMitra(),
-              EventCardBookmarkMitra(),
-              EventCardBookmarkMitra(),
+              EventCardBookmarkOrganizer(),
+              EventCardBookmarkOrganizer(),
+              EventCardBookmarkOrganizer(),
+              EventCardBookmarkOrganizer(),
             ],
           ),
         ),

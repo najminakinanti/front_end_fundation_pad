@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/filter_modal.dart';
-import 'package:pad_fundation/widgets/sponsor_tile_mitra.dart';
+import 'package:pad_fundation/widgets/mitra/sponsor_tile_mitra.dart';
 
 class SponsorPageMitra extends StatelessWidget {
   @override

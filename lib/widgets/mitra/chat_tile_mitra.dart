@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 
-class ChatTile extends StatelessWidget {
+class ChatTileMitra extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

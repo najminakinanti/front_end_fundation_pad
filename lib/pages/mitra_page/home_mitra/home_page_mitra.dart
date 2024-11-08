@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
-import 'package:pad_fundation/widgets/event_card.dart';
-import 'package:pad_fundation/widgets/event_card_mitra.dart';
-import 'package:pad_fundation/widgets/event_tile.dart';
-import 'package:pad_fundation/widgets/event_tile_mitra.dart';
+import 'package:pad_fundation/widgets/guess/event_card.dart';
+import 'package:pad_fundation/widgets/mitra/event_card_mitra.dart';
+import 'package:pad_fundation/widgets/guess/event_tile.dart';
+import 'package:pad_fundation/widgets/mitra/event_tile_mitra.dart';
 
 class HomePageMitra extends StatelessWidget {
   @override
@@ -51,9 +51,9 @@ class HomePageMitra extends StatelessWidget {
                   print("Bookmark");
                 },
                 child: Image.asset(
-                  'assets/icon_bookmark_off.png',
-                  width: 20,
-                  height: 20,
+                  'assets/icon_bookmark_2.png',
+                  width: 18,
+                  height: 18,
                 ),
               ),
 

@@ -6,9 +6,9 @@ import 'package:pad_fundation/pages/not_logged_in/home/profile_page.dart';
 import 'package:pad_fundation/theme.dart';
 
 class MainPage extends StatefulWidget {
-  final int initialIndex; // Add a parameter to accept initialIndex
+  final int initialIndex;
 
-  MainPage({this.initialIndex = 0}); // Default to 0 if no initialIndex is provided
+  MainPage({this.initialIndex = 0});
 
   @override
   _MainPageState createState() => _MainPageState();
@@ -20,7 +20,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    currentIndex = widget.initialIndex; // Set the currentIndex from the parameter
+    currentIndex = widget.initialIndex;
   }
 
   void changeTab(int index) {

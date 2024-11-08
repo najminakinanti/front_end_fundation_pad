@@ -5,12 +5,12 @@ import 'package:pad_fundation/widgets/information_detail_galery.dart';
 import 'package:pad_fundation/widgets/kontraprestasi_category.dart';
 import 'package:pad_fundation/widgets/sponsor_card.dart';
 
-class DetailEventMitra extends StatefulWidget {
+class DetailEventOrganizer extends StatefulWidget {
   @override
   _DetailEventState createState() => _DetailEventState();
 }
 
-class _DetailEventState extends State<DetailEventMitra> {
+class _DetailEventState extends State<DetailEventOrganizer> {
   int currentBatch = 0;
 
   @override
@@ -62,7 +62,7 @@ class _DetailEventState extends State<DetailEventMitra> {
             Row(
               children: [
                 Text(
-                  'Mufest mitra 2024',
+                  'Mufest org 2024',
                   style: blackTextStyle.copyWith(
                       fontSize: 20, fontWeight: bold),
                 ),

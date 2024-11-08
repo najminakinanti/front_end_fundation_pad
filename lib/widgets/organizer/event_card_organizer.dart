@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 
-class EventCardMitra extends StatefulWidget {
+class EventCardOrganizer extends StatefulWidget {
   @override
   _EventCardState createState() => _EventCardState();
 }
 
-class _EventCardState extends State<EventCardMitra> {
+class _EventCardState extends State<EventCardOrganizer> {
   bool isBookmarked = false;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/detail-event-mitra');
+        Navigator.pushNamed(context, '/detail-event-organizer');
       },
       child: Container(
         width: 225,
@@ -91,7 +91,7 @@ class _EventCardState extends State<EventCardMitra> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Music Fest 2024',
+                    'Music org 2024',
                     style: grayTextStyle.copyWith(
                       fontSize: 14,
                       fontWeight: bold,

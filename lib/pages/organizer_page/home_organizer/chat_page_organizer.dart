@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
-import 'package:pad_fundation/widgets/chat_tile_organizer.dart';
+import 'package:pad_fundation/widgets/organizer/chat_tile_organizer.dart';
 
 class ChatPageOrganizer extends StatelessWidget {
   @override

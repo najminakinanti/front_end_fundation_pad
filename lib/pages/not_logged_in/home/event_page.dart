@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
-import 'package:pad_fundation/widgets/event_card.dart';
-import 'package:pad_fundation/widgets/event_tile.dart';
+import 'package:pad_fundation/widgets/guess/event_card.dart';
+import 'package:pad_fundation/widgets/guess/event_tile.dart';
 import 'package:pad_fundation/widgets/filter_modal.dart';
 
 class EventPage extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
-import '../../../widgets/chat_tile.dart';
+import '../../../widgets/mitra/chat_tile_mitra.dart';
 
 class ChatPageMitra extends StatelessWidget {
   @override
@@ -72,12 +72,12 @@ class ChatPageMitra extends StatelessWidget {
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           children: [
-            ChatTile(),
-            ChatTile(),
-            ChatTile(),
-            ChatTile(),
-            ChatTile(),
-            ChatTile(),
+            ChatTileMitra(),
+            ChatTileMitra(),
+            ChatTileMitra(),
+            ChatTileMitra(),
+            ChatTileMitra(),
+            ChatTileMitra(),
           ],
         ),
       );

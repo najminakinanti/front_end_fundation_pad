@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pad_fundation/widgets/chat_tile_organizer.dart';
+import 'package:pad_fundation/widgets/organizer/chat_tile_organizer.dart';
 import '../../theme.dart';
 
 class DetailChatEventOrganizer extends StatelessWidget {

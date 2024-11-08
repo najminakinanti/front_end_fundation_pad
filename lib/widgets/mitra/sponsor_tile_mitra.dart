@@ -72,7 +72,7 @@ class SponsorTileMitra extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          'Music Fest 2024',
+                          'Mufest mitra',
                           style: grayTextStyle.copyWith(
                             fontSize: 14,
                             fontWeight: bold,

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/filter_modal.dart';
+import 'package:pad_fundation/widgets/organizer/event_card_bookmark_organizer.dart';
 
-import '../../widgets/mitra/event_card_mitra.dart';
-
-class EventPageByCategoryMitra extends StatelessWidget {
+class EventByCategoryOrganizer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
@@ -102,77 +101,16 @@ class EventPageByCategoryMitra extends StatelessWidget {
       );
     }
 
-    Widget topEvent() {
+    Widget body() {
       return Container(
-        margin: EdgeInsets.only(top: 10),
+        margin: EdgeInsets.only(top: 17),
         child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
+          child: Column(
             children: [
-              EventCardMitra(),
-              EventCardMitra(),
-              EventCardMitra(),
-              EventCardMitra(),
-            ],
-          ),
-        ),
-      );
-    }
-
-    Widget pendidikanEventTitle() {
-      return Container(
-        margin: EdgeInsets.only(top: 24),
-        child: Text(
-          'Event Pendidikan',
-          style: blackTextStyle.copyWith(
-            fontSize: 16,
-            fontWeight: medium,
-          ),
-        ),
-      );
-    }
-
-    Widget pendidikanEvent() {
-      return Container(
-        margin: EdgeInsets.only(top: 10),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              EventCardMitra(),
-              EventCardMitra(),
-              EventCardMitra(),
-              EventCardMitra(),
-            ],
-          ),
-        ),
-      );
-    }
-
-    Widget kulinerEventTitle() {
-      return Container(
-        margin: EdgeInsets.only(top: 24),
-        child: Text(
-          'Event Pendidikan',
-          style: blackTextStyle.copyWith(
-            fontSize: 16,
-            fontWeight: medium,
-          ),
-        ),
-      );
-    }
-
-    Widget kulinerEvent() {
-      return Container(
-        margin: EdgeInsets.only(top: 10),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              EventCardMitra(),
-              EventCardMitra(),
-              EventCardMitra(),
-              EventCardMitra(),
+              EventCardBookmarkOrganizer(),
+              EventCardBookmarkOrganizer(),
+              EventCardBookmarkOrganizer(),
+              EventCardBookmarkOrganizer(),
             ],
           ),
         ),
@@ -186,11 +124,7 @@ class EventPageByCategoryMitra extends StatelessWidget {
         ),
         children: [
           topEventTitle(),
-          topEvent(),
-          pendidikanEventTitle(),
-          pendidikanEvent(),
-          kulinerEventTitle(),
-          kulinerEvent(),
+          body(),
         ],
       );
     }

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 
-class EventCardBookmarkMitra extends StatefulWidget {
+class EventCardMitra extends StatefulWidget {
   @override
-  _EventCardBookmarkState createState() => _EventCardBookmarkState();
+  _EventCardState createState() => _EventCardState();
 }
 
-class _EventCardBookmarkState extends State<EventCardBookmarkMitra> {
+class _EventCardState extends State<EventCardMitra> {
   bool isBookmarked = false;
 
   @override
@@ -17,8 +17,8 @@ class _EventCardBookmarkState extends State<EventCardBookmarkMitra> {
         Navigator.pushNamed(context, '/detail-event-mitra');
       },
       child: Container(
-        width: double.infinity,
-        margin: EdgeInsets.only(bottom: 20),
+        width: 225,
+        margin: EdgeInsets.only(right: 10),
         decoration: BoxDecoration(
           color: backgroundColor3,
           borderRadius: BorderRadius.circular(5),
@@ -33,11 +33,11 @@ class _EventCardBookmarkState extends State<EventCardBookmarkMitra> {
                   child: Image.asset(
                     'assets/img_music_fest.png',
                     width: double.infinity,
-                    height: 230,
+                    height: 100,
                     fit: BoxFit.cover,
                   ),
                 ),
-
+      
                 Positioned(
                   top: 10,
                   left: 10,
@@ -50,13 +50,13 @@ class _EventCardBookmarkState extends State<EventCardBookmarkMitra> {
                     child: Text(
                       'OFFLINE',
                       style: orangeTextStyle.copyWith(
-                        fontSize: 14,
+                        fontSize: 10,
                         fontWeight: bold,
                       ),
                     ),
                   ),
                 ),
-
+                
                 Positioned(
                   top: 10,
                   right: 10,
@@ -90,23 +90,14 @@ class _EventCardBookmarkState extends State<EventCardBookmarkMitra> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        'Music Fest 2024',
-                        style: grayTextStyle.copyWith(
-                          fontSize: 14,
-                          fontWeight: bold,
-                        ),
-                      ),
-                      Spacer(),
-
-                      Image.asset('assets/icon_calendar.png', width: 11),
-                      SizedBox(width: 4),
-                      Text('20 Mei 2024', style: veryLightGrayTextStyle.copyWith(fontSize: 10, fontWeight: regular,),),
-                    ],
+                  Text(
+                    'Mufest mitra',
+                    style: grayTextStyle.copyWith(
+                      fontSize: 14,
+                      fontWeight: bold,
+                    ),
                   ),
-
+      
                   Text(
                     'Terkumpul Rp90.000.000',
                     style: lighGrayTextStyle.copyWith(
@@ -114,7 +105,7 @@ class _EventCardBookmarkState extends State<EventCardBookmarkMitra> {
                       fontWeight: regular,
                     ),
                   ),
-
+      
                   Row(
                     children: [
                       Expanded(
@@ -137,10 +128,11 @@ class _EventCardBookmarkState extends State<EventCardBookmarkMitra> {
                       ),
                     ],
                   ),
-
+      
                   SizedBox(height: 7),
-
+      
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
@@ -149,7 +141,6 @@ class _EventCardBookmarkState extends State<EventCardBookmarkMitra> {
                           Text('100 Donorship', style: veryLightGrayTextStyle.copyWith(fontSize: 10, fontWeight: regular,),),
                         ],
                       ),
-                      SizedBox(width: 20,),
                       Row(
                         children: [
                           Image.asset('assets/icon_timer.png', width: 13),
@@ -159,9 +150,9 @@ class _EventCardBookmarkState extends State<EventCardBookmarkMitra> {
                       ),
                     ],
                   ),
-
+      
                   SizedBox(height: 7),
-
+      
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Wrap(

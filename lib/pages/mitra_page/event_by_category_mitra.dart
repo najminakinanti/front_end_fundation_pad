@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
-import 'package:pad_fundation/widgets/event_card_bookmark.dart';
-import 'package:pad_fundation/widgets/event_card_bookmark_mitra.dart';
+import 'package:pad_fundation/widgets/guess/event_card_bookmark.dart';
+import 'package:pad_fundation/widgets/mitra/event_card_bookmark_mitra.dart';
 import 'package:pad_fundation/widgets/filter_modal.dart';
 
 class EventByCategoryMitra extends StatelessWidget {
