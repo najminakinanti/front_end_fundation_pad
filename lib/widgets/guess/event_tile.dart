@@ -68,7 +68,7 @@ class EventTile extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          'Music Fest 2024',
+                          'Mufest 2024',
                           style: grayTextStyle.copyWith(
                             fontSize: 14,
                             fontWeight: bold,
