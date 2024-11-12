@@ -90,7 +90,7 @@ class ForgotPasswordOrganizer extends StatelessWidget {
         margin: EdgeInsets.only(top: 29),
         child: TextButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/verification');
+            Navigator.pushNamed(context, '/verification-organizer');
           },
           style: TextButton.styleFrom(
               backgroundColor: primaryColor,

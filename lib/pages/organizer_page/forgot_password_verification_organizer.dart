@@ -80,7 +80,7 @@ class VerificationOrganizer extends StatelessWidget{
         margin: EdgeInsets.only(top: 29),
         child: TextButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/new-password');
+            Navigator.pushNamed(context, '/new-password-organizer');
           },
           style: TextButton.styleFrom(
               backgroundColor: primaryColor,

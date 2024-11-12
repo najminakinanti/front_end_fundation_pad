@@ -23,6 +23,12 @@ Color lineColor2 = Color(0xffB8C3C2);
 Color lineColor3 = Color(0xffCCCCCC);
 Color sageGreen4 = Color(0xff667E7C);
 Color lightYellow = Color(0xffFCDE93);
+Color navy = Color(0xff134B70);
+Color yellow = Color(0xffFFD88F);
+Color brown = Color(0xff88650C);
+Color orange = Color(0xffF5941F);
+Color darkBrown = Color(0xff7A271A);
+Color green = Color(0xff12B76A);
 
 // warna font
 TextStyle blackTextStyle = TextStyle(
@@ -63,6 +69,11 @@ TextStyle orangeTextStyle = TextStyle(
 TextStyle veryLightGrayTextStyle = TextStyle(
   fontFamily: 'Poppins',
   color: gray,
+);
+
+TextStyle navyTextStyle = TextStyle(
+  fontFamily: 'Poppins',
+  color: navy,
 );
 
 // Font weights

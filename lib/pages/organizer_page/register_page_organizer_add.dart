@@ -430,7 +430,7 @@ class AddOrganizer extends StatelessWidget{
             Expanded(
               child: TextButton(
                 onPressed: () {
-                  //
+                  Navigator.pushNamed(context, '/home-organizer');
                 },
                 style: TextButton.styleFrom(
                   backgroundColor: primaryColor,

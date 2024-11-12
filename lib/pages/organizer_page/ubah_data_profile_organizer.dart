@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../theme.dart';
 
-class UbahDataProfile extends StatelessWidget {
+class UbahDataProfileOrganizer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
@@ -52,9 +52,8 @@ class UbahDataProfile extends StatelessWidget {
       );
     }
 
-
     Widget nama() {
-      TextEditingController nominalController = TextEditingController(text: 'Govan Dwi');
+      TextEditingController nominalController = TextEditingController(text: 'Fazaya');
 
       return Container(
         margin: EdgeInsets.only(top: 25, left: 30, right: 30),
@@ -83,7 +82,7 @@ class UbahDataProfile extends StatelessWidget {
                     padding: EdgeInsets.all(10),
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, '/ubah-nama');
+                        Navigator.pushNamed(context, '/ubah-nama-organizer');
                       },
                       child: Image.asset(
                         'assets/icon_panah_kanan_hitam.png',
@@ -101,7 +100,7 @@ class UbahDataProfile extends StatelessWidget {
     }
 
     Widget email() {
-      TextEditingController nominalController = TextEditingController(text: 'govandwi@gmail.com');
+      TextEditingController nominalController = TextEditingController(text: 'fazaya123@gmail.com');
 
       return Container(
         margin: EdgeInsets.only(top: 25, left: 30, right: 30),
@@ -130,7 +129,7 @@ class UbahDataProfile extends StatelessWidget {
                     padding: EdgeInsets.all(10),
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, '/ubah-email');
+                        Navigator.pushNamed(context, '/ubah-email-organizer');
                       },
                       child: Image.asset(
                         'assets/icon_panah_kanan_hitam.png',
@@ -148,7 +147,7 @@ class UbahDataProfile extends StatelessWidget {
     }
 
     Widget telp() {
-      TextEditingController nominalController = TextEditingController(text: '088851453890');
+      TextEditingController nominalController = TextEditingController(text: '08658646376453');
 
       return Container(
         margin: EdgeInsets.only(top: 25, left: 30, right: 30),
@@ -177,7 +176,7 @@ class UbahDataProfile extends StatelessWidget {
                     padding: EdgeInsets.all(10),
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, '/ubah-nomor');
+                        Navigator.pushNamed(context, '/ubah-nomor-organizer');
                       },
                       child: Image.asset(
                         'assets/icon_panah_kanan_hitam.png',

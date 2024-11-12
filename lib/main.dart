@@ -27,9 +27,13 @@ import 'package:pad_fundation/pages/mitra_page/login_page_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/register_page_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/register_page_mitra_add.dart';
 import 'package:pad_fundation/pages/organizer_page/bookmark_page_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/create_new_password_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/data_penerima.dart';
 import 'package:pad_fundation/pages/organizer_page/detail_chat_event_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/detail_chat_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/detail_event_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/edit_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/edit_password_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/event_by_category_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/event_page_by_category_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/forgot_password_new_password_organizer.dart';
@@ -37,9 +41,16 @@ import 'package:pad_fundation/pages/organizer_page/forgot_password_organizer.dar
 import 'package:pad_fundation/pages/organizer_page/forgot_password_verification_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/home_organizer/home_page_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/home_organizer/main_page_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/list_transaksi.dart';
 import 'package:pad_fundation/pages/organizer_page/login_page_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/nominal.dart';
 import 'package:pad_fundation/pages/organizer_page/register_page_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/register_page_organizer_add.dart';
+import 'package:pad_fundation/pages/organizer_page/ubah_data_profile_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/ubah_email_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/ubah_nama_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/ubah_nomor_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/withdrawal_request.dart';
 import 'package:pad_fundation/pages/splash_screen/choose_role.dart';
 import 'package:pad_fundation/pages/splash_screen/splash_page.dart';
 import 'package:pad_fundation/pages/splash_screen/on_boarding_page_1.dart';
@@ -82,21 +93,6 @@ class MyApp extends StatelessWidget {
         '/detail-chat-event-mitra': (context) => DetailChatEventMitra(),
         '/daftar-sponsor-mitra': (context) => DaftarSponsorMitra(),
         '/kirim-sponsor-mitra': (context) => KirimSponsorMitra(),
-
-        //role organizer
-        '/login-organizer': (context) => LoginPageOrganizer(),
-        '/forgot-password-organizer': (context) => ForgotPasswordOrganizer(),
-        '/verification-organizer': (context) => VerificationOrganizer(),
-        '/new-password-organizer': (context) => NewPasswordOrganizer(),
-        '/register-organizer': (context) => RegisterPageOrganizer(),
-        '/add-organizer': (context) => AddOrganizer(),
-        '/home-organizer': (context) => MainPageOrganizer(),
-        '/bookmark-organizer': (context) => BookmarkPageOrganizer(),
-        '/detail-chat-organizer': (context) => DetailChatOrganizer(),
-        '/detail-chat-event-organizer': (context) => DetailChatEventOrganizer(),
-        '/event-by-category-organizer' : (context) => EventByCategoryOrganizer(),
-        '/detail-event-organizer': (context) => DetailEventOrganizer(),
-        '/event-page-by-category-organizer': (context) => EventPageByCategoryOrganizer(),
         '/ubah-data-profile': (context) => UbahDataProfile(),
         '/profile-page-mitra': (context) => ProfilePageMitra(),
         '/ubah-nama': (context) => UbahNama(),
@@ -105,6 +101,39 @@ class MyApp extends StatelessWidget {
         '/edit-mitra': (context) => EditMitra(),
         '/edit-password-mitra': (context) => EditPasswordMitra(),
         '/create-new-password-mitra': (context) => CreateNewPasswordMitra(),
+
+
+
+        //role organizer
+        '/login-organizer': (context) => LoginPageOrganizer(),
+        '/forgot-password-organizer': (context) => ForgotPasswordOrganizer(),
+        '/verification-organizer': (context) => VerificationOrganizer(),
+        '/new-password-organizer': (context) => NewPasswordOrganizer(),
+        '/register-organizer': (context) => RegisterPageOrganizer(),
+        '/add-organizer': (context) => AddOrganizer(),
+        '/home-organizer': (context) {
+          final int initialIndex = ModalRoute.of(context)!.settings.arguments as int? ?? 0;
+          return MainPageOrganizer(initialIndex: initialIndex);
+        },
+        '/bookmark-organizer': (context) => BookmarkPageOrganizer(),
+        '/detail-chat-organizer': (context) => DetailChatOrganizer(),
+        '/detail-chat-event-organizer': (context) => DetailChatEventOrganizer(),
+        '/event-by-category-organizer' : (context) => EventByCategoryOrganizer(),
+        '/detail-event-organizer': (context) => DetailEventOrganizer(),
+        '/event-page-by-category-organizer': (context) => EventPageByCategoryOrganizer(),
+        '/ubah-data-profile-organizer': (context) => UbahDataProfileOrganizer(),
+        '/ubah-nama-organizer': (context) => UbahNamaOrganizer(),
+        '/ubah-email-organizer': (context) => UbahEmailOrganizer(),
+        '/ubah-nomor-organizer': (context) => UbahNomorOrganizer(),
+        '/edit-password-organizer': (context) => EditPasswordOrganizer(),
+        '/create-new-password-organizer': (context) => CreateNewPasswordOrganizer(),
+        '/edit-organizer': (context) => EditOrganizer(),
+        '/list-transaksi': (context) => ListTransaksi(),
+        '/penerima': (context) => DataPenerima(),
+        '/nominal': (context) => Nominal(),
+        '/withdrawal-req': (context) => WithdrawalRequest(),
+
+
 
         //not logged in
         '/home': (context) {

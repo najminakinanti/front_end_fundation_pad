@@ -6,14 +6,28 @@ import 'package:pad_fundation/pages/organizer_page/home_organizer/event_page_org
 import 'package:pad_fundation/theme.dart';
 
 class MainPageOrganizer extends StatefulWidget {
+  final int initialIndex;
+
+  MainPageOrganizer({this.initialIndex = 0});
 
   @override
-  State<MainPageOrganizer> createState() => _MainPageOrganizerState();
+  _MainPageOrganizerState createState() => _MainPageOrganizerState();
 }
 
 class _MainPageOrganizerState extends State<MainPageOrganizer> {
-
   int currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    currentIndex = widget.initialIndex;
+  }
+
+  void changeTab(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

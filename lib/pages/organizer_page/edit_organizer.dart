@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../theme.dart';
 
-class EditMitra extends StatelessWidget {
+class EditOrganizer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
@@ -25,7 +25,7 @@ class EditMitra extends StatelessWidget {
                 },
               ),
               Text(
-                'Ubah Data Mitra',
+                'Ubah Data Organizer',
                 style: blackTextStyle.copyWith(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -39,7 +39,7 @@ class EditMitra extends StatelessWidget {
               children: [
                 SizedBox(height: kToolbarHeight + 25),
                 Image.asset(
-                  'assets/img_chat3.png',
+                  'assets/img_chat4.png',
                   width: 80,
                   height: 80,
                 ),
@@ -59,9 +59,8 @@ class EditMitra extends StatelessWidget {
       );
     }
 
-
     Widget namaInput() {
-      TextEditingController nominalController = TextEditingController(text: 'GOVAN'); // Set initial text
+      TextEditingController nominalController = TextEditingController(text: 'Fazaya');
 
       return Container(
         margin: EdgeInsets.only(top: 25, left: 30, right: 30),
@@ -72,7 +71,7 @@ class EditMitra extends StatelessWidget {
               child: TextFormField(
                 controller: nominalController,
                 decoration: InputDecoration(
-                  labelText: 'Nama Mitra Industri',
+                  labelText: 'Nama Organizer',
                   labelStyle: grayTextStyle.copyWith(fontSize: 14),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
@@ -114,7 +113,7 @@ class EditMitra extends StatelessWidget {
         'Jakarta',
         'Surabaya',
       ];
-      String? selectedProvince = 'Jawa Tengah'; // Set default selected province
+      String? selectedProvince = 'Jawa Tengah';
 
       return Container(
         margin: EdgeInsets.only(top: 18, left: 30, right: 30),
@@ -124,9 +123,9 @@ class EditMitra extends StatelessWidget {
               height: 53,
               child: DropdownButtonFormField<String>(
                 decoration: InputDecoration(
-                  labelText: 'Provinsi Mitra',
+                  labelText: 'Provinsi',
                   labelStyle: grayTextStyle.copyWith(fontSize: 14),
-                  floatingLabelBehavior: FloatingLabelBehavior.always, // Always show the label
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
                       color: primaryColor,
@@ -178,7 +177,7 @@ class EditMitra extends StatelessWidget {
         'Sukoharjo',
         'Salatiga',
       ];
-      String? selectedCity = 'Semarang'; // Set default selected province
+      String? selectedCity = 'Semarang';
 
       return Container(
         margin: EdgeInsets.only(top: 18, left: 30, right: 30),
@@ -188,9 +187,9 @@ class EditMitra extends StatelessWidget {
               height: 53,
               child: DropdownButtonFormField<String>(
                 decoration: InputDecoration(
-                  labelText: 'Kota Mitra',
+                  labelText: 'Kota',
                   labelStyle: grayTextStyle.copyWith(fontSize: 14),
-                  floatingLabelBehavior: FloatingLabelBehavior.always, // Always show the label
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
                       color: primaryColor,
@@ -236,7 +235,7 @@ class EditMitra extends StatelessWidget {
     }
 
     Widget alamatInput() {
-      TextEditingController nominalController = TextEditingController(text: 'Jalan Mawar No 23'); // Set initial text
+      TextEditingController nominalController = TextEditingController(text: 'Jalan Mawar');
 
       return Container(
         margin: EdgeInsets.only(top: 25, left: 30, right: 30),
@@ -286,7 +285,7 @@ class EditMitra extends StatelessWidget {
     }
 
     Widget pictureInput() {
-      TextEditingController nominalController = TextEditingController(text: 'WhatsApp Image 2024-11-08'); // Set initial text
+      TextEditingController nominalController = TextEditingController(text: 'WhatsApp Image 2024-11-08');
 
       return Container(
         margin: EdgeInsets.only(top: 25, left: 30, right: 30),
@@ -297,7 +296,7 @@ class EditMitra extends StatelessWidget {
               child: TextFormField(
                 controller: nominalController,
                 decoration: InputDecoration(
-                  labelText: 'Gambar Mitra Industri',
+                  labelText: 'Gambar Organizer',
                   labelStyle: grayTextStyle.copyWith(fontSize: 14),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
@@ -348,7 +347,7 @@ class EditMitra extends StatelessWidget {
     }
 
     Widget deskripsiInput() {
-      TextEditingController nominalController = TextEditingController(text: 'Di industri musik');
+      TextEditingController nominalController = TextEditingController(text: 'Membuat event seputar bidang kuliner');
 
       return Container(
         margin: EdgeInsets.only(top: 25, left: 30, right: 30),
@@ -359,7 +358,7 @@ class EditMitra extends StatelessWidget {
               child: TextFormField(
                 controller: nominalController,
                 decoration: InputDecoration(
-                  labelText: 'Deskripsi Mitra Industri',
+                  labelText: 'Deskripsi Organizer',
                   labelStyle: grayTextStyle.copyWith(fontSize: 14),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
@@ -389,7 +388,7 @@ class EditMitra extends StatelessWidget {
     Widget simpanButton() {
       return Container(
         height: 40,
-        margin: EdgeInsets.only(left: 30, right: 30, bottom: 0, top: 60),
+        margin: EdgeInsets.only(left: 30, right: 30, bottom: 30, top: 0),
         width: double.infinity,
         child: TextButton(
           onPressed: () {
@@ -416,9 +415,8 @@ class EditMitra extends StatelessWidget {
       );
     }
 
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      body: SafeArea(
+    Widget content() {
+      return SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -429,12 +427,16 @@ class EditMitra extends StatelessWidget {
               alamatInput(),
               pictureInput(),
               deskripsiInput(),
-              simpanButton(),
-              SizedBox(height: 15),
             ],
           ),
         ),
-      ),
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: backgroundColor,
+      body: content(),
+      bottomNavigationBar: simpanButton(),
     );
   }
 }
