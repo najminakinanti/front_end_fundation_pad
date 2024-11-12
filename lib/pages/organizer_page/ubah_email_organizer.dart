@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../theme.dart';
 
-class UbahNomor extends StatelessWidget {
+class UbahEmailOrganizer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
@@ -13,7 +13,7 @@ class UbahNomor extends StatelessWidget {
           backgroundColor: backgroundColor,
           centerTitle: false,
           title: Text(
-            'Ubah Nomor',
+            'Ubah Email',
             style: blackTextStyle.copyWith(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -49,8 +49,8 @@ class UbahNomor extends StatelessWidget {
       );
     }
 
-    Widget telp() {
-      TextEditingController nominalController = TextEditingController(text: '088851453890'); // Set initial text
+    Widget email() {
+      TextEditingController nominalController = TextEditingController(text: 'fazaya123@gmail.com');
 
       return Container(
         margin: EdgeInsets.only(top: 25, left: 30, right: 30),
@@ -61,7 +61,7 @@ class UbahNomor extends StatelessWidget {
               child: TextFormField(
                 controller: nominalController,
                 decoration: InputDecoration(
-                  labelText: 'Nomor Telephone',
+                  labelText: 'Email',
                   labelStyle: grayTextStyle.copyWith(fontSize: 14),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
@@ -78,7 +78,7 @@ class UbahNomor extends StatelessWidget {
                       color: primaryColor,
                     ),
                   ),
-                  floatingLabelBehavior: FloatingLabelBehavior.always,  // Keep label above input
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
                   suffixIcon: Padding(
                     padding: EdgeInsets.all(10),
                     child: GestureDetector(
@@ -105,7 +105,7 @@ class UbahNomor extends StatelessWidget {
           child: Column(
             children: [
               header(),
-              telp(),
+              email(),
             ],
           ),
         ),

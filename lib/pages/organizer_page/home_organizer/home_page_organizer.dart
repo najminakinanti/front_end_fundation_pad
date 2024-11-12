@@ -3,7 +3,14 @@ import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/organizer/event_card_organizer.dart';
 import 'package:pad_fundation/widgets/organizer/event_tile_organizer.dart';
 
-class HomePageOrganizer extends StatelessWidget {
+class HomePageOrganizer extends StatefulWidget {
+  @override
+  _HomePageOrganizerState createState() => _HomePageOrganizerState();
+}
+
+class _HomePageOrganizerState extends State<HomePageOrganizer> {
+  bool _isBalanceVisible = true;
+
   @override
   Widget build(BuildContext context) {
 
@@ -15,7 +22,7 @@ class HomePageOrganizer extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 25,
-                backgroundImage: AssetImage('assets/img_bittersweet.png'),
+                backgroundImage: AssetImage('assets/img_profile_org.png'),
               ),
               SizedBox(width: 10,),
               Column(
@@ -75,7 +82,7 @@ class HomePageOrganizer extends StatelessWidget {
 
     Widget searchBar() {
       return Padding(
-        padding: EdgeInsets.only(top: 16),
+        padding: EdgeInsets.only(top: 18),
         child: TextButton(
           onPressed: () {},
           style: TextButton.styleFrom(
@@ -99,6 +106,110 @@ class HomePageOrganizer extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      );
+    }
+
+    Widget yellowSection(BuildContext context) {
+      // double screenWidth = MediaQuery.of(context).size.width;
+      return Container(
+        margin: EdgeInsets.only(top: 18),
+        child: Row(
+          children: [
+            Expanded(
+              child: Container(
+                height: 50,
+                padding: EdgeInsets.fromLTRB(17, 7, 0, 7),
+                decoration: BoxDecoration(
+                  color: yellow,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Total Saldo',
+                          style: blackTextStyle.copyWith(
+                            fontSize: 12,
+                            fontWeight: bold,
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _isBalanceVisible = !_isBalanceVisible;
+                            });
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(0),
+                            child: Image.asset(
+                              _isBalanceVisible
+                                  ? 'assets/icon_eye_open.png'
+                                  : 'assets/icon_eye_close.png',
+                              width: 15,
+                              height: 15,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          _isBalanceVisible ? 'Rp600.000.000' : 'Rp*****',
+                          style: blackTextStyle.copyWith(
+                            fontSize: 12,
+                            fontWeight: regular,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(width: 10),
+            Expanded(
+              child: Container(
+                height: 50,
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+                decoration: BoxDecoration(
+                  color: yellow,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/list-transaksi');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: secondaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        'assets/icon_tarik_dana.png',
+                        height: 15,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        'Tarik Dana',
+                        style: whiteTextStyle.copyWith(
+                          fontSize: 12,
+                          fontWeight: bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       );
     }
@@ -254,14 +365,14 @@ class HomePageOrganizer extends StatelessWidget {
       );
     }
 
-    Widget popularEventTitle() {
+    Widget myEventTitle() {
       return Container(
         margin: EdgeInsets.only(top: 28),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Event Populer',
+              'Event Saya',
               style: blackTextStyle.copyWith(
                 fontSize: 16,
                 fontWeight: medium,
@@ -271,7 +382,7 @@ class HomePageOrganizer extends StatelessWidget {
             Container(
               child: TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/event-by-category-organizer');
+                  // Navigator.pushNamed(context, '/event-by-category-organizer'); ke page event di main
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -298,7 +409,7 @@ class HomePageOrganizer extends StatelessWidget {
       );
     }
 
-    Widget popularEvent() {
+    Widget myEvent() {
       return Container(
         margin: EdgeInsets.only(top: 10),
         child: SingleChildScrollView(
@@ -377,9 +488,10 @@ class HomePageOrganizer extends StatelessWidget {
       children: [
         header(),
         searchBar(),
+        yellowSection(context),
         categories(),
-        popularEventTitle(),
-        popularEvent(),
+        myEventTitle(),
+        myEvent(),
         allEventTitle(),
         allEvent(),
         SizedBox(height: 80),

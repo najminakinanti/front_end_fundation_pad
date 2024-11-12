@@ -6,31 +6,45 @@ class UbahNama extends StatelessWidget {
   Widget build(BuildContext context) {
 
     Widget header() {
-      return AppBar(
-        backgroundColor: backgroundColor,
-        centerTitle: false,
-        title: Text(
-          'Ubah Nama',
-          style: blackTextStyle.copyWith(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(right: 20.0),
-              child: Image.asset(
-                'assets/icon_check.png',
-                width: 15,
-                height: 15,
-              ),
+      return Container(
+        margin: EdgeInsets.fromLTRB(10, 10, defaultMargin, 0),
+        child: AppBar(
+          backgroundColor: backgroundColor,
+          centerTitle: false,
+          title: Text(
+            'Ubah Nama',
+            style: blackTextStyle.copyWith(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
           ),
-        ],
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+            icon: Image.asset(
+              'assets/icon_panah_kiri.png',
+              width: 15,
+              height: 15,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          actions: [
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(right: 0.0),
+                child: Image.asset(
+                  'assets/icon_check.png',
+                  width: 15,
+                  height: 15,
+                ),
+              ),
+            ),
+          ],
+        ),
       );
     }
 
@@ -38,7 +52,7 @@ class UbahNama extends StatelessWidget {
       TextEditingController nominalController = TextEditingController(text: 'Govan Dwi'); // Set initial text
 
       return Container(
-        margin: EdgeInsets.only(top: 25, left: 20, right: 20),
+        margin: EdgeInsets.only(top: 25, left: 30, right: 30),
         child: Column(
           children: [
             SizedBox(

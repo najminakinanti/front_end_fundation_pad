@@ -155,7 +155,7 @@ class _NewPasswordState extends State<NewPasswordOrganizer> {
         margin: EdgeInsets.only(top: 29),
         child: TextButton(
           onPressed: () {
-            //
+            Navigator.pushNamed(context, '/login-organizer');
           },
           style: TextButton.styleFrom(
               backgroundColor: primaryColor,

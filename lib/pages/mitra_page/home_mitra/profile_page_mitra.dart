@@ -133,6 +133,7 @@ class ProfilePageMitra extends StatelessWidget {
             'GANTI KATA SANDI',
             style: whiteTextStyle.copyWith(
               fontSize: 14,
+
               fontWeight: medium,
             ),
           ),

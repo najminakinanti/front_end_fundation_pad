@@ -160,38 +160,41 @@ class _LoginPageState extends State<LoginPageOrganizer> {
     }
 
     Widget forgotPassword() {
-      return Container(
-        margin: EdgeInsets.only(top: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Checkbox(
-                  value: _rememberMe,
-                  onChanged: _toggleRememberMe,
-                  activeColor: primaryColor,
-                ),
-                Text(
-                  'Ingatkan kata sandi',
-                  style: blackTextStyle.copyWith(
-                    fontSize: 12,
-                    fontWeight: bold,
-                  ),
-                ),
-              ],
+      return Padding(
+        padding: EdgeInsets.only(top: 4),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, '/forgot-password-organizer');
+          },
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              'Lupa kata sandi?',
+              style: blueTextStyle.copyWith(
+                fontSize: 12,
+                fontWeight: regular,
+              ),
             ),
+          ),
+        ),
+      );
+    }
 
-            TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/forgot-password-organizer');
-              },
-              child: Text(
-                'Lupa kata sandi?',
-                style: blueTextStyle.copyWith(
-                  fontSize: 12,
-                  fontWeight: regular,
-                ),
+    Widget rememberMe() {
+      return Container(
+        margin: EdgeInsets.only(top: 0),
+        child: Row(
+          children: [
+            Checkbox(
+              value: _rememberMe,
+              onChanged: _toggleRememberMe,
+              activeColor: primaryColor,
+            ),
+            Text(
+              'Ingatkan kata sandi',
+              style: blackTextStyle.copyWith(
+                fontSize: 12,
+                fontWeight: bold,
               ),
             ),
           ],
@@ -228,7 +231,7 @@ class _LoginPageState extends State<LoginPageOrganizer> {
 
     Widget haveAccount() {
       return Container(
-        margin: EdgeInsets.only(top: 8),
+        margin: EdgeInsets.only(top: 0, bottom: 25,),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -289,7 +292,9 @@ class _LoginPageState extends State<LoginPageOrganizer> {
             SizedBox(height: 15),
 
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, '/register-organizer');
+              },
               style: TextButton.styleFrom(
                   backgroundColor: buttonColor,
                   shape: RoundedRectangleBorder(
@@ -338,6 +343,7 @@ class _LoginPageState extends State<LoginPageOrganizer> {
                     emailInput(),
                     passwordInput(),
                     forgotPassword(),
+                    rememberMe(),
                     loginButton(),
                     haveAccount(),
                   ],

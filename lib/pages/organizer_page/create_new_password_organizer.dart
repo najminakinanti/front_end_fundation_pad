@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 
-class NewPasswordMitra extends StatefulWidget {
+class CreateNewPasswordOrganizer extends StatefulWidget {
   @override
-  _NewPasswordState createState() => _NewPasswordState();
+  _CreateNewPasswordOrganizerState createState() => _CreateNewPasswordOrganizerState();
 }
 
-class _NewPasswordState extends State<NewPasswordMitra> {
+class _CreateNewPasswordOrganizerState extends State<CreateNewPasswordOrganizer> {
   bool _isPasswordObscured = true;
   bool _isConfirmPasswordObscured = true;
 
@@ -22,6 +22,7 @@ class _NewPasswordState extends State<NewPasswordMitra> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
 
     Widget title() {
@@ -40,7 +41,7 @@ class _NewPasswordState extends State<NewPasswordMitra> {
             ),
             SizedBox(width: 20),
             Text(
-              'Kata Sandi Baru',
+              'Kata Sandi',
               style: blackTextStyle.copyWith(
                 fontSize: 20,
                 fontWeight: bold,
@@ -51,29 +52,29 @@ class _NewPasswordState extends State<NewPasswordMitra> {
       );
     }
 
-    Widget subTitle() {
-      return Container(
-        margin: EdgeInsets.only(top: 29),
-        child: Text(
-          'Buat Kata Sandi',
-          style: blackTextStyle.copyWith(
-            fontSize: 16,
-            fontWeight: bold,
-          ),
-        ),
-      );
-    }
-
     Widget description() {
       return Container(
-        margin: EdgeInsets.only(top: 10),
-        child: Text(
-          'Pastikan kata sandi sesuai kriteria keamanan dan belum pernah digunakan',
-          style: grayTextStyle.copyWith(
-            fontSize: 13,
-            fontWeight: regular,
-          ),
-          textAlign: TextAlign.center,
+        margin: EdgeInsets.only(top: 29),
+        child: Column(
+          children: [
+            Text(
+              'Buat Kata Sandi',
+              style: blackTextStyle.copyWith(
+                fontSize: 16,
+                fontWeight: bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Pastikan password sesuai kriteria keamanan dan belum pernah digunakan',
+              style: grayTextStyle.copyWith(
+                fontSize: 13,
+                fontWeight: regular,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       );
     }
@@ -148,14 +149,18 @@ class _NewPasswordState extends State<NewPasswordMitra> {
       );
     }
 
-    Widget saveButton() {
+    Widget nextButton() {
       return Container(
         height: 40,
         width: double.infinity,
         margin: EdgeInsets.only(top: 29),
         child: TextButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/login-mitra');
+            Navigator.pushNamed(
+              context,
+              '/home-organizer',
+              arguments: 3,
+            );
           },
           style: TextButton.styleFrom(
               backgroundColor: primaryColor,
@@ -180,18 +185,22 @@ class _NewPasswordState extends State<NewPasswordMitra> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Container(
-          margin: EdgeInsets.symmetric(
-            horizontal: defaultMargin,
+          margin: EdgeInsets.only(
+            top: 0,
+            bottom: 48,
+            left: defaultMargin,
+            right: defaultMargin,
           ),
+
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               title(),
-              subTitle(),
               description(),
               passwordInput(),
               passwordInputVerif(),
-              saveButton()
+              Spacer(),
+              nextButton(),
             ],
           ),
         ),
