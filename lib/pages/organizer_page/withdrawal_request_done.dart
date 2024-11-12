@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
-import 'package:pad_fundation/widgets/organizer/transaction_card.dart';
+import 'package:pad_fundation/widgets/organizer/withdrawal_request_card.dart';
 
-class ListTransaksi extends StatelessWidget {
-
+class WithdrawalRequestDone extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
@@ -32,7 +31,7 @@ class ListTransaksi extends StatelessWidget {
                     ),
                     SizedBox(width: 20),
                     Text(
-                      'List Transaksi',
+                      'Pencairan Dana',
                       style: blackTextStyle.copyWith(
                         fontSize: 20,
                         fontWeight: bold,
@@ -47,67 +46,44 @@ class ListTransaksi extends StatelessWidget {
       );
     }
 
-    Widget withdrawButton() {
+    Widget card() {
       return Container(
-        height: 40,
-        margin: EdgeInsets.only(top: 20),
-        width: double.infinity,
-        child: TextButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/penerima');
-          },
-          style: TextButton.styleFrom(
-            backgroundColor: primaryColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-              side: BorderSide(
-                color: primaryColor,
-                width: 1,
-              ),
+        margin: EdgeInsets.only(top: 15),
+        child: Column(
+          children: [
+            WithdrawalRequestCard(
+              amount: 'Rp200.000.000',
+              recipientName: 'Rila Najjakha',
+              bankAndAccountNumber: 'Nama Bank - Nomor Rekening',
+              buttonText: 'PERMINTAAN PENCAIRAN DANA GAGAL',
+              buttonColor: green,
             ),
-          ),
-          child: Text(
-            'TARIK DANA',
-            style: whiteTextStyle.copyWith(
-              fontSize: 14,
-              fontWeight: medium,
-            ),
-          ),
+          ],
         ),
       );
     }
 
     Widget body() {
       return Container(
-        margin: EdgeInsets.only(top: 25),
+        margin: EdgeInsets.only(top: 22),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TransactionCard(
-              name: 'Najmina Kinanti',
-              amount: 'Rp200.000.000,-',
-              status: 'Diproses',
-              onTap: () {
-                Navigator.pushNamed(context, '/withdrawal-req-waiting');
-                print('anti tapped!');
-              },
+            Text(
+              '*Proses Pencairan Berhasil',
+              style: blackTextStyle.copyWith(
+                fontSize: 16,
+                fontWeight: bold,
+              ),
             ),
-            TransactionCard(
-              name: 'Faza Nabila',
-              amount: 'Rp150.000.000,-',
-              status: 'Gagal',
-              onTap: () {
-                Navigator.pushNamed(context, '/withdrawal-req-failed');
-                print('faza tapped!');
-              },
-            ),
-            TransactionCard(
-              name: 'Rila Najjakha',
-              amount: 'Rp100.000.000,-',
-              status: 'Selesai',
-              onTap: () {
-                Navigator.pushNamed(context, '/withdrawal-req-done');
-                print('rila tapped!');
-              },
+            SizedBox(height: 15,),
+            Text(
+              'Dana telah berhasil dikirim oleh Admin. Terima kasih telah menunggu, dan permintaan pencairan dana Anda telah sukses diproses.',
+              style: blackTextStyle.copyWith(
+                fontSize: 11,
+                fontWeight: regular,
+              ),
+              textAlign: TextAlign.justify,
             ),
           ],
         ),
@@ -120,7 +96,7 @@ class ListTransaksi extends StatelessWidget {
             horizontal: defaultMargin
         ),
         children: [
-          withdrawButton(),
+          card(),
           body(),
         ],
       );

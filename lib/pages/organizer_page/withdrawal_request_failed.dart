@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/organizer/withdrawal_request_card.dart';
 
-class WithdrawalRequest extends StatelessWidget {
+class WithdrawalRequestFailed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
@@ -46,18 +46,45 @@ class WithdrawalRequest extends StatelessWidget {
       );
     }
 
-    Widget body() {
+    Widget card() {
       return Container(
-        margin: EdgeInsets.only(top: 25),
+        margin: EdgeInsets.only(top: 15),
         child: Column(
           children: [
             WithdrawalRequestCard(
               amount: 'Rp200.000.000',
-              recipientName: 'John Doe',
-              bankAndAccountNumber: 'Bank BCA - 1234567890',
-              buttonText: 'Permintaan Pencairan Dana Terkirim',
-              buttonColor: Colors.orange,
-            )
+              recipientName: 'Faza Nabila',
+              bankAndAccountNumber: 'Nama Bank - Nomor Rekening',
+              buttonText: 'PERMINTAAN PENCAIRAN DANA GAGAL',
+              buttonColor: brownButton,
+            ),
+          ],
+        ),
+      );
+    }
+
+    Widget body() {
+      return Container(
+        margin: EdgeInsets.only(top: 22),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '*Informasi Bank Salah',
+              style: blackTextStyle.copyWith(
+                fontSize: 16,
+                fontWeight: bold,
+              ),
+            ),
+            SizedBox(height: 15,),
+            Text(
+              'Dana tidak dapat dikirimkan karena informasi bank yang dikirimkan tidak valid. Isi permintaan pencairan dana lagi dengan data rekening yang benar!',
+              style: blackTextStyle.copyWith(
+                fontSize: 11,
+                fontWeight: regular,
+              ),
+              textAlign: TextAlign.justify,
+            ),
           ],
         ),
       );
@@ -69,6 +96,7 @@ class WithdrawalRequest extends StatelessWidget {
             horizontal: defaultMargin
         ),
         children: [
+          card(),
           body(),
         ],
       );

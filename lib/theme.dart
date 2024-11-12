@@ -29,6 +29,8 @@ Color brown = Color(0xff88650C);
 Color orange = Color(0xffF5941F);
 Color darkBrown = Color(0xff7A271A);
 Color green = Color(0xff12B76A);
+Color yellowButton = Color(0xffE2A713);
+Color brownButton = Color(0xff6E2317);
 
 // warna font
 TextStyle blackTextStyle = TextStyle(

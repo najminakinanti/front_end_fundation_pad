@@ -442,6 +442,7 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
             Container(
               child: TextButton(
                 onPressed: () {
+                  Navigator.pushNamed(context, '/all-event-organizer');
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,

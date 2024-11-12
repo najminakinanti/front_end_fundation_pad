@@ -26,12 +26,15 @@ import 'package:pad_fundation/pages/not_logged_in/home/main_page.dart';
 import 'package:pad_fundation/pages/mitra_page/login_page_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/register_page_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/register_page_mitra_add.dart';
+import 'package:pad_fundation/pages/organizer_page/all_event_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/bookmark_page_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/create_new_password_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/daftar_sponsor_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/data_penerima.dart';
 import 'package:pad_fundation/pages/organizer_page/detail_chat_event_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/detail_chat_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/detail_event_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/detail_my_event_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/edit_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/edit_password_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/event_by_category_organizer.dart';
@@ -50,7 +53,9 @@ import 'package:pad_fundation/pages/organizer_page/ubah_data_profile_organizer.d
 import 'package:pad_fundation/pages/organizer_page/ubah_email_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/ubah_nama_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/ubah_nomor_organizer.dart';
-import 'package:pad_fundation/pages/organizer_page/withdrawal_request.dart';
+import 'package:pad_fundation/pages/organizer_page/withdrawal_request_waiting.dart';
+import 'package:pad_fundation/pages/organizer_page/withdrawal_request_failed.dart';
+import 'package:pad_fundation/pages/organizer_page/withdrawal_request_done.dart';
 import 'package:pad_fundation/pages/splash_screen/choose_role.dart';
 import 'package:pad_fundation/pages/splash_screen/splash_page.dart';
 import 'package:pad_fundation/pages/splash_screen/on_boarding_page_1.dart';
@@ -131,7 +136,12 @@ class MyApp extends StatelessWidget {
         '/list-transaksi': (context) => ListTransaksi(),
         '/penerima': (context) => DataPenerima(),
         '/nominal': (context) => Nominal(),
-        '/withdrawal-req': (context) => WithdrawalRequest(),
+        '/withdrawal-req-waiting': (context) => WithdrawalRequestWaiting(),
+        '/withdrawal-req-failed': (context) => WithdrawalRequestFailed(),
+        '/withdrawal-req-done': (context) => WithdrawalRequestDone(),
+        '/all-event-organizer': (context) => AllEventOrganizer(),
+        '/daftar-sponsor-organizer': (context) => DaftarSponsorOrganizer(),
+        '/detail-my-event-organizer': (context) => DetailMyEventOrganizer(),
 
 
 
