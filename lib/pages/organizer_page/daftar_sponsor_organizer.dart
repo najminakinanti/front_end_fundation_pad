@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 
-class Nominal extends StatelessWidget {
+import '../../widgets/sponsor_card.dart';
+
+class DaftarSponsorOrganizer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
@@ -30,7 +32,7 @@ class Nominal extends StatelessWidget {
                     ),
                     SizedBox(width: 20),
                     Text(
-                      'Nominal',
+                      'Daftar Sponsor Music Fest',
                       style: blackTextStyle.copyWith(
                         fontSize: 20,
                         fontWeight: bold,
@@ -45,32 +47,34 @@ class Nominal extends StatelessWidget {
       );
     }
 
-    Widget nextButton() {
+    Widget sponsor() {
       return Container(
-        height: 40,
-        margin: EdgeInsets.only(left: 30, right: 30, bottom: 30, top: 0),
-        width: double.infinity,
-        child: TextButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/withdrawal-req-waiting');
-          },
-          style: TextButton.styleFrom(
-            backgroundColor: primaryColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-              side: BorderSide(
-                color: primaryColor,
-                width: 1,
+        margin: EdgeInsets.only(top: 5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Gold',
+              style: blackTextStyle.copyWith(
+                fontSize: 16,
+                fontWeight: medium,
               ),
             ),
-          ),
-          child: Text(
-            'LANJUTKAN',
-            style: whiteTextStyle.copyWith(
-              fontSize: 14,
-              fontWeight: bold,
+            SponsorCard(),
+            SponsorCard(),
+            SizedBox(height: 10),
+            Text(
+              'Silver',
+              style: blackTextStyle.copyWith(
+                fontSize: 16,
+                fontWeight: medium,
+              ),
             ),
-          ),
+            SponsorCard(),
+            SponsorCard(),
+            SponsorCard(),
+            SponsorCard(),
+          ],
         ),
       );
     }
@@ -81,6 +85,7 @@ class Nominal extends StatelessWidget {
             horizontal: defaultMargin
         ),
         children: [
+          sponsor(),
         ],
       );
     }
@@ -89,7 +94,7 @@ class Nominal extends StatelessWidget {
       backgroundColor: backgroundColor,
       appBar: header(),
       body: content(),
-      bottomNavigationBar: nextButton(),
     );
+
   }
 }

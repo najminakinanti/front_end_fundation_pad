@@ -5,15 +5,14 @@ import 'package:pad_fundation/widgets/information_detail_galery.dart';
 import 'package:pad_fundation/widgets/kontraprestasi_category.dart';
 import 'package:pad_fundation/widgets/sponsor_card.dart';
 
-class DetailEventOrganizer extends StatefulWidget {
+class DetailMyEventOrganizer extends StatefulWidget {
   bool isLoggedIn = true;
 
   @override
-  _DetailEventState createState() => _DetailEventState();
+  _DetailMyEventOrganizerState createState() => _DetailMyEventOrganizerState();
 }
 
-class _DetailEventState extends State<DetailEventOrganizer> {
-  bool isBookmarked = false;
+class _DetailMyEventOrganizerState extends State<DetailMyEventOrganizer> {
   int currentBatch = 0;
 
   @override
@@ -45,7 +44,7 @@ class _DetailEventState extends State<DetailEventOrganizer> {
             Row(
               children: [
                 Text(
-                  'Mufest org 2024',
+                  'Mufest my org 2024',
                   style: blackTextStyle.copyWith(
                       fontSize: 20, fontWeight: bold),
                 ),
@@ -265,9 +264,9 @@ class _DetailEventState extends State<DetailEventOrganizer> {
     }
 
     Widget informationDetail() {
-     return Container(
-       child: InformationDetailWidget(),
-     );
+      return Container(
+        child: InformationDetailWidget(),
+      );
     }
 
     Widget kontraprestasiTitle() {
@@ -415,40 +414,22 @@ class _DetailEventState extends State<DetailEventOrganizer> {
             ),
           ),
           Positioned(
-            top: 50,
+            bottom: 90,
             right: 15,
             child: GestureDetector(
               onTap: () {
-                setState(() {
-                  isBookmarked = !isBookmarked;
-                });
+                Navigator.pop(context);
               },
               child: Container(
-                width: 25,
-                height: 25,
+                width: 45,
+                height: 45,
                 decoration: BoxDecoration(
-                  color: backgroundColor3,
-                  shape: BoxShape.circle,
+                  color: backgroundColor,
+                  borderRadius: BorderRadius.circular(100),
                 ),
-                child: Center(
-                  child: Image.asset(
-                    isBookmarked ? 'assets/icon_bookmark_on.png' : 'assets/icon_bookmark_off.png',
-                    width: 15,
-                    height: 15,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 30,
-            left: 15,
-            right: 15,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ElevatedButton(
+                child: ElevatedButton(
                   onPressed: () {
+                    Navigator.pushNamed(context, '/detail-chat-event-organizer');
                     print('chat');
                   },
                   style: ElevatedButton.styleFrom(
@@ -461,39 +442,134 @@ class _DetailEventState extends State<DetailEventOrganizer> {
                   ),
                   child: Image.asset(
                     'assets/icon_chat_2.png',
-                    width: 24,
-                    height: 24,
                   ),
                 ),
-                SizedBox(width: 6),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      print('ajukan dari organizer');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryColor,
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      minimumSize: Size(0, 50),
-                    ),
-                    child: Text(
-                      'AJUKAN SPONSOR',
-                      style: whiteTextStyle.copyWith(
-                        fontSize: 16,
-                        fontWeight: bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
+          ),
+          Positioned(
+            bottom: 30,
+            left: 15,
+            right: 15,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        print('chat');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: yellowButton,
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        minimumSize: Size(0, 50),
+                      ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Ubah Event',
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 16,
+                                fontWeight: bold,
+                              ),
+                            ),
+                            SizedBox(width: 6),
+                            Image.asset(
+                              'assets/icon_edit.png',
+                              width: 20,
+                              height: 20,
+                            ),
+                          ],
+                        )
+                    ),
+                  ),
+                  SizedBox(width: 6),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        showConfirmationDialog(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: darkBrown,
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        minimumSize: Size(0, 50),
+                      ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Hapus Event',
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 16,
+                                fontWeight: bold,
+                              ),
+                            ),
+                            SizedBox(width: 6),
+                            Image.asset(
+                              'assets/icon_trash.png',
+                              width: 20,
+                              height: 20,
+                            ),
+                          ],
+                        )
+                    ),
+                  ),
+                ],
+              )
           )
-
         ],
       ),
+    );
+  }
+  void showConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Konfirmasi Hapus',
+            style: blackTextStyle.copyWith(fontSize: 14, fontWeight: bold),
+          ),
+          content: Container(
+            width: 250,
+            child: Text(
+              'Apakah Anda yakin untuk menghapus event ini?',
+              style: blackTextStyle.copyWith(fontSize: 12, fontWeight: regular),
+            ),
+          ),
+          contentPadding: EdgeInsets.fromLTRB(25, 10, 10, 0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'BATAL',
+                style: navyTextStyle.copyWith(fontSize: 12, fontWeight: regular),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/choose-role');
+              },
+              child: Text(
+                'YA',
+                style: navyTextStyle.copyWith(fontSize: 12, fontWeight: regular),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
