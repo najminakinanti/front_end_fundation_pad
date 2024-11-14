@@ -23,6 +23,10 @@ Color lineColor2 = Color(0xffB8C3C2);
 Color lineColor3 = Color(0xffCCCCCC);
 Color sageGreen4 = Color(0xff667E7C);
 Color lightYellow = Color(0xffFCDE93);
+Color button = Color(0xffFACE98);
+Color backgroundyellow = Color(0xffFFEF4E9);
+
+
 
 // warna font
 TextStyle blackTextStyle = TextStyle(
