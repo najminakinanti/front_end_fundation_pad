@@ -643,8 +643,6 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
       );
     }
 
-
-
     Widget _buildDataEventSection() {
       return Stack(
         children: [

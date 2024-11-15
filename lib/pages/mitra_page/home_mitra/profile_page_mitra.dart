@@ -393,7 +393,7 @@ class ProfilePageMitra extends StatelessWidget {
         width: double.infinity,
         child: TextButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/choose-role');
+            showConfirmationDialog(context);
           },
           style: TextButton.styleFrom(
             backgroundColor: buttonColor,
@@ -527,6 +527,50 @@ class ProfilePageMitra extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+  void showConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Konfirmasi Keluar',
+            style: blackTextStyle.copyWith(fontSize: 14, fontWeight: bold),
+          ),
+          content: Container(
+            width: 250,
+            child: Text(
+              'Apakah Anda yakin ingin keluar dari aplikasi?',
+              style: blackTextStyle.copyWith(fontSize: 12, fontWeight: regular),
+            ),
+          ),
+          contentPadding: EdgeInsets.fromLTRB(25, 10, 10, 0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'BATAL',
+                style: navyTextStyle.copyWith(fontSize: 12, fontWeight: regular),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/choose-role');
+              },
+              child: Text(
+                'YA',
+                style: navyTextStyle.copyWith(fontSize: 12, fontWeight: regular),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

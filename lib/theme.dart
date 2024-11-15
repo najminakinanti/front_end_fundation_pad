@@ -36,6 +36,7 @@ Color pinkButton = Color(0xffEB6753);
 Color extendColor = Color(0xffDDDDDE);
 Color button = Color(0xffFACE98);
 Color backgroundyellow = Color(0xffFFEF4E9);
+Color grayStepper = Color(0xffCCCCCC);
 
 // warna font
 TextStyle blackTextStyle = TextStyle(

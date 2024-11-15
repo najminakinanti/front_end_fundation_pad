@@ -85,7 +85,7 @@ class EventPageOrganizer extends StatelessWidget {
         width: double.infinity,
         child: TextButton(
           onPressed: () {
-            // Navigator.pushNamed(context, '/withdrawal-req-waiting');
+            Navigator.pushNamed(context, '/add-event');
           },
           style: TextButton.styleFrom(
             backgroundColor: primaryColor,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 
-class TambahBuktiKontraprestasi extends StatelessWidget {
+class UbahBuktiKontraprestasi extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class TambahBuktiKontraprestasi extends StatelessWidget {
                     ),
                     SizedBox(width: 20),
                     Text(
-                      'Tambah Bukti Kontraprestasi',
+                      'Ubah Bukti Kontraprestasi',
                       style: blackTextStyle.copyWith(
                         fontSize: 20,
                         fontWeight: bold,
@@ -91,7 +91,7 @@ class TambahBuktiKontraprestasi extends StatelessWidget {
                 decoration: InputDecoration(
                   labelText: 'Foto Kontraprestasi',
                   labelStyle: grayTextStyle.copyWith(fontSize: 14),
-                  hintText: 'Masukkan foto',
+                  hintText: 'WA-0987568487',
                   hintStyle: grayTextStyle.copyWith(
                     fontSize: 14,
                     fontWeight: regular,
@@ -166,7 +166,122 @@ class TambahBuktiKontraprestasi extends StatelessWidget {
                   decoration: InputDecoration(
                     labelText: 'Deskripsi Kontraprestasi',
                     labelStyle: grayTextStyle.copyWith(fontSize: 14),
-                    hintText: 'Masukkan Deskripsi Kontraprestasi',
+                    hintText: 'Umbul-Umbul 3x4 di depan stand',
+                    hintStyle: grayTextStyle.copyWith(
+                      fontSize: 14,
+                      fontWeight: regular,
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: primaryColor),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: primaryColor),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: primaryColor),
+                    ),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    Widget fotoKontraprestasi2() {
+      TextEditingController nominalController = TextEditingController();
+
+      return Container(
+        margin: EdgeInsets.only(top: 10),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 48,
+              child: TextFormField(
+                controller: nominalController,
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText: 'Foto Kontraprestasi',
+                  labelStyle: grayTextStyle.copyWith(fontSize: 14),
+                  hintText: 'WA-09875683593',
+                  hintStyle: grayTextStyle.copyWith(
+                    fontSize: 14,
+                    fontWeight: regular,
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: primaryColor),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: primaryColor),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: primaryColor),
+                  ),
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                  contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                  suffixIcon: GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      margin: EdgeInsets.only(right: 0),
+                      width: 80,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(color: primaryColor),
+                          right: BorderSide(color: primaryColor),
+                          bottom: BorderSide(color: primaryColor),
+                        ),
+                        color: sageGreen2,
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(5),
+                          bottomRight: Radius.circular(5),
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Unggah',
+                          style: greenTextStyle.copyWith(
+                            fontSize: 14,
+                            fontWeight: regular,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    Widget deskripsiKontraprestasi2() {
+      TextEditingController nominalController = TextEditingController();
+      bool isCleared = false;
+
+      return Container(
+        margin: EdgeInsets.only(top: 25),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 48,
+              child: Focus(
+                onFocusChange: (hasFocus) {
+                  if (hasFocus && !isCleared) {
+                    nominalController.clear();
+                    isCleared = true;
+                  }
+                },
+                child: TextFormField(
+                  controller: nominalController,
+                  decoration: InputDecoration(
+                    labelText: 'Deskripsi Kontraprestasi',
+                    labelStyle: grayTextStyle.copyWith(fontSize: 14),
+                    hintText: 'Logo di sertifikat',
                     hintStyle: grayTextStyle.copyWith(
                       fontSize: 14,
                       fontWeight: regular,
@@ -198,7 +313,6 @@ class TambahBuktiKontraprestasi extends StatelessWidget {
         width: double.infinity,
         child: TextButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/ubah-bukti-kontraprestasi');
 
           },
           style: TextButton.styleFrom(
@@ -257,12 +371,12 @@ class TambahBuktiKontraprestasi extends StatelessWidget {
                         child: Container(
                           padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
-                            color: sageGreen3,
+                            color: button,
                             borderRadius: BorderRadius.circular(5),
                           ),
                           child: Text(
                             'Bukti Kontraprestasi 1',
-                            style: whiteTextStyle.copyWith(
+                            style: blackTextStyle.copyWith(
                               fontSize: 12,
                               fontWeight: regular,
                             ),
@@ -289,8 +403,8 @@ class TambahBuktiKontraprestasi extends StatelessWidget {
                         ),
                         child: Column(
                           children: [
-                            fotoKontraprestasi(),
-                            deskripsiKontraprestasi(),
+                            fotoKontraprestasi2(),
+                            deskripsiKontraprestasi2(),
                           ],
                         ),
                       ),
@@ -300,12 +414,12 @@ class TambahBuktiKontraprestasi extends StatelessWidget {
                         child: Container(
                           padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
-                            color: sageGreen3,
+                            color: button,
                             borderRadius: BorderRadius.circular(5),
                           ),
                           child: Text(
                             'Bukti Kontraprestasi 2',
-                            style: whiteTextStyle.copyWith(
+                            style: blackTextStyle.copyWith(
                               fontSize: 12,
                               fontWeight: regular,
                             ),
@@ -342,7 +456,7 @@ class TambahBuktiKontraprestasi extends StatelessWidget {
           content: Container(
             width: 250,
             child: Text(
-              'Kontraprestasi berhasil ditambahkan!',
+              'Perubahan kontraprestasi berhasil disimpan!',
               style: blackTextStyle.copyWith(fontSize: 12, fontWeight: regular),
             ),
           ),

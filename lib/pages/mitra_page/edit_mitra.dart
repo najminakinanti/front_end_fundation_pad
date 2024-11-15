@@ -59,7 +59,6 @@ class EditMitra extends StatelessWidget {
       );
     }
 
-
     Widget namaInput() {
       TextEditingController nominalController = TextEditingController(text: 'GOVAN'); // Set initial text
 

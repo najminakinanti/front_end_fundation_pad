@@ -58,26 +58,34 @@ class HomePage extends StatelessWidget {
 
     Widget searchBar() {
       return Padding(
-        padding: EdgeInsets.only(top: 16),
-        child: TextButton(
-          onPressed: () {},
-          style: TextButton.styleFrom(
-            backgroundColor: textColor3,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            padding: EdgeInsets.symmetric(vertical: 12),
+        padding: EdgeInsets.only(top: 18),
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+          decoration: BoxDecoration(
+            color: textColor3,
+            borderRadius: BorderRadius.circular(10),
           ),
           child: Row(
             children: [
-              SizedBox(width: 10),
               Image.asset('assets/icon_search.png', width: 18),
               SizedBox(width: 10),
-              Text(
-                'Cari Event',
-                style: veryLightGrayTextStyle.copyWith(
-                  fontSize: 16,
-                  fontWeight: medium,
+              Expanded(
+                child: TextField(
+                  onChanged: (value) {
+
+                  },
+                  style: veryLightGrayTextStyle.copyWith(
+                    fontSize: 16,
+                    fontWeight: medium,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'Cari Event',
+                    hintStyle: veryLightGrayTextStyle.copyWith(
+                      fontSize: 16,
+                      fontWeight: medium,
+                    ),
+                    border: InputBorder.none,
+                  ),
                 ),
               ),
             ],

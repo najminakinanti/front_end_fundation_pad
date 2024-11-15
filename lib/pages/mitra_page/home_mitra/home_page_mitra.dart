@@ -77,26 +77,34 @@ class HomePageMitra extends StatelessWidget {
 
     Widget searchBar() {
       return Padding(
-        padding: EdgeInsets.only(top: 16),
-        child: TextButton(
-          onPressed: () {},
-          style: TextButton.styleFrom(
-            backgroundColor: textColor3,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            padding: EdgeInsets.symmetric(vertical: 12),
+        padding: EdgeInsets.only(top: 18),
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+          decoration: BoxDecoration(
+            color: textColor3,
+            borderRadius: BorderRadius.circular(10),
           ),
           child: Row(
             children: [
-              SizedBox(width: 10),
               Image.asset('assets/icon_search.png', width: 18),
-              SizedBox(width: 5),
-              Text(
-                'Cari Event',
-                style: veryLightGrayTextStyle.copyWith(
-                  fontSize: 16,
-                  fontWeight: medium,
+              SizedBox(width: 10),
+              Expanded(
+                child: TextField(
+                  onChanged: (value) {
+
+                  },
+                  style: veryLightGrayTextStyle.copyWith(
+                    fontSize: 16,
+                    fontWeight: medium,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'Cari Event',
+                    hintStyle: veryLightGrayTextStyle.copyWith(
+                      fontSize: 16,
+                      fontWeight: medium,
+                    ),
+                    border: InputBorder.none,
+                  ),
                 ),
               ),
             ],
@@ -133,7 +141,7 @@ class HomePageMitra extends StatelessWidget {
                 Text(
                   'Festival',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -161,7 +169,7 @@ class HomePageMitra extends StatelessWidget {
                 Text(
                   'Kuliner',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -189,7 +197,7 @@ class HomePageMitra extends StatelessWidget {
                 Text(
                   'Pendidikan',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -217,7 +225,7 @@ class HomePageMitra extends StatelessWidget {
                 Text(
                   'Seniman',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -245,7 +253,7 @@ class HomePageMitra extends StatelessWidget {
                 Text(
                   'Lainnya',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -282,7 +290,7 @@ class HomePageMitra extends StatelessWidget {
                     Text(
                       'Lihat Semua',
                       style: grayTextStyle.copyWith(
-                        fontSize: 10,
+                        fontSize: 12,
                         fontWeight: regular,
                       ),
                     ),
@@ -342,7 +350,7 @@ class HomePageMitra extends StatelessWidget {
                     Text(
                       'Lihat Semua',
                       style: grayTextStyle.copyWith(
-                        fontSize: 10,
+                        fontSize: 12,
                         fontWeight: regular,
                       ),
                     ),
