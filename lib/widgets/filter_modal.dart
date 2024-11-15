@@ -23,7 +23,7 @@ class FilterModal extends StatelessWidget {
               for (var label in ['Festival', 'Musik', 'Pendidikan', 'Kuliner', 'Pameran', 'Formal', 'Informal', 'Tari'])
                 FilterChip(
                   label: SizedBox(
-                    width: 70,
+                    width: 65,
                     child: Center(
                       child: Text(
                         label,

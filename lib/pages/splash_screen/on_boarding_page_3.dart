@@ -24,7 +24,7 @@ class OnBoardingPage3 extends StatelessWidget {
                       height: 297.02,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage('assets/img_splash_2.png'),
+                          image: AssetImage('assets/img_splash_3.png'),
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -37,7 +37,7 @@ class OnBoardingPage3 extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: blackTextStyle.copyWith(
                       fontSize: 16,
-                      fontWeight: semiBold,
+                      fontWeight: bold,
                     ),
                   ),
 
@@ -80,7 +80,6 @@ class OnBoardingPage3 extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
-                            // Navigate to the next page
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) => ChooseRole()),
@@ -92,7 +91,6 @@ class OnBoardingPage3 extends StatelessWidget {
                               style: whiteTextStyle.copyWith(
                                 fontSize: 20,
                                 fontWeight: bold,
-                                color: Colors.white,
                               ),
                             ),
                           ),
@@ -104,7 +102,7 @@ class OnBoardingPage3 extends StatelessWidget {
                   Align(
                     alignment: Alignment.centerRight,
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 15, top: 10),
+                      padding: const EdgeInsets.only(right: 15, top: 5),
                       child: TextButton(
                         onPressed: () {
                           Navigator.pushNamed(context, '/home');
@@ -112,7 +110,7 @@ class OnBoardingPage3 extends StatelessWidget {
                         child: Text(
                           'Masuk Tanpa Akun',
                           style: greenTextStyle.copyWith(
-                            fontSize: 11,
+                            fontSize: 12,
                             fontWeight: bold,
                           ),
                         ),

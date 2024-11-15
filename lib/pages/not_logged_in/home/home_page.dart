@@ -72,7 +72,7 @@ class HomePage extends StatelessWidget {
             children: [
               SizedBox(width: 10),
               Image.asset('assets/icon_search.png', width: 18),
-              SizedBox(width: 5),
+              SizedBox(width: 10),
               Text(
                 'Cari Event',
                 style: veryLightGrayTextStyle.copyWith(
@@ -97,7 +97,6 @@ class HomePage extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Text Section
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,7 +105,7 @@ class HomePage extends StatelessWidget {
                     'Punya Event?',
                     style: blackTextStyle.copyWith(
                       fontSize: 14,
-                      fontWeight: medium,
+                      fontWeight: bold,
                     ),
                   ),
                   SizedBox(height: 8),
@@ -114,20 +113,20 @@ class HomePage extends StatelessWidget {
                     'Jadilah Partner Kami',
                     style: blackTextStyle.copyWith(
                       fontSize: 12,
-                      fontWeight: regular,
+                      fontWeight: semiBold,
                     ),
                   ),
                   SizedBox(height: 8),
                   Text(
                     'Daftar sekarang dan rasakan keuntungan menjadi bagian dari kami',
                     style: blackTextStyle.copyWith(
-                      fontSize: 10,
+                      fontSize: 12,
                       fontWeight: regular,
                     ),
                   ),
                   SizedBox(height: 20),
                   Container(
-                    height: 32,
+                    height: 35,
                     child: TextButton(
                       onPressed: () {
                         Navigator.pushNamed(context, '/register-organizer');
@@ -145,14 +144,14 @@ class HomePage extends StatelessWidget {
                           Text(
                             'DAFTAR SEKARANG',
                             style: whiteTextStyle.copyWith(
-                              fontSize: 12,
+                              fontSize: 14,
                               fontWeight: bold,
                             ),
                           ),
                           SizedBox(width: 5),
                           Image.asset(
                             'assets/icon_panah_kanan.png',
-                            width: 5,
+                            width: 6,
                           ),
                         ],
                       ),
@@ -163,7 +162,7 @@ class HomePage extends StatelessWidget {
             ),
             Image.asset(
               'assets/img_promotion.png',
-              height: 141,
+              height: 160,
             ),
           ],
         ),
@@ -198,7 +197,7 @@ class HomePage extends StatelessWidget {
                 Text(
                   'Festival',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -227,7 +226,7 @@ class HomePage extends StatelessWidget {
                 Text(
                   'Kuliner',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -256,7 +255,7 @@ class HomePage extends StatelessWidget {
                 Text(
                   'Pendidikan',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -285,7 +284,7 @@ class HomePage extends StatelessWidget {
                 Text(
                   'Seniman',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -314,7 +313,7 @@ class HomePage extends StatelessWidget {
                 Text(
                   'Lainnya',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -327,7 +326,7 @@ class HomePage extends StatelessWidget {
 
     Widget popularEventTitle() {
       return Container(
-        margin: EdgeInsets.only(top: 28),
+        margin: EdgeInsets.only(top: 18),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -351,7 +350,7 @@ class HomePage extends StatelessWidget {
                     Text(
                       'Lihat Semua',
                       style: grayTextStyle.copyWith(
-                        fontSize: 10,
+                        fontSize: 12,
                         fontWeight: regular,
                       ),
                     ),
@@ -411,7 +410,7 @@ class HomePage extends StatelessWidget {
                     Text(
                       'Lihat Semua',
                       style: grayTextStyle.copyWith(
-                        fontSize: 10,
+                        fontSize: 12,
                         fontWeight: regular,
                       ),
                     ),

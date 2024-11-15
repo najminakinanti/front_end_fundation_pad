@@ -35,7 +35,7 @@ class OnBoardingPage1 extends StatelessWidget {
                   'Kemudahan Pencarian Dana',
                   style: blackTextStyle.copyWith(
                     fontSize: 16,
-                    fontWeight: semiBold,
+                    fontWeight: bold,
                   ),
                 ),
                 SizedBox(height: 10),
@@ -88,7 +88,6 @@ class OnBoardingPage1 extends StatelessWidget {
                             style: whiteTextStyle.copyWith(
                               fontSize: 20,
                               fontWeight: bold,
-                              color: Colors.white,
                             ),
                           ),
                         ),

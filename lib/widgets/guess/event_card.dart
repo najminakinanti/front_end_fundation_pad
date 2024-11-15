@@ -8,7 +8,6 @@ class EventCard extends StatefulWidget {
 }
 
 class _EventCardState extends State<EventCard> {
-  bool isBookmarked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -52,33 +51,6 @@ class _EventCardState extends State<EventCard> {
                       style: orangeTextStyle.copyWith(
                         fontSize: 10,
                         fontWeight: bold,
-                      ),
-                    ),
-                  ),
-                ),
-                
-                Positioned(
-                  top: 10,
-                  right: 10,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isBookmarked = !isBookmarked;
-                      });
-                    },
-                    child: Container(
-                      width: 25,
-                      height: 25,
-                      decoration: BoxDecoration(
-                        color: backgroundColor3,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Image.asset(
-                          isBookmarked ? 'assets/icon_bookmark_on.png' : 'assets/icon_bookmark_off.png',
-                          width: 15,
-                          height: 15,
-                        ),
                       ),
                     ),
                   ),

@@ -6,32 +6,47 @@ class DetailChatOrganizer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    AppBar header() {
-      return AppBar(
-        backgroundColor: backgroundColor,
-        centerTitle: false,
-        title: Row(
-          children: [
-            Image.asset(
-              'assets/img_chat3.png',
-              width: 40,
-            ),
-            SizedBox(
-              width: 12,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    PreferredSize header() {
+      return PreferredSize(
+        preferredSize: Size.fromHeight(75.0),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: backgroundColor,
+          centerTitle: false,
+          flexibleSpace: Container(
+            margin: EdgeInsets.fromLTRB(defaultMargin, defaultMargin, defaultMargin, 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(
-                  'Nama Mitra Industri',
-                  style: blackTextStyle.copyWith(
-                    fontWeight: bold,
-                    fontSize: 14,
-                  ),
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Image.asset(
+                        'assets/icon_panah_kiri.png',
+                        width: 8,
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    Image.asset(
+                      'assets/img_chat3.png',
+                      width: 40,
+                    ),
+                    SizedBox(width: 12),
+                    Text(
+                      'Nama Mitra Industri',
+                      style: blackTextStyle.copyWith(
+                        fontWeight: bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
                 ),
               ],
-            )
-          ],
+            ),
+          ),
         ),
       );
     }
@@ -39,7 +54,7 @@ class DetailChatOrganizer extends StatelessWidget {
     Widget chatDate() {
       return Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20),
+          padding: const EdgeInsets.only(bottom: 20),
           child: Text(
             'Minggu, 7 April 2024',
             style: grayTextStyle.copyWith(fontSize: 14),
@@ -94,7 +109,6 @@ class DetailChatOrganizer extends StatelessWidget {
         ),
       );
     }
-
 
     Widget content() {
       return ListView(

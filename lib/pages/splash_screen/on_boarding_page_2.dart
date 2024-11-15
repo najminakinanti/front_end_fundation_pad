@@ -35,7 +35,7 @@ class OnBoardingPage2 extends StatelessWidget {
                   'Memperluas Jangkauan Brand',
                   style: blackTextStyle.copyWith(
                     fontSize: 16,
-                    fontWeight: semiBold,
+                    fontWeight: bold,
                   ),
                 ),
 
@@ -90,7 +90,6 @@ class OnBoardingPage2 extends StatelessWidget {
                             style: whiteTextStyle.copyWith(
                               fontSize: 20,
                               fontWeight: bold,
-                              color: Colors.white,
                             ),
                           ),
                         ),

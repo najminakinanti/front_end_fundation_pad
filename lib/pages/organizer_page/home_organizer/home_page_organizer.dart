@@ -4,6 +4,9 @@ import 'package:pad_fundation/widgets/organizer/event_card_organizer.dart';
 import 'package:pad_fundation/widgets/organizer/event_tile_organizer.dart';
 
 class HomePageOrganizer extends StatefulWidget {
+  final VoidCallback onNavigateToEvent;
+  HomePageOrganizer({required this.onNavigateToEvent});
+
   @override
   _HomePageOrganizerState createState() => _HomePageOrganizerState();
 }
@@ -83,25 +86,33 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
     Widget searchBar() {
       return Padding(
         padding: EdgeInsets.only(top: 18),
-        child: TextButton(
-          onPressed: () {},
-          style: TextButton.styleFrom(
-            backgroundColor: textColor3,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            padding: EdgeInsets.symmetric(vertical: 12),
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+          decoration: BoxDecoration(
+            color: textColor3,
+            borderRadius: BorderRadius.circular(10),
           ),
           child: Row(
             children: [
-              SizedBox(width: 10),
               Image.asset('assets/icon_search.png', width: 18),
-              SizedBox(width: 5),
-              Text(
-                'Cari Event',
-                style: veryLightGrayTextStyle.copyWith(
-                  fontSize: 16,
-                  fontWeight: medium,
+              SizedBox(width: 10),
+              Expanded(
+                child: TextField(
+                  onChanged: (value) {
+
+                  },
+                  style: veryLightGrayTextStyle.copyWith(
+                    fontSize: 16,
+                    fontWeight: medium,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'Cari Event',
+                    hintStyle: veryLightGrayTextStyle.copyWith(
+                      fontSize: 16,
+                      fontWeight: medium,
+                    ),
+                    border: InputBorder.none,
+                  ),
                 ),
               ),
             ],
@@ -381,9 +392,7 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
 
             Container(
               child: TextButton(
-                onPressed: () {
-                  // Navigator.pushNamed(context, '/event-by-category-organizer'); ke page event di main
-                },
+                onPressed: widget.onNavigateToEvent,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -404,6 +413,7 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
                 ),
               ),
             )
+
           ],
         ),
       );

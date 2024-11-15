@@ -45,6 +45,88 @@ class Nominal extends StatelessWidget {
       );
     }
 
+    Widget nominal() {
+      TextEditingController controller = TextEditingController();
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 20),
+          Text(
+            'Nominal',
+            style: lighGrayTextStyle.copyWith(fontSize: 14),
+          ),
+          SizedBox(height: 3),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Rp ',
+                style: blackTextStyle.copyWith(fontSize: 34, fontWeight: bold),
+              ),
+              Expanded(
+                child: TextField(
+                  controller: controller,
+                  keyboardType: TextInputType.number,
+                  style: blackTextStyle.copyWith(fontSize: 34, fontWeight: bold),
+                  decoration: InputDecoration(
+                    hintText: '0',
+                    hintStyle: blackTextStyle.copyWith(fontSize: 34, fontWeight: bold),
+                    border: InputBorder.none,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Divider(
+            thickness: 2,
+            color: Colors.black,
+            indent: 0,
+            endIndent: 0,
+          ),
+        ],
+      );
+    }
+
+    Widget saldo() {
+      return Container(
+        margin: EdgeInsets.only(top: 40),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Saldo Dana Sumber',
+                      style: lighGrayTextStyle.copyWith(fontSize: 14),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Rp 600.000.000',
+                      style: blackTextStyle.copyWith(fontSize: 24, fontWeight: bold),
+                    ),
+                  ],
+                ),
+                CircleAvatar(
+                  backgroundImage: AssetImage('assets/img_chat1.png'),
+                  radius: 30,
+                ),
+              ],
+            ),
+            Divider(
+              thickness: 2,
+              color: Colors.black,
+              indent: 0,
+              endIndent: 0,
+            ),
+          ],
+        ),
+      );
+    }
+
     Widget nextButton() {
       return Container(
         height: 40,
@@ -81,6 +163,8 @@ class Nominal extends StatelessWidget {
             horizontal: defaultMargin
         ),
         children: [
+          nominal(),
+          saldo(),
         ],
       );
     }
