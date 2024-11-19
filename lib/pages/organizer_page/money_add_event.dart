@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 
 class MoneyAddEvent extends StatelessWidget {
-  const MoneyAddEvent({super.key});
 
   @override
   Widget build(BuildContext context) {

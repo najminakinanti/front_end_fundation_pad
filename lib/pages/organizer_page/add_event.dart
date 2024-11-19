@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/pages/organizer_page/calendar_add_event.dart';
+import 'package:pad_fundation/pages/organizer_page/check_add_event.dart';
 import 'package:pad_fundation/pages/organizer_page/edit_event_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/file_add_event.dart';
 import 'package:pad_fundation/pages/organizer_page/handshake_add_event.dart';
@@ -43,7 +44,9 @@ class _EventFormStepperState extends State<EventFormStepper> {
         if (index % 2 == 0) {
           int stepIndex = index ~/ 2;
           return GestureDetector(
-            onTap: () {
+            onTap: stepIndex == stepIcons.length - 1
+                ? null
+                : () {
               _goToPage(stepIndex);
             },
             child: Image.asset(
@@ -83,7 +86,7 @@ class _EventFormStepperState extends State<EventFormStepper> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.pop(context);
+                      showConfirmationDialog(context);
                     },
                     child: Image.asset(
                       'assets/icon_panah_kiri.png',
@@ -112,6 +115,7 @@ class _EventFormStepperState extends State<EventFormStepper> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: header(),
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: defaultMargin, vertical: 15),
@@ -130,7 +134,7 @@ class _EventFormStepperState extends State<EventFormStepper> {
                   if (_currentPage == 1) CalendarAddEvent(),
                   if (_currentPage == 2) MoneyAddEvent(),
                   if (_currentPage == 3) HandshakeAddEvent(),
-                  if (_currentPage == 4) HandshakeAddEvent(),
+                  if (_currentPage == 4) CheckAddEvent(),
                 ],
               ),
             ),
@@ -194,7 +198,7 @@ class _EventFormStepperState extends State<EventFormStepper> {
                       width: MediaQuery.of(context).size.width / 2 - 35,
                       child: ElevatedButton(
                         onPressed: () {
-
+                          showSaveConfirmationDialog(context);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: primaryColor,
@@ -221,6 +225,91 @@ class _EventFormStepperState extends State<EventFormStepper> {
           ],
         ),
       ),
+    );
+  }
+
+  void showConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Konfirmasi Batal',
+            style: blackTextStyle.copyWith(fontSize: 14, fontWeight: bold),
+          ),
+          content: Container(
+            width: 250,
+            child: Text(
+              'Apakah Anda yakin ingin batal membuat event?',
+              style: blackTextStyle.copyWith(fontSize: 12, fontWeight: regular),
+            ),
+          ),
+          contentPadding: EdgeInsets.fromLTRB(25, 10, 10, 0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'BATAL',
+                style: navyTextStyle.copyWith(fontSize: 12, fontWeight: regular),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  '/home-organizer',
+                  arguments: 1,
+                );
+              },
+              child: Text(
+                'YA',
+                style: navyTextStyle.copyWith(fontSize: 12, fontWeight: regular),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showSaveConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Container(
+            width: 250,
+            child: Text(
+              'Event berhasil ditambahkan!',
+              style: blackTextStyle.copyWith(fontSize: 12, fontWeight: regular),
+            ),
+          ),
+          contentPadding: EdgeInsets.fromLTRB(30, 40, 15, 0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  '/home-organizer',
+                  arguments: 1,
+                );
+              },
+              child: Text(
+                'OK',
+                style: navyTextStyle.copyWith(fontSize: 12, fontWeight: regular),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
