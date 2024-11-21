@@ -60,8 +60,13 @@ class DaftarSponsorOrganizer extends StatelessWidget {
                 fontWeight: medium,
               ),
             ),
-            SponsorCard(),
-            SponsorCard(),
+            SponsorCard(
+              imageUrl: 'assets/img_bittersweet.png',
+              name: 'Bittersweet by Najla',
+              iconUrl: 'assets/icon_gold.png',
+              category: 'Gold',
+              amount: 'Rp35.000.000',
+            ),
             SizedBox(height: 10),
             Text(
               'Silver',
@@ -70,10 +75,13 @@ class DaftarSponsorOrganizer extends StatelessWidget {
                 fontWeight: medium,
               ),
             ),
-            SponsorCard(),
-            SponsorCard(),
-            SponsorCard(),
-            SponsorCard(),
+            SponsorCard(
+              imageUrl: 'assets/img_bittersweet.png',
+              name: 'Bittersweet by Najla',
+              iconUrl: 'assets/icon_gold.png',
+              category: 'Gold',
+              amount: 'Rp35.000.000',
+            ),
           ],
         ),
       );

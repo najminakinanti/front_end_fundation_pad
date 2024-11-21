@@ -3,14 +3,26 @@ import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 
 class SponsorTileMitra extends StatelessWidget {
-  final List<String> kontraprestasiImages = [
-    'assets/img_kontraprestasi_1.png',
-    'assets/img_kontraprestasi_2.png',
-    'assets/img_kontraprestasi_1.png',
-  ];
+  final String imagePath;
+  final String status;
+  final String eventName;
+  final String date;
+  final String location;
+  final List<String> categories;
+  final String kontraprestasiAmount;
+  final List<String> kontraprestasiImages;
 
-  final double imageHeight = 350;
-  final double arrowHeight = 24;
+  const SponsorTileMitra({
+    Key? key,
+    required this.imagePath,
+    required this.status,
+    required this.eventName,
+    required this.date,
+    required this.location,
+    required this.categories,
+    required this.kontraprestasiAmount,
+    required this.kontraprestasiImages,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +49,7 @@ class SponsorTileMitra extends StatelessWidget {
                     bottomLeft: Radius.circular(5),
                   ),
                   child: Image.asset(
-                    'assets/img_music_fest.png',
+                    imagePath,
                     width: 127,
                     height: double.infinity,
                     fit: BoxFit.cover,
@@ -53,7 +65,7 @@ class SponsorTileMitra extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      'OFFLINE',
+                      status,
                       style: orangeTextStyle.copyWith(
                         fontSize: 10,
                         fontWeight: bold,
@@ -72,7 +84,7 @@ class SponsorTileMitra extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          'Mufest mitra',
+                          eventName,
                           style: grayTextStyle.copyWith(
                             fontSize: 14,
                             fontWeight: bold,
@@ -82,7 +94,7 @@ class SponsorTileMitra extends StatelessWidget {
                         Image.asset('assets/icon_calendar.png', width: 11),
                         SizedBox(width: 4),
                         Text(
-                          '20 Mei 2024',
+                          date,
                           style: veryLightGrayTextStyle.copyWith(
                             fontSize: 10,
                             fontWeight: bold,
@@ -92,58 +104,28 @@ class SponsorTileMitra extends StatelessWidget {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      'Jakarta, Jalan Kamboja',
+                      location,
                       style: lighGrayTextStyle.copyWith(
                         fontSize: 10,
                         fontWeight: regular,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    SizedBox(height: 12),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Wrap(
                         spacing: 5,
-                        children: [
-                          CategoryButton(
-                            label: 'Festival',
-                            onTap: () {
-                              print('Festival');
-                            },
-                          ),
-                          CategoryButton(
-                            label: 'Musik',
-                            onTap: () {
-                              print('Musik');
-                            },
-                          ),
-                          CategoryButton(
-                            label: 'EDM',
-                            onTap: () {
-                              print('EDM');
-                            },
-                          ),
-                          CategoryButton(
-                            label: 'Hiburan',
-                            onTap: () {
-                              print('Hiburan');
-                            },
-                          ),
-                          CategoryButton(
-                            label: 'DJ',
-                            onTap: () {
-                              print('DJ');
-                            },
-                          ),
-                          CategoryButton(
-                            label: 'Live',
-                            onTap: () {
-                              print('Live');
-                            },
-                          ),
-                        ],
+                        children: categories
+                            .map((category) => CategoryButton(
+                          label: category,
+                          onTap: () {
+                            print(category);
+                          },
+                        ))
+                            .toList(),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 12),
                     Row(
                       children: [
                         Container(
@@ -163,7 +145,7 @@ class SponsorTileMitra extends StatelessWidget {
                               ),
                               SizedBox(width: 4),
                               Text(
-                                '10 juta',
+                                '$kontraprestasiAmount juta',
                                 style: blackTextStyle.copyWith(
                                   fontSize: 10,
                                   fontWeight: bold,
@@ -208,14 +190,17 @@ class SponsorTileMitra extends StatelessWidget {
     );
   }
 
-  void _showLargeImage(BuildContext context, List<String> imagePaths, int initialIndex) {
+  void _showLargeImage(
+      BuildContext context, List<String> imagePaths, int initialIndex) {
     int currentIndex = initialIndex;
 
     showDialog(
       context: context,
       builder: (context) {
         return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: Stack(
             clipBehavior: Clip.none,
             children: [
@@ -235,22 +220,18 @@ class SponsorTileMitra extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(
-                      left: 10,
-                      right: 10,
-                      bottom: 10
-                    ),
+                    padding: const EdgeInsets.all(10),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: Image.asset(
                         imagePaths[currentIndex],
-                        height: imageHeight,
+                        height: 350,
                         fit: BoxFit.contain,
                       ),
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                     alignment: Alignment.centerLeft,
                     child: Text(
                       "Umbul-Umbul Tampak Depan",
@@ -279,42 +260,39 @@ class SponsorTileMitra extends StatelessWidget {
                   ),
                 ),
               ),
-              // Left arrow
-              Positioned(
-                top: (imageHeight / 2) - (arrowHeight / 2) + 55,
-                left: 20,
-                child: GestureDetector(
-                  onTap: () {
-                    if (currentIndex > 0) {
+              // Arrows
+              if (currentIndex > 0)
+                Positioned(
+                  top: 190,
+                  left: 20,
+                  child: GestureDetector(
+                    onTap: () {
                       currentIndex--;
                       Navigator.of(context).pop();
                       _showLargeImage(context, imagePaths, currentIndex);
-                    }
-                  },
-                  child: Image.asset(
-                    'assets/icon_button_panah_kiri.png',
-                    width: 24,
+                    },
+                    child: Image.asset(
+                      'assets/icon_button_panah_kiri.png',
+                      width: 24,
+                    ),
                   ),
                 ),
-              ),
-              // Right arrow
-              Positioned(
-                top: (imageHeight / 2) - (arrowHeight / 2) + 55,
-                right: 20,
-                child: GestureDetector(
-                  onTap: () {
-                    if (currentIndex < imagePaths.length - 1) {
+              if (currentIndex < imagePaths.length - 1)
+                Positioned(
+                  top: 190,
+                  right: 20,
+                  child: GestureDetector(
+                    onTap: () {
                       currentIndex++;
                       Navigator.of(context).pop();
                       _showLargeImage(context, imagePaths, currentIndex);
-                    }
-                  },
-                  child: Image.asset(
-                    'assets/icon_button_panah_kanan.png',
-                    width: 24,
+                    },
+                    child: Image.asset(
+                      'assets/icon_button_panah_kanan.png',
+                      width: 24,
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
         );

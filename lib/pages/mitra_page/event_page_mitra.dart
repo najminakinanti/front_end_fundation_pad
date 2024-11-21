@@ -110,7 +110,7 @@ class EventPageMitra extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category-mitra');
+                    Navigator.pushNamed(context, '/festival-mitra');
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -139,7 +139,7 @@ class EventPageMitra extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category-mitra');
+                    Navigator.pushNamed(context, '/kuliner-mitra');
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -168,7 +168,7 @@ class EventPageMitra extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category-mitra');
+                    Navigator.pushNamed(context, '/pendidikan-mitra');
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -197,7 +197,7 @@ class EventPageMitra extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category-mitra');
+                    Navigator.pushNamed(context, '/seniman-mitra');
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -226,7 +226,7 @@ class EventPageMitra extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category-mitra');
+                    Navigator.pushNamed(context, '/event-page-by-category-mitra');
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -280,10 +280,71 @@ class EventPageMitra extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              EventCardMitra(),
-              EventCardMitra(),
-              EventCardMitra(),
-              EventCardMitra(),
+              EventCardMitra(
+                imagePath: 'assets/img_music_fest.png',
+                status: 'OFFLINE',
+                title: 'Music Fest 2024',
+                collectedAmount: 'Rp90.000.000',
+                progress: 0.9,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: ['Festival', 'Musik', 'EDM', 'Hiburan', 'DJ', 'Live'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event-mitra');
+                },
+              ),
+              EventCardMitra(
+                imagePath: 'assets/img_kulfood.png',
+                status: 'OFFLINE',
+                title: 'KulFood 2024 ',
+                collectedAmount: 'Rp900.000',
+                progress: 0.2,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: ['Festival', 'Kuliner', 'Kompetisi', 'Live Musik', 'Live'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event-mitra');
+                },
+              ),
+              EventCardMitra(
+                imagePath: 'assets/img_summer_party.png',
+                status: 'OFFLINE',
+                title: 'KulFood 2024',
+                collectedAmount: 'Rp900.000',
+                progress: 0.2,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: ['Pantai', 'Pesta', 'Liburan', 'Musik', 'Dress'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event-mitra');
+                },
+              ),
+              EventCardMitra(
+                imagePath: 'assets/img_food_fest.png',
+                status: 'OFFLINE',
+                title: 'FoodFest 2024',
+                collectedAmount: 'Rp900.000',
+                progress: 0.2,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: ['Festival', 'Kuliner', 'Weekend', 'Live Musik', 'Live'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event-mitra');
+                },
+              ),
+              EventCardMitra(
+                imagePath: 'assets/img_educ_fest.png',
+                status: 'ONLINE',
+                title: 'Educ Fest 2024',
+                collectedAmount: 'Rp10.000.000',
+                progress: 0.95,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: ['Pendidikan', 'Seminar', 'Konsultasi', 'Formal'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event-mitra');
+                },
+              ),
             ],
           ),
         ),
@@ -314,10 +375,66 @@ class EventPageMitra extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              EventTileMitra(),
-              EventTileMitra(),
-              EventTileMitra(),
-              EventTileMitra(),
+              EventTileMitra(
+                imagePath: 'assets/img_bali_fest.png',
+                status: 'OFFLINE',
+                title: 'Bali Fest 2024',
+                collectedAmount: 'Rp1.000.000',
+                progress: 0.1,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                eventDate: '20 Mei 2024',
+                categories: ['Festival', 'Budaya', 'Bali', 'Seni'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event-mitra');
+                  print('Navigate to detail');
+                },
+              ),
+              EventTileMitra(
+                imagePath: 'assets/img_summer_party.png',
+                status: 'OFFLINE',
+                title: 'Summer Party',
+                collectedAmount: 'Rp5.000.000',
+                progress: 0.2,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                eventDate: '20 Mei 2024',
+                categories: ['Pantai', 'Pesta', 'Musik', 'Liburan'],
+                onTap: () {
+                  print('Navigate to detail');
+                  Navigator.pushNamed(context, '/detail-event-mitra');
+                },
+              ),
+              EventTileMitra(
+                imagePath: 'assets/img_nobar_cinema.png',
+                status: 'OFFLINE',
+                title: 'Nobar Cinema',
+                collectedAmount: 'Rp1.900.000',
+                progress: 0.5,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                eventDate: '20 Mei 2024',
+                categories: ['Film', 'Spoiler', 'Diskusi', 'Nobar'],
+                onTap: () {
+                  print('Navigate to detail');
+                  Navigator.pushNamed(context, '/detail-event-mitra');
+                },
+              ),
+              EventTileMitra(
+                imagePath: 'assets/img_rock_fest.png',
+                status: 'OFFLINE',
+                title: 'Rock Fest',
+                collectedAmount: 'Rp5.900.000',
+                progress: 0.3,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                eventDate: '20 Mei 2024',
+                categories: ['Musik', 'Festival', 'Rock', 'Karaoke'],
+                onTap: () {
+                  print('Navigate to detail');
+                  Navigator.pushNamed(context, '/detail-event-mitra');
+                },
+              ),
             ],
           ),
         ),

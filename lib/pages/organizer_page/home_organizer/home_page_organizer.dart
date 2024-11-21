@@ -186,11 +186,6 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
             Expanded(
               child: Container(
                 height: 50,
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
-                decoration: BoxDecoration(
-                  color: yellow,
-                  borderRadius: BorderRadius.circular(10),
-                ),
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.pushNamed(context, '/list-transaksi');
@@ -202,6 +197,8 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
                     ),
                   ),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Image.asset(
                         'assets/icon_tarik_dana.png',
@@ -211,7 +208,7 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
                       Text(
                         'Tarik Dana',
                         style: whiteTextStyle.copyWith(
-                          fontSize: 12,
+                          fontSize: 14,
                           fontWeight: bold,
                         ),
                       ),

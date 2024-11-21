@@ -2,47 +2,48 @@ import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 
-class EventCardMitra extends StatefulWidget {
-  final String imagePath;
+class EventCardBigMitra extends StatefulWidget {
+  final String imageUrl;
   final String status;
   final String title;
-  final String collectedAmount;
-  final double progress;
-  final int daysRemaining;
+  final String date;
+  final String amountCollected;
+  final double percentage;
   final int donorshipCount;
+  final String remainingDays;
   final List<String> categories;
   final VoidCallback? onTap;
 
-  const EventCardMitra({
+  const EventCardBigMitra({
     Key? key,
-    required this.imagePath,
+    required this.imageUrl,
     required this.status,
     required this.title,
-    required this.collectedAmount,
-    required this.progress,
-    required this.daysRemaining,
+    required this.date,
+    required this.amountCollected,
+    required this.percentage,
     required this.donorshipCount,
+    required this.remainingDays,
     required this.categories,
     this.onTap,
   }) : super(key: key);
 
   @override
-  _EventCardMitraState createState() => _EventCardMitraState();
+  _EventCardBigMitraState createState() => _EventCardBigMitraState();
 }
 
-class _EventCardMitraState extends State<EventCardMitra> {
-  bool isBookmarked = false;
+class _EventCardBigMitraState extends State<EventCardBigMitra> {
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: widget.onTap ?? () => Navigator.pushNamed(context, '/detail-event-mitra'),
       child: Container(
-        width: 225,
-        margin: const EdgeInsets.only(right: 10),
+        width: double.infinity,
+        margin: EdgeInsets.only(bottom: 20),
         decoration: BoxDecoration(
           color: backgroundColor3,
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,11 +51,11 @@ class _EventCardMitraState extends State<EventCardMitra> {
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.circular(10),
                   child: Image.asset(
-                    widget.imagePath,
+                    widget.imageUrl,
                     width: double.infinity,
-                    height: 100,
+                    height: 230,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -62,45 +63,16 @@ class _EventCardMitraState extends State<EventCardMitra> {
                   top: 10,
                   left: 10,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
                       color: sageGreen3,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      widget.status.toUpperCase(),
+                      widget.status,
                       style: orangeTextStyle.copyWith(
-                        fontSize: 10,
+                        fontSize: 14,
                         fontWeight: bold,
-                      ),
-                    ),
-                  ),
-                ),
-                // Bookmark Icon
-                Positioned(
-                  top: 10,
-                  right: 10,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isBookmarked = !isBookmarked;
-                      });
-                    },
-                    child: Container(
-                      width: 25,
-                      height: 25,
-                      decoration: BoxDecoration(
-                        color: backgroundColor3,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Image.asset(
-                          isBookmarked
-                              ? 'assets/icon_bookmark_on.png'
-                              : 'assets/icon_bookmark_off.png',
-                          width: 15,
-                          height: 15,
-                        ),
                       ),
                     ),
                   ),
@@ -112,37 +84,52 @@ class _EventCardMitraState extends State<EventCardMitra> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    widget.title,
-                    style: grayTextStyle.copyWith(
-                      fontSize: 14,
-                      fontWeight: bold,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        widget.title,
+                        style: grayTextStyle.copyWith(
+                          fontSize: 14,
+                          fontWeight: bold,
+                        ),
+                      ),
+                      Spacer(),
+                      Image.asset('assets/icon_calendar.png', width: 11),
+                      SizedBox(width: 4),
+                      Text(
+                        widget.date,
+                        style: lighGrayTextStyle.copyWith(
+                          fontSize: 10,
+                          fontWeight: bold,
+                        ),
+                      ),
+                    ],
                   ),
+                  SizedBox(height: 5),
                   Text(
-                    'Terkumpul ${widget.collectedAmount}',
+                    'Terkumpul ${widget.amountCollected}',
                     style: lighGrayTextStyle.copyWith(
                       fontSize: 10,
                       fontWeight: regular,
                     ),
                   ),
+                  SizedBox(height: 5),
                   Row(
                     children: [
                       Expanded(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8),
                           child: LinearProgressIndicator(
-                            value: widget.progress,
+                            value: widget.percentage,
                             backgroundColor: lineColor2,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              lineColor,
-                            ),
+                            valueColor:
+                            AlwaysStoppedAnimation<Color>(lineColor),
                           ),
                         ),
                       ),
-                      const SizedBox(width: 5),
+                      SizedBox(width: 5),
                       Text(
-                        '${(widget.progress * 100).toInt()}%',
+                        '${(widget.percentage * 100).toInt()}%',
                         style: blackTextStyle.copyWith(
                           fontSize: 10,
                           fontWeight: regular,
@@ -150,14 +137,13 @@ class _EventCardMitraState extends State<EventCardMitra> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 7),
+                  SizedBox(height: 5),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
                           Image.asset('assets/icon_donorship.png', width: 18),
-                          const SizedBox(width: 4),
+                          SizedBox(width: 4),
                           Text(
                             '${widget.donorshipCount} Donorship',
                             style: veryLightGrayTextStyle.copyWith(
@@ -167,12 +153,13 @@ class _EventCardMitraState extends State<EventCardMitra> {
                           ),
                         ],
                       ),
+                      SizedBox(width: 20),
                       Row(
                         children: [
                           Image.asset('assets/icon_timer.png', width: 13),
-                          const SizedBox(width: 4),
+                          SizedBox(width: 4),
                           Text(
-                            '${widget.daysRemaining} hari lagi',
+                            '${widget.remainingDays} hari lagi',
                             style: veryLightGrayTextStyle.copyWith(
                               fontSize: 10,
                               fontWeight: regular,
@@ -182,7 +169,7 @@ class _EventCardMitraState extends State<EventCardMitra> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 7),
+                  SizedBox(height: 7),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Wrap(

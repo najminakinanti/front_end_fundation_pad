@@ -7,6 +7,11 @@ import 'package:pad_fundation/pages/mitra_page/detail_chat_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/detail_event_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/edit_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/edit_password_mitra.dart';
+import 'package:pad_fundation/pages/mitra_page/event_by_category_page/festival_page_mitra.dart';
+import 'package:pad_fundation/pages/mitra_page/event_by_category_page/kuliner_page_mitra.dart';
+import 'package:pad_fundation/pages/mitra_page/event_by_category_page/pendidikan_page_mitra.dart';
+import 'package:pad_fundation/pages/mitra_page/event_by_category_page/populer_page_mitra.dart';
+import 'package:pad_fundation/pages/mitra_page/event_by_category_page/seniman_page_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/event_page_by_category_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/event_page_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/forgot_password_mitra.dart';
@@ -21,7 +26,6 @@ import 'package:pad_fundation/pages/mitra_page/ubah_email.dart';
 import 'package:pad_fundation/pages/mitra_page/ubah_nama.dart';
 import 'package:pad_fundation/pages/mitra_page/ubah_nomor.dart';
 import 'package:pad_fundation/pages/not_logged_in/detail_event.dart';
-import 'package:pad_fundation/pages/not_logged_in/event_by_category.dart';
 import 'package:pad_fundation/pages/not_logged_in/event_by_category_page/festival_page.dart';
 import 'package:pad_fundation/pages/not_logged_in/event_by_category_page/kuliner_page.dart';
 import 'package:pad_fundation/pages/not_logged_in/event_by_category_page/pendidikan_page.dart';
@@ -52,7 +56,6 @@ import 'package:pad_fundation/pages/organizer_page/event_page_by_category_organi
 import 'package:pad_fundation/pages/organizer_page/forgot_password_new_password_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/forgot_password_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/forgot_password_verification_organizer.dart';
-import 'package:pad_fundation/pages/organizer_page/home_organizer/home_page_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/home_organizer/main_page_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/list_transaksi.dart';
 import 'package:pad_fundation/pages/organizer_page/login_page_organizer.dart';
@@ -103,7 +106,11 @@ class MyApp extends StatelessWidget {
         },
         '/bookmark-mitra': (context) => BookmarkPageMitra(),
         '/event-mitra': (context) => EventPageMitra(),
-        '/event-by-category-mitra': (context) => EventByCategoryMitra(),
+        '/populer-mitra': (context) => PopulerPageMitra(),
+        '/festival-mitra': (context) => FestivalPageMitra(),
+        '/kuliner-mitra': (context) => KulinerPageMitra(),
+        '/pendidikan-mitra': (context) => PendidikanPageMitra(),
+        '/seniman-mitra': (context) => SenimanPageMitra(),
         '/event-page-by-category-mitra': (context) => EventPageByCategoryMitra(),
         '/detail-event-mitra': (context) => DetailEventMitra(),
         '/detail-chat-mitra': (context) => DetailChatMitra(),

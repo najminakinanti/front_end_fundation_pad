@@ -43,7 +43,7 @@ class _DetailEventState extends State<DetailEventMitra> {
             Row(
               children: [
                 Text(
-                  'Mufest mitra 2024',
+                  'Mufest 2024',
                   style: blackTextStyle.copyWith(
                       fontSize: 20, fontWeight: bold),
                 ),
@@ -330,8 +330,27 @@ class _DetailEventState extends State<DetailEventMitra> {
                 fontWeight: medium,
               ),
             ),
-            SponsorCard(),
-            SponsorCard(),
+            SponsorCard(
+              imageUrl: 'assets/img_bittersweet.png',
+              name: 'Bittersweet by Najla',
+              iconUrl: 'assets/icon_gold.png',
+              category: 'Gold',
+              amount: 'Rp35.000.000',
+            ),
+            SponsorCard(
+              imageUrl: 'assets/img_the_organizer.png',
+              name: 'The Organizer',
+              iconUrl: 'assets/icon_gold.png',
+              category: 'Gold',
+              amount: 'Rp34.000.000',
+            ),
+            SponsorCard(
+              imageUrl: 'assets/img_ozora.png',
+              name: 'Ozora Organizer',
+              iconUrl: 'assets/icon_gold.png',
+              category: 'Gold',
+              amount: 'Rp33.000.000',
+            ),
             SizedBox(height: 10),
             Text(
               'Silver',
@@ -340,8 +359,27 @@ class _DetailEventState extends State<DetailEventMitra> {
                 fontWeight: medium,
               ),
             ),
-            SponsorCard(),
-            SponsorCard(),
+            SponsorCard(
+              imageUrl: 'assets/img_raorganizer.png',
+              name: 'Raorganizer',
+              iconUrl: 'assets/icon_silver.png',
+              category: 'Silver',
+              amount: 'Rp25.000.000',
+            ),
+            SponsorCard(
+              imageUrl: 'assets/img_space.png',
+              name: 'Space Organizer',
+              iconUrl: 'assets/icon_silver.png',
+              category: 'Silver',
+              amount: 'Rp20.000.000',
+            ),
+            SponsorCard(
+              imageUrl: 'assets/img_space.png',
+              name: 'Organizer Event',
+              iconUrl: 'assets/icon_silver.png',
+              category: 'Silver',
+              amount: 'Rp15.000.000',
+            ),
           ],
         ),
       );
@@ -353,167 +391,179 @@ class _DetailEventState extends State<DetailEventMitra> {
       body: Stack(
         children: [
           SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  header(),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: defaultMargin),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        title(),
-                      ],
-                    ),
-                  ),
-                  whiteLine(),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: defaultMargin),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        audienceTargetTitle(),
-                        audienceTarget(),
-                        aboutEventTitle(),
-                        aboutEvent(),
-                        eventCategories(),
-                        informationDetailTitle(),
-                        informationDetail(),
-                        kontraprestasiTitle(),
-                        kontraprestasi(),
-                        sponsorTitle(),
-                        sponsor(),
-                        SizedBox(height: 100),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            top: 50,
-            left: 15,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Container(
-                width: 25,
-                height: 25,
-                decoration: BoxDecoration(
-                  color: backgroundColor,
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                child: Image.asset(
-                  'assets/icon_tanda_panah_kiri.png',
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 50,
-            right: 50,
-            child: GestureDetector(
-              onTap: () {
-                showConfirmationDialog(context);
-              },
-              child: Container(
-                width: 25,
-                height: 25,
-                decoration: BoxDecoration(
-                  color: backgroundColor,
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                child: Image.asset(
-                  'assets/icon_download.png',
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 50,
-            right: 15,
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  isBookmarked = !isBookmarked;
-                });
-              },
-              child: Container(
-                width: 25,
-                height: 25,
-                decoration: BoxDecoration(
-                  color: backgroundColor3,
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: Image.asset(
-                    isBookmarked ? 'assets/icon_bookmark_on.png' : 'assets/icon_bookmark_off.png',
-                    width: 15,
-                    height: 15,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 30,
-            left: 15,
-            right: 15,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
+            child: Column(
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/detail-chat-event-mitra');
-                    print('chat');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: primaryColor,
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        header(),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: defaultMargin),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              title(),
+                            ],
+                          ),
+                        ),
+                        whiteLine(),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: defaultMargin),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              audienceTargetTitle(),
+                              audienceTarget(),
+                              aboutEventTitle(),
+                              aboutEvent(),
+                              eventCategories(),
+                              informationDetailTitle(),
+                              informationDetail(),
+                              kontraprestasiTitle(),
+                              kontraprestasi(),
+                              sponsorTitle(),
+                              sponsor(),
+                              SizedBox(height: 50),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    minimumSize: Size(50, 50),
-                  ),
-                  child: Image.asset(
-                    'assets/icon_chat_2.png',
-                    width: 24,
-                    height: 24,
                   ),
                 ),
-                SizedBox(width: 6),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/kirim-sponsor-mitra');
-                      print('ajukan dari mitra');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryColor,
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      minimumSize: Size(0, 50),
-                    ),
-                    child: Text(
-                      'AJUKAN SPONSOR',
-                      style: whiteTextStyle.copyWith(
-                        fontSize: 16,
-                        fontWeight: bold,
-                      ),
+                Positioned(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(15, 5,15, 30),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/detail-chat-event-mitra');
+                            print('chat');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: primaryColor,
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            minimumSize: Size(50, 50),
+                          ),
+                          child: Image.asset(
+                            'assets/icon_chat_2.png',
+                            width: 24,
+                            height: 24,
+                          ),
+                        ),
+                        SizedBox(width: 6),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/kirim-sponsor-mitra');
+                              print('ajukan dari mitra');
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: primaryColor,
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              minimumSize: Size(0, 50),
+                            ),
+                            child: Text(
+                              'AJUKAN SPONSOR',
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 16,
+                                fontWeight: bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ],
             ),
-          )
+          ),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      width: 25,
+                      height: 25,
+                      decoration: BoxDecoration(
+                        color: backgroundColor,
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      child: Image.asset(
+                        'assets/icon_tanda_panah_kiri.png',
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          showConfirmationDialog(context);
+                        },
+                        child: Container(
+                          width: 25,
+                          height: 25,
+                          decoration: BoxDecoration(
+                            color: backgroundColor,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          child: Image.asset(
+                            'assets/icon_download.png',
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 15),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isBookmarked = !isBookmarked;
+                          });
+                        },
+                        child: Container(
+                          width: 25,
+                          height: 25,
+                          decoration: BoxDecoration(
+                            color: backgroundColor3,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: Image.asset(
+                              isBookmarked
+                                  ? 'assets/icon_bookmark_on.png'
+                                  : 'assets/icon_bookmark_off.png',
+                              width: 15,
+                              height: 15,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
+
   }
 
   void showConfirmationDialog(BuildContext context) {

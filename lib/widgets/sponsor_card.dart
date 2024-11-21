@@ -2,6 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 
 class SponsorCard extends StatelessWidget {
+  final String imageUrl;
+  final String name;
+  final String iconUrl;
+  final String category;
+  final String amount;
+
+  SponsorCard({
+    required this.imageUrl,
+    required this.name,
+    required this.iconUrl,
+    required this.category,
+    required this.amount,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -16,16 +30,15 @@ class SponsorCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 25,
-              backgroundImage: AssetImage('assets/img_bittersweet.png'),
+              backgroundImage: AssetImage(imageUrl),
             ),
-
             SizedBox(width: 10),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Bittersweet by Najla",
+                    name,
                     style: blackTextStyle.copyWith(
                       fontSize: 12,
                       fontWeight: regular,
@@ -34,10 +47,10 @@ class SponsorCard extends StatelessWidget {
                   SizedBox(height: 4),
                   Row(
                     children: [
-                      Image.asset('assets/icon_gold.png', width: 15,),
+                      Image.asset(iconUrl, width: 15),
                       SizedBox(width: 4),
                       Text(
-                        "Gold",
+                        category,
                         style: blackTextStyle.copyWith(
                           fontSize: 12,
                           fontWeight: regular,
@@ -50,7 +63,7 @@ class SponsorCard extends StatelessWidget {
             ),
             // Price Information
             Text(
-              "Rp35.000.000",
+              amount,
               style: lighGrayTextStyle.copyWith(
                 fontWeight: regular,
                 fontSize: 12,

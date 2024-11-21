@@ -9,6 +9,7 @@ class ChatTileOrganizer extends StatelessWidget {
         Navigator.pushNamed(context, '/detail-chat-organizer');
       },
       child: Container(
+        color: Colors.transparent,
         margin: EdgeInsets.only(top: 15, left: 0, right: 0),
         child: Column(
           children: [

@@ -9,6 +9,7 @@ class ChatTileMitra extends StatelessWidget {
         Navigator.pushNamed(context, '/detail-chat-mitra');
       },
       child: Container(
+        color: Colors.transparent,
         margin: EdgeInsets.only(top: 15, left: 0, right: 0),
         child: Column(
           children: [
