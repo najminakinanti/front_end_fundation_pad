@@ -2,12 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 
 class SponsorCardOrg extends StatefulWidget {
+  final String sponsorLogo;
+  final String sponsorName;
+  final String sponsorType;
+  final String sponsorshipAmount;
+  final List<String> imageList;
+  final String iconPath;
+
+  const SponsorCardOrg({
+    required this.sponsorLogo,
+    required this.sponsorName,
+    required this.sponsorType,
+    required this.sponsorshipAmount,
+    required this.imageList,
+    required this.iconPath,
+    Key? key,
+  }) : super(key: key);
+
   @override
   _SponsorCardOrgState createState() => _SponsorCardOrgState();
 }
 
 class _SponsorCardOrgState extends State<SponsorCardOrg> {
+  final ScrollController _scrollController = ScrollController();
   bool isExpanded = false;
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +51,7 @@ class _SponsorCardOrgState extends State<SponsorCardOrg> {
               children: [
                 CircleAvatar(
                   radius: 25,
-                  backgroundImage: AssetImage('assets/img_bittersweet.png'),
+                  backgroundImage: AssetImage(widget.sponsorLogo),
                 ),
                 SizedBox(width: 10),
                 Expanded(
@@ -35,7 +59,7 @@ class _SponsorCardOrgState extends State<SponsorCardOrg> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Bittersweet by Najla",
+                        widget.sponsorName,
                         style: blackTextStyle.copyWith(
                           fontSize: 12,
                           fontWeight: regular,
@@ -44,10 +68,10 @@ class _SponsorCardOrgState extends State<SponsorCardOrg> {
                       SizedBox(height: 4),
                       Row(
                         children: [
-                          Image.asset('assets/icon_gold.png', width: 15),
+                          Image.asset(widget.iconPath, width: 15),
                           SizedBox(width: 4),
                           Text(
-                            "Gold",
+                            widget.sponsorType,
                             style: blackTextStyle.copyWith(
                               fontSize: 12,
                               fontWeight: regular,
@@ -59,7 +83,7 @@ class _SponsorCardOrgState extends State<SponsorCardOrg> {
                   ),
                 ),
                 Text(
-                  "Rp35.000.000",
+                  widget.sponsorshipAmount,
                   style: lighGrayTextStyle.copyWith(
                     fontWeight: regular,
                     fontSize: 12,
@@ -84,39 +108,142 @@ class _SponsorCardOrgState extends State<SponsorCardOrg> {
                       });
                     },
                   ),
-                  Center(
-                    child: Text(
-                      "Foto Bukti belum ditambahkan",
-                      style: blackTextStyle.copyWith(
-                        fontSize: 10,
-                        fontWeight: bold,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 30),
-                  Container(
-                    alignment: Alignment.centerRight,
-                    padding: EdgeInsets.only(right: 12),
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/tambah-bukti-kontraprestasi');
-                      },
-                      style: TextButton.styleFrom(
-                        backgroundColor: pinkButton,
-                        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                  if (widget.imageList.isEmpty)
+                    Column(
+                      children: [
+                        Center(
+                          child: Text(
+                            "Foto Bukti belum ditambahkan",
+                            style: blackTextStyle.copyWith(
+                              fontSize: 10,
+                              fontWeight: bold,
+                            ),
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        "Tambah Bukti Kontraprestasi",
-                        style: whiteTextStyle.copyWith(
-                          fontSize: 10,
-                          fontWeight: bold,
+                        SizedBox(height: 30),
+                        Container(
+                          alignment: Alignment.centerRight,
+                          padding: EdgeInsets.only(right: 12),
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/tambah-bukti-kontraprestasi');
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: primaryColor,
+                              padding: EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  "Tambah Bukti Kontraprestasi",
+                                  style: whiteTextStyle.copyWith(
+                                    fontSize: 10,
+                                    fontWeight: bold,
+                                  ),
+                                ),
+                                SizedBox(width: 8),
+                                Image.asset(
+                                  'assets/icon_up_right_arrow.png',
+                                  width: 16,
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
+                    )
+                  else
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.arrow_circle_left_outlined),
+                              onPressed: () {
+                                if (_scrollController.hasClients) {
+                                  _scrollController.animateTo(
+                                    _scrollController.offset - 100,
+                                    duration: Duration(milliseconds: 300),
+                                    curve: Curves.easeInOut,
+                                  );
+                                }
+                              },
+                            ),
+                            Expanded(
+                              child: SizedBox(
+                                height: 50,
+                                child: ListView.builder(
+                                  controller: _scrollController,
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: widget.imageList.length,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                      child: Image.asset(
+                                        widget.imageList[index],
+                                        width: 50,
+                                        height: 50,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.arrow_circle_right_outlined),
+                              onPressed: () {
+                                if (_scrollController.hasClients) {
+                                  _scrollController.animateTo(
+                                    _scrollController.offset + 100,
+                                    duration: Duration(milliseconds: 300),
+                                    curve: Curves.easeInOut,
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Container(
+                          alignment: Alignment.centerRight,
+                          padding: EdgeInsets.only(right: 12),
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/ubah-bukti-kontraprestasi');
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: yellowButton,
+                              padding: EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  "Ubah Bukti Kontraprestasi",
+                                  style: whiteTextStyle.copyWith(
+                                    fontSize: 10,
+                                    fontWeight: bold,
+                                  ),
+                                ),
+                                SizedBox(width: 8),
+                                Image.asset(
+                                  'assets/icon_edit.png',
+                                  width: 16,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
                   SizedBox(height: 10),
                 ],
               ),
@@ -141,7 +268,7 @@ class _SponsorCardOrgState extends State<SponsorCardOrg> {
                   ),
                 ),
               ],
-            )
+            ),
         ],
       ),
     );
