@@ -417,7 +417,7 @@ class _DetailEventState extends State<DetailEventMitra> {
             right: 50,
             child: GestureDetector(
               onTap: () {
-
+                showConfirmationDialog(context);
               },
               child: Container(
                 width: 25,
@@ -511,9 +511,41 @@ class _DetailEventState extends State<DetailEventMitra> {
               ],
             ),
           )
-
         ],
       ),
+    );
+  }
+
+  void showConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Container(
+            width: 250,
+            child: Text(
+              'Download Berhasil!',
+                style: blackTextStyle.copyWith(fontSize: 14, fontWeight: bold),
+                textAlign: TextAlign.center,
+            ),
+          ),
+          contentPadding: EdgeInsets.fromLTRB(0, 30, 0, 10),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/detail-event-mitra');
+              },
+              child: Text(
+                'OK',
+                style: navyTextStyle.copyWith(fontSize: 12, fontWeight: regular),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

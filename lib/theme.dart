@@ -37,6 +37,7 @@ Color extendColor = Color(0xffDDDDDE);
 Color button = Color(0xffFACE98);
 Color backgroundyellow = Color(0xffFFEF4E9);
 Color grayStepper = Color(0xffCCCCCC);
+Color grayBorderPayment = Color(0xffABABAB);
 
 // warna font
 TextStyle blackTextStyle = TextStyle(

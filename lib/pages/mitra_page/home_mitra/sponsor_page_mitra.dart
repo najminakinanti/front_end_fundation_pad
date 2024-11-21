@@ -35,6 +35,7 @@ class SponsorPageMitra extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Container(
+                        height: 50,
                         padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                         decoration: BoxDecoration(
                           color: textColor3,
@@ -74,6 +75,7 @@ class SponsorPageMitra extends StatelessWidget {
                       },
                       style: TextButton.styleFrom(
                         backgroundColor: textColor3,
+                        minimumSize: Size(50, 50),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
