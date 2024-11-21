@@ -37,7 +37,7 @@ class FestivalPage extends StatelessWidget {
           title: 'Wayang Fest',
           date: '20 Mei 2024',
           amountCollected: 'Rp900.000',
-          percentage: 0.8,
+          percentage: 0.9,
           donorshipCount: 100,
           remainingDays: '230',
           categories: ['Musik', 'Jawa', 'Budaya'],
