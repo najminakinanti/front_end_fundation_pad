@@ -2,14 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 
-
 class EventTile extends StatelessWidget {
+  final String imagePath;
+  final String status;
+  final String title;
+  final String collectedAmount;
+  final double progress;
+  final int daysRemaining;
+  final int donorshipCount;
+  final String date;
+  final List<String> categories;
+  final VoidCallback? onTap;
+
+  const EventTile({
+    Key? key,
+    required this.imagePath,
+    required this.status,
+    required this.title,
+    required this.collectedAmount,
+    required this.progress,
+    required this.daysRemaining,
+    required this.donorshipCount,
+    required this.date,
+    required this.categories,
+    required this.onTap,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, '/detail-event');
-      },
+      onTap: onTap ?? () => Navigator.pushNamed(context, '/detail-event'),
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: 135,
@@ -33,7 +55,7 @@ class EventTile extends StatelessWidget {
                     bottomLeft: Radius.circular(5),
                   ),
                   child: Image.asset(
-                    'assets/img_music_fest.png',
+                    imagePath,
                     width: 127,
                     height: double.infinity,
                     fit: BoxFit.cover,
@@ -49,7 +71,7 @@ class EventTile extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      'OFFLINE',
+                      status,
                       style: orangeTextStyle.copyWith(
                         fontSize: 10,
                         fontWeight: bold,
@@ -68,23 +90,27 @@ class EventTile extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          'Music Fest 2024',
+                          title,
                           style: grayTextStyle.copyWith(
                             fontSize: 14,
                             fontWeight: bold,
                           ),
                         ),
                         Spacer(),
-
                         Image.asset('assets/icon_calendar.png', width: 11),
                         SizedBox(width: 4),
-                        Text('20 Mei 2024', style: veryLightGrayTextStyle.copyWith(fontSize: 10, fontWeight: regular,),),
+                        Text(
+                          date,
+                          style: lighGrayTextStyle.copyWith(
+                            fontSize: 10,
+                            fontWeight: regular,
+                          ),
+                        ),
                       ],
                     ),
-
                     SizedBox(height: 4),
                     Text(
-                      'Terkumpul Rp90.000.000',
+                      collectedAmount,
                       style: lighGrayTextStyle.copyWith(
                         fontSize: 10,
                         fontWeight: regular,
@@ -97,7 +123,7 @@ class EventTile extends StatelessWidget {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: LinearProgressIndicator(
-                              value: 0.9,
+                              value: progress,
                               backgroundColor: lineColor2,
                               valueColor: AlwaysStoppedAnimation<Color>(lineColor),
                             ),
@@ -105,7 +131,7 @@ class EventTile extends StatelessWidget {
                         ),
                         SizedBox(width: 5),
                         Text(
-                          '90%',
+                          '${(progress * 100).toInt()}%',
                           style: blackTextStyle.copyWith(
                             fontSize: 10,
                             fontWeight: regular,
@@ -118,60 +144,38 @@ class EventTile extends StatelessWidget {
                       children: [
                         Image.asset('assets/icon_donorship.png', width: 18),
                         SizedBox(width: 4),
-                        Text('100 Donorship', style: veryLightGrayTextStyle.copyWith(fontSize: 10, fontWeight: regular,),),
-
+                        Text(
+                          '$donorshipCount Donorship',
+                          style: veryLightGrayTextStyle.copyWith(
+                            fontSize: 10,
+                            fontWeight: regular,
+                          ),
+                        ),
                         Spacer(),
-
                         Image.asset('assets/icon_timer.png', width: 13),
                         SizedBox(width: 4),
-                        Text('230 hari lagi', style: veryLightGrayTextStyle.copyWith(fontSize: 10, fontWeight: regular,),),
+                        Text(
+                          '$daysRemaining hari lagi',
+                          style: veryLightGrayTextStyle.copyWith(
+                            fontSize: 10,
+                            fontWeight: regular,
+                          ),
+                        ),
                       ],
                     ),
-
                     SizedBox(height: 7),
-
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Wrap(
                         spacing: 5,
-                        children: [
-                          CategoryButton(
-                            label: 'Festival',
-                            onTap: () {
-                              print('Festival');
-                            },
-                          ),
-                          CategoryButton(
-                            label: 'Musik',
-                            onTap: () {
-                              print('Musik');
-                            },
-                          ),
-                          CategoryButton(
-                            label: 'EDM',
-                            onTap: () {
-                              print('EDM');
-                            },
-                          ),
-                          CategoryButton(
-                            label: 'Hiburan',
-                            onTap: () {
-                              print('Hiburan');
-                            },
-                          ),
-                          CategoryButton(
-                            label: 'DJ',
-                            onTap: () {
-                              print('DJ');
-                            },
-                          ),
-                          CategoryButton(
-                            label: 'Live',
-                            onTap: () {
-                              print('Live');
-                            },
-                          ),
-                        ],
+                        children: categories
+                            .map((category) => CategoryButton(
+                          label: category,
+                          onTap: () {
+                            print(category);
+                          },
+                        ))
+                            .toList(),
                       ),
                     ),
                   ],

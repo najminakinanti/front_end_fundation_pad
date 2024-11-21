@@ -22,6 +22,11 @@ import 'package:pad_fundation/pages/mitra_page/ubah_nama.dart';
 import 'package:pad_fundation/pages/mitra_page/ubah_nomor.dart';
 import 'package:pad_fundation/pages/not_logged_in/detail_event.dart';
 import 'package:pad_fundation/pages/not_logged_in/event_by_category.dart';
+import 'package:pad_fundation/pages/not_logged_in/event_by_category_page/festival_page.dart';
+import 'package:pad_fundation/pages/not_logged_in/event_by_category_page/kuliner_page.dart';
+import 'package:pad_fundation/pages/not_logged_in/event_by_category_page/pendidikan_page.dart';
+import 'package:pad_fundation/pages/not_logged_in/event_by_category_page/populer_page.dart';
+import 'package:pad_fundation/pages/not_logged_in/event_by_category_page/seniman_page.dart';
 import 'package:pad_fundation/pages/not_logged_in/event_page_by_category.dart';
 import 'package:pad_fundation/pages/not_logged_in/home/main_page.dart';
 import 'package:pad_fundation/pages/mitra_page/login_page_mitra.dart';
@@ -164,7 +169,11 @@ class MyApp extends StatelessWidget {
           return MainPage(initialIndex: initialIndex);
         },
         '/detail-event': (context) => DetailEvent(),
-        '/event-by-category': (context) => EventByCategory(),
+        '/populer': (context) => PopulerPage(),
+        '/festival': (context) => FestivalPage(),
+        '/kuliner': (context) => KulinerPage(),
+        '/pendidikan': (context) => PendidikanPage(),
+        '/seniman': (context) => SenimanPage(),
         '/event-page-by-category': (context) => EventPageByCategory(),
       },
     );

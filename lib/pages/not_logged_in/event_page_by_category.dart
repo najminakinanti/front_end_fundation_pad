@@ -121,10 +121,83 @@ class EventPageByCategory extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              EventCard(),
-              EventCard(),
-              EventCard(),
-              EventCard(),
+              EventCard(
+                imagePath: 'assets/img_music_fest.png',
+                status: 'OFFLINE',
+                title: 'Music Fest 2024',
+                collectedAmount: 'Rp90.000.000',
+                progress: 0.9,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: [
+                  'Festival',
+                  'Musik',
+                  'EDM',
+                  'Hiburan',
+                  'DJ',
+                  'Live'
+                ],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
+              ),
+              EventCard(
+                imagePath: 'assets/img_kulfood.png',
+                status: 'OFFLINE',
+                title: 'KulFood 2024',
+                collectedAmount: 'Rp900.000',
+                progress: 0.2,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: [
+                  'Festival',
+                  'Kuliner',
+                  'Kompetisi',
+                  'Live Musik',
+                  'Live'
+                ],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
+              ),
+              EventCard(
+                imagePath: 'assets/img_food_fest.png',
+                status: 'OFFLINE',
+                title: 'FoodFest 2024',
+                collectedAmount: 'Rp900.000',
+                progress: 0.2,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: [
+                  'Festival',
+                  'Kuliner',
+                  'Weekend',
+                  'Live Musik',
+                  'Live'
+                ],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
+              ),
+              EventCard(
+                imagePath: 'assets/img_summer_shimer.png',
+                status: 'OFFLINE',
+                title: 'Summer Shimer 2024',
+                collectedAmount: 'Rp900.000',
+                progress: 0.2,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: [
+                  'Pantai',
+                  'Pesta',
+                  'Liburan',
+                  'Musik',
+                  'Dress'
+                ],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
+              ),
             ],
           ),
         ),
@@ -151,10 +224,46 @@ class EventPageByCategory extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              EventCard(),
-              EventCard(),
-              EventCard(),
-              EventCard(),
+              EventCard(
+                imagePath: 'assets/img_experiment_class.png',
+                status: 'OFFLINE',
+                title: 'Experiment Class',
+                collectedAmount: 'Rp85.000.000',
+                progress: 0.9,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: [
+                  'Belajar',
+                  'Pendidikan',
+                  'Fisika',
+                  'Membaca',
+                  'Diskusi',
+                  'Live'
+                ],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
+              ),
+              EventCard(
+                imagePath: 'assets/img_literasi.png',
+                status: 'OFFLINE',
+                title: 'Literasi Bersama',
+                collectedAmount: 'Rp90.00.000',
+                progress: 0.9,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: [
+                  'Pengetahuan',
+                  'Buku',
+                  'Diskusi',
+                  'Penulis',
+                  'Membaca',
+                  'Live'
+                ],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
+              ),
             ],
           ),
         ),
@@ -165,7 +274,7 @@ class EventPageByCategory extends StatelessWidget {
       return Container(
         margin: EdgeInsets.only(top: 24),
         child: Text(
-          'Event Pendidikan',
+          'Event Kuliner',
           style: blackTextStyle.copyWith(
             fontSize: 16,
             fontWeight: medium,
@@ -181,10 +290,45 @@ class EventPageByCategory extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              EventCard(),
-              EventCard(),
-              EventCard(),
-              EventCard(),
+              EventCard(
+                imagePath: 'assets/img_food_fest.png',
+                status: 'OFFLINE',
+                title: 'Food Fest 2024',
+                collectedAmount: 'Rp90.000.000',
+                progress: 0.9,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: [
+                  'Festival',
+                  'Kuliner',
+                  'Hiburan',
+                  'Nusantara',
+                  'Live Musik',
+                  'Live'
+                ],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
+              ),
+              EventCard(
+                imagePath: 'assets/img_kulfood.png',
+                status: 'OFFLINE',
+                title: 'KulFood 2024',
+                collectedAmount: 'Rp900.000',
+                progress: 0.2,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: [
+                  'Festival',
+                  'Kuliner',
+                  'Kompetisi',
+                  'Live Musik',
+                  'Live'
+                ],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
+              ),
             ],
           ),
         ),
@@ -203,6 +347,7 @@ class EventPageByCategory extends StatelessWidget {
           pendidikanEvent(),
           kulinerEventTitle(),
           kulinerEvent(),
+          SizedBox(height: defaultMargin)
         ],
       );
     }
