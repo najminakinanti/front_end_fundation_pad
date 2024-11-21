@@ -449,7 +449,7 @@ class _DetailEventState extends State<DetailEventOrganizer> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    print('chat');
+                    Navigator.pushNamed(context, '/login-mitra');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColor,
@@ -469,7 +469,7 @@ class _DetailEventState extends State<DetailEventOrganizer> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      print('ajukan dari organizer');
+                      Navigator.pushNamed(context, '/login-mitra');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primaryColor,
@@ -496,4 +496,5 @@ class _DetailEventState extends State<DetailEventOrganizer> {
       ),
     );
   }
+
 }

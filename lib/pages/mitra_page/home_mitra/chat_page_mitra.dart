@@ -33,23 +33,33 @@ class ChatPageMitra extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: TextButton(
-                        onPressed: () {},
-                        style: TextButton.styleFrom(
-                          backgroundColor: textColor3,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: textColor3,
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         child: Row(
                           children: [
                             Image.asset('assets/icon_search.png', width: 18),
-                            SizedBox(width: 5),
-                            Text(
-                              'Cari Pesan',
-                              style: veryLightGrayTextStyle.copyWith(
-                                fontSize: 16,
-                                fontWeight: medium,
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: TextField(
+                                onChanged: (value) {
+
+                                },
+                                style: veryLightGrayTextStyle.copyWith(
+                                  fontSize: 16,
+                                  fontWeight: medium,
+                                ),
+                                decoration: InputDecoration(
+                                  hintText: 'Cari Pesan',
+                                  hintStyle: veryLightGrayTextStyle.copyWith(
+                                    fontSize: 16,
+                                    fontWeight: medium,
+                                  ),
+                                  border: InputBorder.none,
+                                ),
                               ),
                             ),
                           ],

@@ -1,11 +1,19 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:pad_fundation/pages/mitra_page/payment_method.dart';
 import 'package:pad_fundation/theme.dart';
 
-class KirimSponsorMitra extends StatelessWidget {
+class KirimSponsorMitra extends StatefulWidget {
+  @override
+  _KirimSponsorMitraState createState() => _KirimSponsorMitraState();
+}
+
+class _KirimSponsorMitraState extends State<KirimSponsorMitra> {
+  String selectedPaymentMethod = 'Pilih metode pembayaran';
+  String selectedLogo = '';
+
   @override
   Widget build(BuildContext context) {
-
     PreferredSize header() {
       return PreferredSize(
         preferredSize: Size.fromHeight(75.0),
@@ -78,7 +86,7 @@ class KirimSponsorMitra extends StatelessWidget {
                     'by Tech Musicompany',
                     style: blackTextStyle.copyWith(
                       fontSize: 14,
-                        fontWeight: regular,
+                      fontWeight: regular,
                     ),
                   ),
                 ],
@@ -161,37 +169,66 @@ class KirimSponsorMitra extends StatelessWidget {
       );
     }
 
-    Widget paymentMethod() {
+    Widget selectPaymentMethod(BuildContext context) {
       return Container(
         margin: EdgeInsets.only(top: 25),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
+            Container(
               height: 48,
-              child: TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Masukkan nominal',
-                  labelStyle: grayTextStyle.copyWith(
-                      fontSize: 13
-                  ),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
-                ),
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              decoration: BoxDecoration(
+                border: Border.all(color: primaryColor),
+                borderRadius: BorderRadius.circular(5),
               ),
-            )
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      final selectedPayment = await Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => PaymentMethod()),
+                      );
+                      if (selectedPayment != null) {
+                        setState(() {
+                          selectedPaymentMethod = selectedPayment['name']!;
+                          selectedLogo = selectedPayment['logo']!;
+                        });
+                      }
+                    },
+                    child: Container(
+                      height: 23,
+                      decoration: BoxDecoration(
+                        color: textColor3,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          if (selectedLogo.isNotEmpty)
+                            Image.asset(
+                              selectedLogo,
+                              width: 46,
+                            ),
+                          Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 20,
+                            color: textColor,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    selectedPaymentMethod,
+                    style: grayTextStyle.copyWith(fontSize: 13),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       );
@@ -202,7 +239,7 @@ class KirimSponsorMitra extends StatelessWidget {
         padding: EdgeInsets.all(20),
         height: 220,
         decoration: BoxDecoration(
-          color:navbarColor,
+          color: navbarColor,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(10),
             topRight: Radius.circular(10),
@@ -281,7 +318,7 @@ class KirimSponsorMitra extends StatelessWidget {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/kirim-sponsor-mitra');
+                showConfirmationDialog(context);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: primaryColor,
@@ -306,25 +343,59 @@ class KirimSponsorMitra extends StatelessWidget {
 
     Widget content() {
       return ListView(
-        padding: EdgeInsets.symmetric(
-            horizontal: defaultMargin
-        ),
+        padding: EdgeInsets.symmetric(horizontal: defaultMargin),
         children: [
           sponsorInfoCard(),
           nameInput(),
           nominalInput(),
-          paymentMethod(),
+          selectPaymentMethod(context),
         ],
       );
     }
 
     return Scaffold(
-      backgroundColor: backgroundColor,
       appBar: header(),
-      bottomNavigationBar: bottomBox(),
       body: content(),
+      bottomNavigationBar: bottomBox(),
     );
   }
 
 
+  void showConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Pembayaran Berhasil',
+            style: blackTextStyle.copyWith(fontSize: 14, fontWeight: bold),
+            textAlign: TextAlign.center,
+          ),
+          content: Container(
+            width: 250,
+            child: Text(
+              'Terima kasih! Pembayaran Anda telah berhasil diproses.',
+              textAlign: TextAlign.center,
+              style: blackTextStyle.copyWith(fontSize: 12, fontWeight: regular),
+            ),
+          ),
+          contentPadding: EdgeInsets.fromLTRB(25, 10, 25, 10),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/detail-event-mitra');
+              },
+              child: Text(
+                'OK',
+                style: navyTextStyle.copyWith(fontSize: 12, fontWeight: regular),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

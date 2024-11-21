@@ -58,26 +58,34 @@ class HomePage extends StatelessWidget {
 
     Widget searchBar() {
       return Padding(
-        padding: EdgeInsets.only(top: 16),
-        child: TextButton(
-          onPressed: () {},
-          style: TextButton.styleFrom(
-            backgroundColor: textColor3,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            padding: EdgeInsets.symmetric(vertical: 12),
+        padding: EdgeInsets.only(top: 18),
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+          decoration: BoxDecoration(
+            color: textColor3,
+            borderRadius: BorderRadius.circular(10),
           ),
           child: Row(
             children: [
-              SizedBox(width: 10),
               Image.asset('assets/icon_search.png', width: 18),
-              SizedBox(width: 5),
-              Text(
-                'Cari Event',
-                style: veryLightGrayTextStyle.copyWith(
-                  fontSize: 16,
-                  fontWeight: medium,
+              SizedBox(width: 10),
+              Expanded(
+                child: TextField(
+                  onChanged: (value) {
+
+                  },
+                  style: veryLightGrayTextStyle.copyWith(
+                    fontSize: 16,
+                    fontWeight: medium,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'Cari Event',
+                    hintStyle: veryLightGrayTextStyle.copyWith(
+                      fontSize: 16,
+                      fontWeight: medium,
+                    ),
+                    border: InputBorder.none,
+                  ),
                 ),
               ),
             ],
@@ -97,7 +105,6 @@ class HomePage extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Text Section
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,7 +113,7 @@ class HomePage extends StatelessWidget {
                     'Punya Event?',
                     style: blackTextStyle.copyWith(
                       fontSize: 14,
-                      fontWeight: medium,
+                      fontWeight: bold,
                     ),
                   ),
                   SizedBox(height: 8),
@@ -114,20 +121,20 @@ class HomePage extends StatelessWidget {
                     'Jadilah Partner Kami',
                     style: blackTextStyle.copyWith(
                       fontSize: 12,
-                      fontWeight: regular,
+                      fontWeight: semiBold,
                     ),
                   ),
                   SizedBox(height: 8),
                   Text(
                     'Daftar sekarang dan rasakan keuntungan menjadi bagian dari kami',
                     style: blackTextStyle.copyWith(
-                      fontSize: 10,
+                      fontSize: 12,
                       fontWeight: regular,
                     ),
                   ),
                   SizedBox(height: 20),
                   Container(
-                    height: 32,
+                    height: 35,
                     child: TextButton(
                       onPressed: () {
                         Navigator.pushNamed(context, '/register-organizer');
@@ -145,14 +152,14 @@ class HomePage extends StatelessWidget {
                           Text(
                             'DAFTAR SEKARANG',
                             style: whiteTextStyle.copyWith(
-                              fontSize: 12,
+                              fontSize: 14,
                               fontWeight: bold,
                             ),
                           ),
                           SizedBox(width: 5),
                           Image.asset(
                             'assets/icon_panah_kanan.png',
-                            width: 5,
+                            width: 6,
                           ),
                         ],
                       ),
@@ -163,7 +170,7 @@ class HomePage extends StatelessWidget {
             ),
             Image.asset(
               'assets/img_promotion.png',
-              height: 141,
+              height: 160,
             ),
           ],
         ),
@@ -198,7 +205,7 @@ class HomePage extends StatelessWidget {
                 Text(
                   'Festival',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -227,7 +234,7 @@ class HomePage extends StatelessWidget {
                 Text(
                   'Kuliner',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -256,7 +263,7 @@ class HomePage extends StatelessWidget {
                 Text(
                   'Pendidikan',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -285,7 +292,7 @@ class HomePage extends StatelessWidget {
                 Text(
                   'Seniman',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -314,7 +321,7 @@ class HomePage extends StatelessWidget {
                 Text(
                   'Lainnya',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -327,7 +334,7 @@ class HomePage extends StatelessWidget {
 
     Widget popularEventTitle() {
       return Container(
-        margin: EdgeInsets.only(top: 28),
+        margin: EdgeInsets.only(top: 18),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -351,7 +358,7 @@ class HomePage extends StatelessWidget {
                     Text(
                       'Lihat Semua',
                       style: grayTextStyle.copyWith(
-                        fontSize: 10,
+                        fontSize: 12,
                         fontWeight: regular,
                       ),
                     ),
@@ -411,7 +418,7 @@ class HomePage extends StatelessWidget {
                     Text(
                       'Lihat Semua',
                       style: grayTextStyle.copyWith(
-                        fontSize: 10,
+                        fontSize: 12,
                         fontWeight: regular,
                       ),
                     ),

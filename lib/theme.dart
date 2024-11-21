@@ -31,6 +31,13 @@ Color darkBrown = Color(0xff7A271A);
 Color green = Color(0xff12B76A);
 Color yellowButton = Color(0xffE2A713);
 Color brownButton = Color(0xff6E2317);
+Color creamButton = Color(0xffFACE98);
+Color pinkButton = Color(0xffEB6753);
+Color extendColor = Color(0xffDDDDDE);
+Color button = Color(0xffFACE98);
+Color backgroundyellow = Color(0xffFFEF4E9);
+Color grayStepper = Color(0xffCCCCCC);
+Color grayBorderPayment = Color(0xffABABAB);
 
 // warna font
 TextStyle blackTextStyle = TextStyle(

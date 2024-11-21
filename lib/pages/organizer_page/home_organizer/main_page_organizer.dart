@@ -100,7 +100,7 @@ class _MainPageOrganizerState extends State<MainPageOrganizer> {
     Widget body() {
       switch(currentIndex) {
         case 0:
-          return HomePageOrganizer();
+          return HomePageOrganizer(onNavigateToEvent: () => changeTab(1));
           break;
         case 1:
           return EventPageOrganizer();
@@ -112,7 +112,7 @@ class _MainPageOrganizerState extends State<MainPageOrganizer> {
           return ProfilePageOrganizer();
           break;
         default:
-          return HomePageOrganizer();
+          return HomePageOrganizer(onNavigateToEvent: () => changeTab(1));
       }
     }
 

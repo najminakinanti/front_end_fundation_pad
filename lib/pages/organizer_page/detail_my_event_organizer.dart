@@ -3,6 +3,7 @@ import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 import 'package:pad_fundation/widgets/information_detail_galery.dart';
 import 'package:pad_fundation/widgets/kontraprestasi_category.dart';
+import 'package:pad_fundation/widgets/organizer/sponsor_card_org.dart';
 import 'package:pad_fundation/widgets/sponsor_card.dart';
 
 class DetailMyEventOrganizer extends StatefulWidget {
@@ -331,8 +332,8 @@ class _DetailMyEventOrganizerState extends State<DetailMyEventOrganizer> {
                 fontWeight: medium,
               ),
             ),
-            SponsorCard(),
-            SponsorCard(),
+            SponsorCardOrg(),
+            SponsorCardOrg(),
             SizedBox(height: 10),
             Text(
               'Silver',
@@ -341,8 +342,8 @@ class _DetailMyEventOrganizerState extends State<DetailMyEventOrganizer> {
                 fontWeight: medium,
               ),
             ),
-            SponsorCard(),
-            SponsorCard(),
+            SponsorCardOrg(),
+            SponsorCardOrg(),
           ],
         ),
       );
@@ -457,6 +458,7 @@ class _DetailMyEventOrganizerState extends State<DetailMyEventOrganizer> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
+                        Navigator.pushNamed(context, '/ubah-event-organizer');
                         print('chat');
                       },
                       style: ElevatedButton.styleFrom(
@@ -560,7 +562,11 @@ class _DetailMyEventOrganizerState extends State<DetailMyEventOrganizer> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/choose-role');
+                Navigator.pushNamed(
+                  context,
+                  '/home-organizer',
+                  arguments: 1,
+                );
               },
               child: Text(
                 'YA',

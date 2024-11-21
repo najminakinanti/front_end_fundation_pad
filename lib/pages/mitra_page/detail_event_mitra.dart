@@ -11,6 +11,7 @@ class DetailEventMitra extends StatefulWidget {
 }
 
 class _DetailEventState extends State<DetailEventMitra> {
+  bool isBookmarked = false;
   int currentBatch = 0;
 
   @override
@@ -26,26 +27,6 @@ class _DetailEventState extends State<DetailEventMitra> {
                 width: double.infinity,
                 height: 300,
                 fit: BoxFit.cover,
-              ),
-            ),
-            Positioned(
-              top: 16,
-              left: 16,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: backgroundColor,
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  child: Image.asset(
-                    'assets/icon_tanda_panah_kiri.png',
-                    width: 20,
-                  ),
-                ),
               ),
             ),
           ],
@@ -412,6 +393,72 @@ class _DetailEventState extends State<DetailEventMitra> {
             ),
           ),
           Positioned(
+            top: 50,
+            left: 15,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                width: 25,
+                height: 25,
+                decoration: BoxDecoration(
+                  color: backgroundColor,
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Image.asset(
+                  'assets/icon_tanda_panah_kiri.png',
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 50,
+            right: 50,
+            child: GestureDetector(
+              onTap: () {
+                showConfirmationDialog(context);
+              },
+              child: Container(
+                width: 25,
+                height: 25,
+                decoration: BoxDecoration(
+                  color: backgroundColor,
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Image.asset(
+                  'assets/icon_download.png',
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 50,
+            right: 15,
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  isBookmarked = !isBookmarked;
+                });
+              },
+              child: Container(
+                width: 25,
+                height: 25,
+                decoration: BoxDecoration(
+                  color: backgroundColor3,
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Image.asset(
+                    isBookmarked ? 'assets/icon_bookmark_on.png' : 'assets/icon_bookmark_off.png',
+                    width: 15,
+                    height: 15,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
             bottom: 30,
             left: 15,
             right: 15,
@@ -464,9 +511,41 @@ class _DetailEventState extends State<DetailEventMitra> {
               ],
             ),
           )
-
         ],
       ),
+    );
+  }
+
+  void showConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Container(
+            width: 250,
+            child: Text(
+              'Download Berhasil!',
+                style: blackTextStyle.copyWith(fontSize: 14, fontWeight: bold),
+                textAlign: TextAlign.center,
+            ),
+          ),
+          contentPadding: EdgeInsets.fromLTRB(0, 30, 0, 10),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/detail-event-mitra');
+              },
+              child: Text(
+                'OK',
+                style: navyTextStyle.copyWith(fontSize: 12, fontWeight: regular),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

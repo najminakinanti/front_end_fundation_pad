@@ -22,10 +22,13 @@ import 'package:pad_fundation/pages/mitra_page/ubah_nama.dart';
 import 'package:pad_fundation/pages/mitra_page/ubah_nomor.dart';
 import 'package:pad_fundation/pages/not_logged_in/detail_event.dart';
 import 'package:pad_fundation/pages/not_logged_in/event_by_category.dart';
+import 'package:pad_fundation/pages/not_logged_in/event_page_by_category.dart';
 import 'package:pad_fundation/pages/not_logged_in/home/main_page.dart';
 import 'package:pad_fundation/pages/mitra_page/login_page_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/register_page_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/register_page_mitra_add.dart';
+import 'package:pad_fundation/pages/organizer_page/add_event.dart';
+import 'package:pad_fundation/pages/organizer_page/add_kontraprestasi.dart';
 import 'package:pad_fundation/pages/organizer_page/all_event_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/bookmark_page_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/create_new_password_organizer.dart';
@@ -35,6 +38,8 @@ import 'package:pad_fundation/pages/organizer_page/detail_chat_event_organizer.d
 import 'package:pad_fundation/pages/organizer_page/detail_chat_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/detail_event_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/detail_my_event_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/edit_event_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/edit_kontraprestasi.dart';
 import 'package:pad_fundation/pages/organizer_page/edit_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/edit_password_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/event_by_category_organizer.dart';
@@ -49,6 +54,7 @@ import 'package:pad_fundation/pages/organizer_page/login_page_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/nominal.dart';
 import 'package:pad_fundation/pages/organizer_page/register_page_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/register_page_organizer_add.dart';
+import 'package:pad_fundation/pages/organizer_page/tambah_bukti_kontraprestasi.dart';
 import 'package:pad_fundation/pages/organizer_page/ubah_data_profile_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/ubah_email_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/ubah_nama_organizer.dart';
@@ -61,6 +67,7 @@ import 'package:pad_fundation/pages/splash_screen/splash_page.dart';
 import 'package:pad_fundation/pages/splash_screen/on_boarding_page_1.dart';
 import 'package:pad_fundation/pages/splash_screen/on_boarding_page_2.dart';
 import 'package:pad_fundation/pages/splash_screen/on_boarding_page_3.dart';
+import 'package:pad_fundation/pages/organizer_page/ubah_bukti_kontraprestasi.dart';
 
 void main() => runApp(MyApp());
 
@@ -142,6 +149,12 @@ class MyApp extends StatelessWidget {
         '/all-event-organizer': (context) => AllEventOrganizer(),
         '/daftar-sponsor-organizer': (context) => DaftarSponsorOrganizer(),
         '/detail-my-event-organizer': (context) => DetailMyEventOrganizer(),
+        '/ubah-event-organizer': (context) => EditEventOrganizer(),
+        '/ubah-kontraprestasi': (context) => EditKontraprestasi(),
+        '/add-kontraprestasi': (context) => AddKontraprestasi(),
+        '/tambah-bukti-kontraprestasi': (context) => TambahBuktiKontraprestasi(),
+        '/ubah-bukti-kontraprestasi': (context) => UbahBuktiKontraprestasi(),
+        '/add-event': (context) => EventFormStepper(),
 
 
 
@@ -152,6 +165,7 @@ class MyApp extends StatelessWidget {
         },
         '/detail-event': (context) => DetailEvent(),
         '/event-by-category': (context) => EventByCategory(),
+        '/event-page-by-category': (context) => EventPageByCategory(),
       },
     );
   }

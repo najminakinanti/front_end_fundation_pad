@@ -52,7 +52,6 @@ class UbahDataProfile extends StatelessWidget {
       );
     }
 
-
     Widget nama() {
       TextEditingController nominalController = TextEditingController(text: 'Govan Dwi');
 

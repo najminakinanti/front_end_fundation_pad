@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
+import 'package:pad_fundation/widgets/filter_sidebar.dart';
 import 'package:pad_fundation/widgets/mitra/event_card_mitra.dart';
-import 'package:pad_fundation/widgets/guess/event_tile.dart';
 import 'package:pad_fundation/widgets/mitra/event_tile_mitra.dart';
-import 'package:pad_fundation/widgets/filter_modal.dart';
 
 class EventPageMitra extends StatelessWidget {
   @override
@@ -46,23 +45,33 @@ class EventPageMitra extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        child: TextButton(
-                          onPressed: () {},
-                          style: TextButton.styleFrom(
-                            backgroundColor: textColor3,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                          decoration: BoxDecoration(
+                            color: textColor3,
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           child: Row(
                             children: [
                               Image.asset('assets/icon_search.png', width: 18),
-                              SizedBox(width: 5),
-                              Text(
-                                'Cari Event',
-                                style: veryLightGrayTextStyle.copyWith(
-                                  fontSize: 16,
-                                  fontWeight: medium,
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: TextField(
+                                  onChanged: (value) {
+
+                                  },
+                                  style: veryLightGrayTextStyle.copyWith(
+                                    fontSize: 16,
+                                    fontWeight: medium,
+                                  ),
+                                  decoration: InputDecoration(
+                                    hintText: 'Cari Event',
+                                    hintStyle: veryLightGrayTextStyle.copyWith(
+                                      fontSize: 16,
+                                      fontWeight: medium,
+                                    ),
+                                    border: InputBorder.none,
+                                  ),
                                 ),
                               ),
                             ],
@@ -76,6 +85,7 @@ class EventPageMitra extends StatelessWidget {
                         },
                         style: TextButton.styleFrom(
                           backgroundColor: textColor3,
+                          minimumSize: Size(50, 50),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -100,7 +110,7 @@ class EventPageMitra extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category');
+                    Navigator.pushNamed(context, '/event-by-category-mitra');
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -129,7 +139,7 @@ class EventPageMitra extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category');
+                    Navigator.pushNamed(context, '/event-by-category-mitra');
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -158,7 +168,7 @@ class EventPageMitra extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category');
+                    Navigator.pushNamed(context, '/event-by-category-mitra');
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -187,7 +197,7 @@ class EventPageMitra extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category');
+                    Navigator.pushNamed(context, '/event-by-category-mitra');
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -216,7 +226,7 @@ class EventPageMitra extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-page-by-category-mitra');
+                    Navigator.pushNamed(context, '/event-by-category-mitra');
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -258,32 +268,6 @@ class EventPageMitra extends StatelessWidget {
                 fontWeight: medium,
               ),
             ),
-
-            Container(
-              child: TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/event-by-category');
-                },
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Lihat Semua',
-                      style: grayTextStyle.copyWith(
-                        fontSize: 10,
-                        fontWeight: regular,
-                      ),
-                    ),
-                    SizedBox(width: 2),
-                    Image.asset(
-                      'assets/icon_tanda_panah_kanan.png',
-                      width: 15,
-                    ),
-                  ],
-                ),
-              ),
-            )
           ],
         ),
       );
@@ -319,32 +303,6 @@ class EventPageMitra extends StatelessWidget {
                 fontWeight: medium,
               ),
             ),
-
-            Container(
-              child: TextButton(
-                onPressed: () {
-                  //
-                },
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Lihat Semua',
-                      style: grayTextStyle.copyWith(
-                        fontSize: 10,
-                        fontWeight: regular,
-                      ),
-                    ),
-                    SizedBox(width: 2),
-                    Image.asset(
-                      'assets/icon_tanda_panah_kanan.png',
-                      width: 15,
-                    ),
-                  ],
-                ),
-              ),
-            )
           ],
         ),
       );
@@ -389,52 +347,31 @@ class EventPageMitra extends StatelessWidget {
   }
 
   void showModalRightSheet(BuildContext context) {
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        opaque: false,
-        pageBuilder: (BuildContext context, _, __) {
-          return RightSideModal();
-        },
-        transitionsBuilder: (_, animation, __, child) {
-          const begin = Offset(1.0, 0.0);
-          const end = Offset.zero;
-          const curve = Curves.easeInOut;
-
-          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-          var offsetAnimation = animation.drive(tween);
-
-          return SlideTransition(
-            position: offsetAnimation,
-            child: child,
-          );
-        },
-      ),
-    );
-  }
-}
-
-class RightSideModal extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: textColor2.withOpacity(0.5),
-      body: Row(
-        children: [
-          Spacer(),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.7,
-            height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(
-              color: textColor3,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                bottomLeft: Radius.circular(20),
-              ),
-            ),
-            child: FilterModal(),
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'Dismiss',
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Align(
+          alignment: Alignment.centerRight,
+          child: FilterSidebar(
+            onApply: (filters) {
+              print('Selected Filters: $filters');
+            },
           ),
-        ],
-      ),
+        );
+      },
+      transitionDuration: Duration(milliseconds: 300),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final offsetAnimation = Tween<Offset>(
+          begin: Offset(1, 0),
+          end: Offset(0, 0),
+        ).animate(animation);
+        return SlideTransition(
+          position: offsetAnimation,
+          child: child,
+        );
+      },
     );
   }
 }

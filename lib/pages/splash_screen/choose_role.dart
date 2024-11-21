@@ -26,15 +26,15 @@ class ChooseRole extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 6),
+                SizedBox(height: 20),
                 Text(
                   'FUNDation',
                   style: greenTextStyle.copyWith(
                     fontSize: 34,
-                    fontWeight: extraBold,
+                    fontWeight: bold,
                   ),
                 ),
-                SizedBox(height: 65),
+                SizedBox(height: 70),
                 Text(
                   'Pilih Peran Anda',
                   style: greenTextStyle.copyWith(
@@ -42,9 +42,8 @@ class ChooseRole extends StatelessWidget {
                     fontWeight: bold,
                   ),
                 ),
-                SizedBox(height: 33),
+                SizedBox(height: 30),
 
-                // Button Mitra
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: ConstrainedBox(
@@ -52,7 +51,7 @@ class ChooseRole extends StatelessWidget {
                       maxWidth: 230,
                     ),
                     child: SizedBox(
-                      height: 45,
+                      height: 40,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: secondaryColor,
@@ -70,7 +69,6 @@ class ChooseRole extends StatelessWidget {
                             style: whiteTextStyle.copyWith(
                               fontSize: 16,
                               fontWeight: bold,
-                              color: Colors.white,
                             ),
                           ),
                         ),
@@ -84,12 +82,12 @@ class ChooseRole extends StatelessWidget {
                   'Dukung Event sebagai Mitra Sponsor',
                   style: grayTextStyle.copyWith(
                     fontSize: 12,
+                    fontWeight: regular,
                   ),
-                  textAlign: TextAlign.center, // Menambahkan textAlign untuk center
+                  textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 25),
+                SizedBox(height: 30),
 
-                // Button Organizer
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: ConstrainedBox(
@@ -97,7 +95,7 @@ class ChooseRole extends StatelessWidget {
                       maxWidth: 230,
                     ),
                     child: SizedBox(
-                      height: 45,
+                      height: 40,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: primaryColor,
@@ -106,7 +104,6 @@ class ChooseRole extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
-                          // Navigate to the next page
                           Navigator.pushNamed(context, '/login-organizer');
                         },
                         child: Center(
@@ -115,7 +112,6 @@ class ChooseRole extends StatelessWidget {
                             style: whiteTextStyle.copyWith(
                               fontSize: 16,
                               fontWeight: bold,
-                              color: Colors.white,
                             ),
                           ),
                         ),
@@ -129,8 +125,9 @@ class ChooseRole extends StatelessWidget {
                   'Rencanakan Event Anda sebagai Organizer',
                   style: grayTextStyle.copyWith(
                     fontSize: 12,
+                    fontWeight: regular,
                   ),
-                  textAlign: TextAlign.center, // Menambahkan textAlign untuk center
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
