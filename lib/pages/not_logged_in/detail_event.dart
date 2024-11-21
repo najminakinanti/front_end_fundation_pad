@@ -28,26 +28,6 @@ class _DetailEventState extends State<DetailEvent> {
                 fit: BoxFit.cover,
               ),
             ),
-            Positioned(
-              top: 16,
-              left: 16,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: backgroundColor,
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  child: Image.asset(
-                    'assets/icon_tanda_panah_kiri.png',
-                    width: 20,
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       );
@@ -391,6 +371,26 @@ class _DetailEventState extends State<DetailEvent> {
                     ),
                   ),
                 ],
+              ),
+            ),
+          ),
+          Positioned(
+            top: 50,
+            left: 15,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                width: 25,
+                height: 25,
+                decoration: BoxDecoration(
+                  color: backgroundColor,
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Image.asset(
+                  'assets/icon_tanda_panah_kiri.png',
+                ),
               ),
             ),
           ),

@@ -21,7 +21,7 @@ class _InformationDetailWidgetState extends State<InformationDetailWidget> {
 
   int currentBatch = 0;
 
-  final double imageHeight = 200;
+  final double imageHeight = 350;
   final double arrowHeight = 24;
 
   void _showLargeImage(BuildContext context, List<String> imagePaths, int initialIndex) {

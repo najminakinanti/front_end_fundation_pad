@@ -7,46 +7,69 @@ class DetailChatMitra extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    AppBar header() {
-      return AppBar(
-        backgroundColor: backgroundColor,
-        centerTitle: false,
-        title: Row(
-          children: [
-            Image.asset(
-              'assets/img_chat1.png',
-              width: 40,
-            ),
-            SizedBox(
-              width: 12,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    PreferredSize header() {
+      return PreferredSize(
+        preferredSize: Size.fromHeight(60.0),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: backgroundColor,
+          centerTitle: false,
+          flexibleSpace: Container(
+            margin: EdgeInsets.fromLTRB(defaultMargin, defaultMargin, defaultMargin, 5),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(
-                  'Nama EO',
-                  style: blackTextStyle.copyWith(
-                    fontWeight: bold,
-                    fontSize: 14,
-                  ),
-                ),
-                Text(
-                  'Nama Event',
-                  style: blackTextStyle.copyWith(
-                    fontWeight: light,
-                    fontSize: 10,
-                  ),
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Image.asset(
+                        'assets/icon_panah_kiri.png',
+                        width: 8,
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    Image.asset(
+                      'assets/img_chat1.png',
+                      width: 40,
+                    ),
+                    SizedBox(width: 12),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Nama EO',
+                          style: blackTextStyle.copyWith(
+                            fontWeight: bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                        Text(
+                          'Nama Event',
+                          style: blackTextStyle.copyWith(
+                            fontWeight: light,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
               ],
-            )
-          ],
+            ),
+          ),
         ),
       );
     }
 
     Widget cardEvent() {
       return Container(
-        margin: EdgeInsets.only(top: 10),
+        margin: EdgeInsets.only(top: 30),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -83,7 +106,7 @@ class DetailChatMitra extends StatelessWidget {
 
     Widget chatInput() {
       return Container(
-        margin: EdgeInsets.all(20),
+        margin: EdgeInsets.all(defaultMargin),
         child: Row(
           children: [
             Expanded(

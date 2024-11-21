@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/guess/event_card_bookmark.dart';
-import 'package:pad_fundation/widgets/filter_modal.dart';
+
+import '../../widgets/filter_sidebar.dart';
 
 class EventByCategory extends StatelessWidget {
   @override
@@ -84,6 +85,7 @@ class EventByCategory extends StatelessWidget {
                       },
                       style: TextButton.styleFrom(
                         backgroundColor: textColor3,
+                        minimumSize: Size(50, 50),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -147,52 +149,31 @@ class EventByCategory extends StatelessWidget {
   }
 
   void showModalRightSheet(BuildContext context) {
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        opaque: false,
-        pageBuilder: (BuildContext context, _, __) {
-          return RightSideModal();
-        },
-        transitionsBuilder: (_, animation, __, child) {
-          const begin = Offset(1.0, 0.0);
-          const end = Offset.zero;
-          const curve = Curves.easeInOut;
-
-          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-          var offsetAnimation = animation.drive(tween);
-
-          return SlideTransition(
-            position: offsetAnimation,
-            child: child,
-          );
-        },
-      ),
-    );
-  }
-}
-
-class RightSideModal extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: textColor2.withOpacity(0.5),
-      body: Row(
-        children: [
-          Spacer(),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.7,
-            height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(
-              color: textColor3,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                bottomLeft: Radius.circular(20),
-              ),
-            ),
-            child: FilterModal(),
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'Dismiss',
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Align(
+          alignment: Alignment.centerRight,
+          child: FilterSidebar(
+            onApply: (filters) {
+              print('Selected Filters: $filters');
+            },
           ),
-        ],
-      ),
+        );
+      },
+      transitionDuration: Duration(milliseconds: 300),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final offsetAnimation = Tween<Offset>(
+          begin: Offset(1, 0),
+          end: Offset(0, 0),
+        ).animate(animation);
+        return SlideTransition(
+          position: offsetAnimation,
+          child: child,
+        );
+      },
     );
   }
 }
