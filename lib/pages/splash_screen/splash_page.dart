@@ -15,7 +15,7 @@ class _SplashPageState extends State<SplashPage> {
     // mengatur pindah halaman dari logo selama 3 detik
     Timer(
       Duration(seconds: 3),
-          () => Navigator.pushNamed(context, '/boarding-1'),
+          () => Navigator.pushNamed(context, '/boarding'),
     );
 
     super.initState();

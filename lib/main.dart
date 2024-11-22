@@ -76,6 +76,7 @@ import 'package:pad_fundation/pages/organizer_page/withdrawal_request_waiting.da
 import 'package:pad_fundation/pages/organizer_page/withdrawal_request_failed.dart';
 import 'package:pad_fundation/pages/organizer_page/withdrawal_request_done.dart';
 import 'package:pad_fundation/pages/splash_screen/choose_role.dart';
+import 'package:pad_fundation/pages/splash_screen/on_boarding_page.dart';
 import 'package:pad_fundation/pages/splash_screen/splash_page.dart';
 import 'package:pad_fundation/pages/splash_screen/on_boarding_page_1.dart';
 import 'package:pad_fundation/pages/splash_screen/on_boarding_page_2.dart';
@@ -93,10 +94,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         '/': (context) => SplashPage(),
-        '/boarding-1': (context) => OnBoardingPage1(),
-        '/boarding-2': (context) => OnBoardingPage2(),
-        '/boarding-3': (context) => OnBoardingPage3(),
         '/choose-role': (context) => ChooseRole(),
+        '/boarding': (context) => OnBoardingPageView(),
 
         // role mitra
         '/login-mitra': (context) => LoginPageMitra(),
