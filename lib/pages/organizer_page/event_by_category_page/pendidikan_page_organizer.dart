@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:pad_fundation/widgets/mitra/event_card_big_mitra.dart';
+import '../../../widgets/organizer/event_card_big_organizer.dart';
+import '../event_by_category_organizer.dart';
 
-import '../event_by_category_mitra.dart';
-
-class PendidikanPageMitra extends StatelessWidget {
+class PendidikanPageOrganizer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return EventByCategoryMitra(
+    return EventByCategoryOrganizer(
       title: 'Event Pendidikan',
       eventCards: [
-        EventCardBigMitra(
+        EventCardBigOrganizer(
           imageUrl: 'assets/img_educ_fest.png',
           status: 'OFFLINE',
           title: 'Edu Fest 2024',
@@ -21,7 +20,7 @@ class PendidikanPageMitra extends StatelessWidget {
           remainingDays: '230',
           categories: ['Pendidikan', 'Formal', 'Konseling'],
         ),
-        EventCardBigMitra(
+        EventCardBigOrganizer(
           imageUrl: 'assets/img_experiment_class.png',
           status: 'OFFLINE',
           title: 'Experiment Class',
@@ -32,7 +31,7 @@ class PendidikanPageMitra extends StatelessWidget {
           remainingDays: '230',
           categories: ['Fisika', 'Pendidikan', 'Diskusi'],
         ),
-        EventCardBigMitra(
+        EventCardBigOrganizer(
           imageUrl: 'assets/img_literasi.png',
           status: 'OFFLINE',
           title: 'Literasi Bersama',

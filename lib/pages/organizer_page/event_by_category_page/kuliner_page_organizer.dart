@@ -1,47 +1,46 @@
 import 'package:flutter/material.dart';
-import 'package:pad_fundation/widgets/mitra/event_card_big_mitra.dart';
+import '../../../widgets/organizer/event_card_big_organizer.dart';
+import '../event_by_category_organizer.dart';
 
-import '../event_by_category_mitra.dart';
-
-class PendidikanPageMitra extends StatelessWidget {
+class KulinerPageOrganizer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return EventByCategoryMitra(
-      title: 'Event Pendidikan',
+    return EventByCategoryOrganizer(
+      title: 'Event Kuliner',
       eventCards: [
-        EventCardBigMitra(
-          imageUrl: 'assets/img_educ_fest.png',
+        EventCardBigOrganizer(
+          imageUrl: 'assets/img_kulfood.png',
           status: 'OFFLINE',
-          title: 'Edu Fest 2024',
+          title: 'KulFood 2024',
           date: '20 Mei 2024',
           amountCollected: 'Rp900.000',
           percentage: 0.9,
           donorshipCount: 100,
           remainingDays: '230',
-          categories: ['Pendidikan', 'Formal', 'Konseling'],
+          categories: ['Musik', 'Festival', 'Festival'],
         ),
-        EventCardBigMitra(
-          imageUrl: 'assets/img_experiment_class.png',
+        EventCardBigOrganizer(
+          imageUrl: 'assets/img_food_fest.png',
           status: 'OFFLINE',
-          title: 'Experiment Class',
+          title: 'KoChella 2024',
           date: '20 Mei 2024',
-          amountCollected: 'Rp900.000',
-          percentage: 0.8,
+          amountCollected: 'Rp50.000.000',
+          percentage: 0.45,
           donorshipCount: 100,
           remainingDays: '230',
-          categories: ['Fisika', 'Pendidikan', 'Diskusi'],
+          categories: ['Kuliner', 'Live Musik', 'Kompetisi Makan'],
         ),
-        EventCardBigMitra(
-          imageUrl: 'assets/img_literasi.png',
+        EventCardBigOrganizer(
+          imageUrl: 'assets/img_italian_kuliner.png',
           status: 'OFFLINE',
-          title: 'Literasi Bersama',
+          title: 'Italian Kuliner',
           date: '20 Mei 2024',
           amountCollected: 'Rp900.000',
           percentage: 0.9,
           donorshipCount: 100,
           remainingDays: '230',
-          categories: ['Pengetahuan', 'Buku', 'Membaca'],
+          categories: ['Musik', 'Kuliner', 'Festival'],
         ),
       ],
       onSearchChanged: (value) {

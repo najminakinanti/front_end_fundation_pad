@@ -52,6 +52,11 @@ import 'package:pad_fundation/pages/organizer_page/edit_kontraprestasi.dart';
 import 'package:pad_fundation/pages/organizer_page/edit_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/edit_password_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/event_by_category_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/event_by_category_page/festival_page_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/event_by_category_page/kuliner_page_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/event_by_category_page/pendidikan_page_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/event_by_category_page/populer_page_organizer.dart';
+import 'package:pad_fundation/pages/organizer_page/event_by_category_page/seniman_page_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/event_page_by_category_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/forgot_password_new_password_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/forgot_password_organizer.dart';
@@ -142,7 +147,11 @@ class MyApp extends StatelessWidget {
         '/bookmark-organizer': (context) => BookmarkPageOrganizer(),
         '/detail-chat-organizer': (context) => DetailChatOrganizer(),
         '/detail-chat-event-organizer': (context) => DetailChatEventOrganizer(),
-        '/event-by-category-organizer' : (context) => EventByCategoryOrganizer(),
+        '/populer-organizer': (context) => PopulerPageOrganizer(),
+        '/festival-organizer': (context) => FestivalPageOrganizer(),
+        '/kuliner-organizer': (context) => KulinerPageOrganizer(),
+        '/pendidikan-organizer': (context) => PendidikanPageOrganizer(),
+        '/seniman-organizer': (context) => SenimanPageOrganizer(),
         '/detail-event-organizer': (context) => DetailEventOrganizer(),
         '/event-page-by-category-organizer': (context) => EventPageByCategoryOrganizer(),
         '/ubah-data-profile-organizer': (context) => UbahDataProfileOrganizer(),

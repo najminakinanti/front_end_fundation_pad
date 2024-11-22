@@ -231,7 +231,7 @@ class _LoginPageState extends State<LoginPageMitra> {
 
     Widget haveAccount() {
       return Container(
-        margin: EdgeInsets.only(top: 8),
+        margin: EdgeInsets.only(top: 3),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -327,26 +327,36 @@ class _LoginPageState extends State<LoginPageMitra> {
       resizeToAvoidBottomInset: false,
       backgroundColor: backgroundColor,
       body: SafeArea(
-        child: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                margin: EdgeInsets.symmetric(
-                  horizontal: defaultMargin,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    header(),
-                    image(),
-                    emailInput(),
-                    passwordInput(),
-                    forgotPassword(),
-                    rememberMe(),
-                    loginButton(),
-                    haveAccount(),
-                  ],
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                          horizontal: defaultMargin,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            header(),
+                            image(),
+                            emailInput(),
+                            passwordInput(),
+                            forgotPassword(),
+                            rememberMe(),
+                            loginButton(),
+                            haveAccount(),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               footer(),
@@ -355,5 +365,6 @@ class _LoginPageState extends State<LoginPageMitra> {
         ),
       ),
     );
+
   }
 }

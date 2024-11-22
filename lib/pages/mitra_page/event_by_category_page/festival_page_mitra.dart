@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:pad_fundation/pages/not_logged_in/event_by_category.dart';
 import 'package:pad_fundation/widgets/mitra/event_card_big_mitra.dart';
-import '../../../widgets/guess/event_card_bookmark.dart';
+import '../event_by_category_mitra.dart';
 
 class FestivalPageMitra extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return EventByCategory(
+    return EventByCategoryMitra(
       title: 'Event Festival',
       eventCards: [
         EventCardBigMitra(

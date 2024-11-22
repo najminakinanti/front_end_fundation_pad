@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:pad_fundation/widgets/mitra/event_card_big_mitra.dart';
-import '../event_by_category_mitra.dart';
+import 'package:pad_fundation/pages/organizer_page/event_by_category_organizer.dart';
+import 'package:pad_fundation/widgets/organizer/event_card_big_organizer.dart';
 
-class SenimanPageMitra extends StatelessWidget {
+class SenimanPageOrganizer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return EventByCategoryMitra(
+    return EventByCategoryOrganizer(
       title: 'Event Seniman',
       eventCards: [
-        EventCardBigMitra(
+        EventCardBigOrganizer(
           imageUrl: 'assets/img_world_art.png',
           status: 'OFFLINE',
           title: 'World Art Day',
@@ -20,7 +20,7 @@ class SenimanPageMitra extends StatelessWidget {
           remainingDays: '230',
           categories: ['Seniman', 'Seni Lukis'],
         ),
-        EventCardBigMitra(
+        EventCardBigOrganizer(
           imageUrl: 'assets/img_seni_kontemporer.png',
           status: 'OFFLINE',
           title: 'Seni Kontemporer 2024',

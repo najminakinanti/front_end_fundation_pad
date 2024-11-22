@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:pad_fundation/widgets/mitra/event_card_big_mitra.dart';
-import '../event_by_category_mitra.dart';
+import '../../../widgets/organizer/event_card_big_organizer.dart';
+import '../event_by_category_organizer.dart';
 
-class PopulerPageMitra extends StatelessWidget {
+class PopulerPageOrganizer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return EventByCategoryMitra(
+    return EventByCategoryOrganizer(
       title: 'Event Populer',
       eventCards: [
-        EventCardBigMitra(
+        EventCardBigOrganizer(
           imageUrl: 'assets/img_music_fest.png',
           status: 'OFFLINE',
           title: 'Music Fest 2024',
@@ -20,7 +20,7 @@ class PopulerPageMitra extends StatelessWidget {
           remainingDays: '230',
           categories: ['Musik', 'Festival', 'DJ', 'EDM', 'Hiburan'],
         ),
-        EventCardBigMitra(
+        EventCardBigOrganizer(
           imageUrl: 'assets/img_kulfood.png',
           status: 'OFFLINE',
           title: 'KulFood 2024',
@@ -31,7 +31,7 @@ class PopulerPageMitra extends StatelessWidget {
           remainingDays: '230',
           categories: ['Kuliner', 'Live Musik', 'Festival', 'Seafood', 'BBQ', 'Food Truck'],
         ),
-        EventCardBigMitra(
+        EventCardBigOrganizer(
           imageUrl: 'assets/img_kochella.png',
           status: 'OFFLINE',
           title: 'KoChella 2024',

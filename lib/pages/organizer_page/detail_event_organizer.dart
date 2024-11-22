@@ -45,7 +45,7 @@ class _DetailEventState extends State<DetailEventOrganizer> {
             Row(
               children: [
                 Text(
-                  'Mufest org 2024',
+                  'Mufest 2024',
                   style: blackTextStyle.copyWith(
                       fontSize: 20, fontWeight: bold),
                 ),
@@ -339,6 +339,13 @@ class _DetailEventState extends State<DetailEventOrganizer> {
               category: 'Gold',
               amount: 'Rp35.000.000',
             ),
+            SponsorCard(
+              imageUrl: 'assets/img_the_organizer.png',
+              name: 'The Organizer',
+              iconUrl: 'assets/icon_gold.png',
+              category: 'Gold',
+              amount: 'Rp34.000.000',
+            ),
             SizedBox(height: 10),
             Text(
               'Silver',
@@ -348,11 +355,18 @@ class _DetailEventState extends State<DetailEventOrganizer> {
               ),
             ),
             SponsorCard(
-              imageUrl: 'assets/img_bittersweet.png',
-              name: 'Bittersweet by Najla',
-              iconUrl: 'assets/icon_gold.png',
-              category: 'Gold',
-              amount: 'Rp35.000.000',
+              imageUrl: 'assets/img_raorganizer.png',
+              name: 'Raorganizer',
+              iconUrl: 'assets/icon_silver.png',
+              category: 'Silver',
+              amount: 'Rp25.000.000',
+            ),
+            SponsorCard(
+              imageUrl: 'assets/img_space.png',
+              name: 'Organizer Event',
+              iconUrl: 'assets/icon_silver.png',
+              category: 'Silver',
+              amount: 'Rp15.000.000',
             ),
           ],
         ),
@@ -404,50 +418,56 @@ class _DetailEventState extends State<DetailEventOrganizer> {
               ),
             ),
           ),
-          Positioned(
-            top: 50,
-            left: 15,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Container(
-                width: 25,
-                height: 25,
-                decoration: BoxDecoration(
-                  color: backgroundColor,
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                child: Image.asset(
-                  'assets/icon_tanda_panah_kiri.png',
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 50,
-            right: 15,
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  isBookmarked = !isBookmarked;
-                });
-              },
-              child: Container(
-                width: 25,
-                height: 25,
-                decoration: BoxDecoration(
-                  color: backgroundColor3,
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: Image.asset(
-                    isBookmarked ? 'assets/icon_bookmark_on.png' : 'assets/icon_bookmark_off.png',
-                    width: 15,
-                    height: 15,
+          SafeArea(
+            child: Stack(
+              children: [
+                Positioned(
+                  top: 30,
+                  left: 15,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      width: 25,
+                      height: 25,
+                      decoration: BoxDecoration(
+                        color: backgroundColor,
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      child: Image.asset(
+                        'assets/icon_tanda_panah_kiri.png',
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                Positioned(
+                  top: 30,
+                  right: 15,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isBookmarked = !isBookmarked;
+                      });
+                    },
+                    child: Container(
+                      width: 25,
+                      height: 25,
+                      decoration: BoxDecoration(
+                        color: backgroundColor3,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Image.asset(
+                          isBookmarked ? 'assets/icon_bookmark_on.png' : 'assets/icon_bookmark_off.png',
+                          width: 15,
+                          height: 15,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           Positioned(
@@ -501,10 +521,10 @@ class _DetailEventState extends State<DetailEventOrganizer> {
               ],
             ),
           )
-
         ],
       ),
     );
+
   }
 
 }

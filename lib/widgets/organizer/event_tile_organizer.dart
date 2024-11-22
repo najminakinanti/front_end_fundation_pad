@@ -3,10 +3,35 @@ import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 
 class EventTileOrganizer extends StatelessWidget {
+  final String imagePath;
+  final String status;
+  final String title;
+  final String collectedAmount;
+  final double progress;
+  final int daysRemaining;
+  final int donorshipCount;
+  final String eventDate;
+  final List<String> categories;
+  final VoidCallback? onTap;
+
+  const EventTileOrganizer({
+    Key? key,
+    required this.imagePath,
+    required this.status,
+    required this.title,
+    required this.collectedAmount,
+    required this.progress,
+    required this.daysRemaining,
+    required this.donorshipCount,
+    required this.eventDate,
+    required this.categories,
+    this.onTap,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: onTap ?? () {
         Navigator.pushNamed(context, '/detail-event-organizer');
       },
       child: Container(
@@ -15,7 +40,7 @@ class EventTileOrganizer extends StatelessWidget {
         margin: EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
           color: backgroundColor3,
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: sageGreen4,
             width: 1.0,
@@ -28,11 +53,11 @@ class EventTileOrganizer extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(5),
-                    bottomLeft: Radius.circular(5),
+                    topLeft: Radius.circular(10),
+                    bottomLeft: Radius.circular(10),
                   ),
                   child: Image.asset(
-                    'assets/img_music_fest.png',
+                    imagePath,
                     width: 127,
                     height: double.infinity,
                     fit: BoxFit.cover,
@@ -48,7 +73,7 @@ class EventTileOrganizer extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      'OFFLINE',
+                      status.toUpperCase(),
                       style: orangeTextStyle.copyWith(
                         fontSize: 10,
                         fontWeight: bold,
@@ -60,43 +85,49 @@ class EventTileOrganizer extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(10),
+                padding: EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
-                        Text(
-                          'Mufest org',
-                          style: grayTextStyle.copyWith(
-                            fontSize: 14,
-                            fontWeight: bold,
+                        Expanded(
+                          child: Text(
+                            title,
+                            style: grayTextStyle.copyWith(
+                              fontSize: 14,
+                              fontWeight: bold,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        Spacer(),
-
+                        SizedBox(width: 5),
                         Image.asset('assets/icon_calendar.png', width: 11),
                         SizedBox(width: 4),
-                        Text('20 Mei 2024', style: veryLightGrayTextStyle.copyWith(fontSize: 10, fontWeight: regular,),),
+                        Text(
+                          eventDate,
+                          style: lighGrayTextStyle.copyWith(
+                            fontSize: 10,
+                            fontWeight: regular,
+                          ),
+                        ),
                       ],
                     ),
-
-                    SizedBox(height: 4),
+                    SizedBox(height: 8),
                     Text(
-                      'Terkumpul Rp90.000.000',
+                      'Terkumpul $collectedAmount',
                       style: lighGrayTextStyle.copyWith(
                         fontSize: 10,
                         fontWeight: regular,
                       ),
                     ),
-                    SizedBox(height: 4),
                     Row(
                       children: [
                         Expanded(
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: LinearProgressIndicator(
-                              value: 0.9,
+                              value: progress,
                               backgroundColor: lineColor2,
                               valueColor: AlwaysStoppedAnimation<Color>(lineColor),
                             ),
@@ -104,7 +135,7 @@ class EventTileOrganizer extends StatelessWidget {
                         ),
                         SizedBox(width: 5),
                         Text(
-                          '90%',
+                          '${(progress * 100).toInt()}%',
                           style: blackTextStyle.copyWith(
                             fontSize: 10,
                             fontWeight: regular,
@@ -112,65 +143,45 @@ class EventTileOrganizer extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 4),
+                    SizedBox(height: 8),
                     Row(
                       children: [
                         Image.asset('assets/icon_donorship.png', width: 18),
                         SizedBox(width: 4),
-                        Text('100 Donorship', style: veryLightGrayTextStyle.copyWith(fontSize: 10, fontWeight: regular,),),
-
+                        Text(
+                          '$donorshipCount Donorship',
+                          style: veryLightGrayTextStyle.copyWith(
+                            fontSize: 10,
+                            fontWeight: regular,
+                          ),
+                        ),
                         Spacer(),
-
                         Image.asset('assets/icon_timer.png', width: 13),
                         SizedBox(width: 4),
-                        Text('230 hari lagi', style: veryLightGrayTextStyle.copyWith(fontSize: 10, fontWeight: regular,),),
+                        Text(
+                          '$daysRemaining hari lagi',
+                          style: veryLightGrayTextStyle.copyWith(
+                            fontSize: 10,
+                            fontWeight: regular,
+                          ),
+                        ),
                       ],
                     ),
-
-                    SizedBox(height: 7),
-
+                    SizedBox(height: 8),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Wrap(
                         spacing: 5,
-                        children: [
-                          CategoryButton(
-                            label: 'Festival',
+                        children: categories
+                            .map(
+                              (category) => CategoryButton(
+                            label: category,
                             onTap: () {
-                              print('Festival');
+                              print(category);
                             },
                           ),
-                          CategoryButton(
-                            label: 'Musik',
-                            onTap: () {
-                              print('Musik');
-                            },
-                          ),
-                          CategoryButton(
-                            label: 'EDM',
-                            onTap: () {
-                              print('EDM');
-                            },
-                          ),
-                          CategoryButton(
-                            label: 'Hiburan',
-                            onTap: () {
-                              print('Hiburan');
-                            },
-                          ),
-                          CategoryButton(
-                            label: 'DJ',
-                            onTap: () {
-                              print('DJ');
-                            },
-                          ),
-                          CategoryButton(
-                            label: 'Live',
-                            onTap: () {
-                              print('Live');
-                            },
-                          ),
-                        ],
+                        )
+                            .toList(),
                       ),
                     ),
                   ],

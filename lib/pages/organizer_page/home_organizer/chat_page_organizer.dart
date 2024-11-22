@@ -83,11 +83,87 @@ class ChatPageOrganizer extends StatelessWidget {
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           children: [
-            ChatTileOrganizer(),
-            ChatTileOrganizer(),
-            ChatTileOrganizer(),
-            ChatTileOrganizer(),
-            ChatTileOrganizer(),
+            ChatTileOrganizer(
+              imageUrl: 'assets/img_chat3.png',
+              name: 'Nama Mitra Industri',
+              message: 'Bagaimana kak?',
+              time: '12:18 PM',
+              onTap: () {
+                Navigator.pushNamed(context, '/detail-chat-organizer');
+              },
+            ),
+            ChatTileOrganizer(
+              imageUrl: 'assets/img_chat8.png',
+              name: 'Nama Mitra Industri',
+              message: 'Bagaimana kak?',
+              time: '12:18 PM',
+              onTap: () {
+                Navigator.pushNamed(context, '/detail-chat-organizer');
+              },
+            ),
+            ChatTileOrganizer(
+              imageUrl: 'assets/img_chat9.png',
+              name: 'Nama Mitra Industri',
+              message: 'Bagaimana kak?',
+              time: '12:18 PM',
+              onTap: () {
+                Navigator.pushNamed(context, '/detail-chat-organizer');
+              },
+            ),
+            ChatTileOrganizer(
+              imageUrl: 'assets/img_chat10.png',
+              name: 'Nama Mitra Industri',
+              message: 'Bagaimana kak?',
+              time: '12:18 PM',
+              onTap: () {
+                Navigator.pushNamed(context, '/detail-chat-organizer');
+              },
+            ),
+            ChatTileOrganizer(
+              imageUrl: 'assets/img_chat11.png',
+              name: 'Nama Mitra Industri',
+              message: 'Bagaimana kak?',
+              time: '12:18 PM',
+              onTap: () {
+                Navigator.pushNamed(context, '/detail-chat-organizer');
+              },
+            ),
+            ChatTileOrganizer(
+              imageUrl: 'assets/img_chat12.png',
+              name: 'Nama Mitra Industri',
+              message: 'Bagaimana kak?',
+              time: '12:18 PM',
+              onTap: () {
+                Navigator.pushNamed(context, '/detail-chat-organizer');
+              },
+            ),
+            ChatTileOrganizer(
+              imageUrl: 'assets/img_chat13.png',
+              name: 'Nama Mitra Industri',
+              message: 'Bagaimana kak?',
+              time: '12:18 PM',
+              onTap: () {
+                Navigator.pushNamed(context, '/detail-chat-organizer');
+              },
+            ),
+            ChatTileOrganizer(
+              imageUrl: 'assets/img_chat14.png',
+              name: 'Nama Mitra Industri',
+              message: 'Bagaimana kak?',
+              time: '12:18 PM',
+              onTap: () {
+                Navigator.pushNamed(context, '/detail-chat-organizer');
+              },
+            ),
+            ChatTileOrganizer(
+              imageUrl: 'assets/img_chat15.png',
+              name: 'Nama Mitra Industri',
+              message: 'Bagaimana kak?',
+              time: '12:18 PM',
+              onTap: () {
+                Navigator.pushNamed(context, '/detail-chat-organizer');
+              },
+            ),
           ],
         ),
       );

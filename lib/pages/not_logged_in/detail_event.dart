@@ -359,63 +359,67 @@ class _DetailEventState extends State<DetailEvent> {
       body: Stack(
         children: [
           SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  header(),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: defaultMargin),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        title(),
-                      ],
+            child: Stack(
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      header(),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: defaultMargin),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            title(),
+                          ],
+                        ),
+                      ),
+                      whiteLine(),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: defaultMargin),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            audienceTargetTitle(),
+                            audienceTarget(),
+                            aboutEventTitle(),
+                            aboutEvent(),
+                            eventCategories(),
+                            informationDetailTitle(),
+                            informationDetail(),
+                            kontraprestasiTitle(),
+                            kontraprestasi(),
+                            sponsorTitle(),
+                            sponsor(),
+                            SizedBox(height: 100),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  top: 30,
+                  left: 15,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      width: 25,
+                      height: 25,
+                      decoration: BoxDecoration(
+                        color: backgroundColor,
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      child: Image.asset(
+                        'assets/icon_tanda_panah_kiri.png',
+                      ),
                     ),
                   ),
-                  whiteLine(),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: defaultMargin),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        audienceTargetTitle(),
-                        audienceTarget(),
-                        aboutEventTitle(),
-                        aboutEvent(),
-                        eventCategories(),
-                        informationDetailTitle(),
-                        informationDetail(),
-                        kontraprestasiTitle(),
-                        kontraprestasi(),
-                        sponsorTitle(),
-                        sponsor(),
-                        SizedBox(height: 100),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            top: 50,
-            left: 15,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Container(
-                width: 25,
-                height: 25,
-                decoration: BoxDecoration(
-                  color: backgroundColor,
-                  borderRadius: BorderRadius.circular(100),
                 ),
-                child: Image.asset(
-                  'assets/icon_tanda_panah_kiri.png',
-                ),
-              ),
+              ],
             ),
           ),
           Positioned(
@@ -475,7 +479,6 @@ class _DetailEventState extends State<DetailEvent> {
               ],
             ),
           )
-
         ],
       ),
     );
