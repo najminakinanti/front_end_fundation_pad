@@ -1,120 +1,90 @@
 import 'package:flutter/material.dart';
-import 'package:pad_fundation/pages/splash_screen/on_boarding_page_2.dart';
 import 'package:pad_fundation/theme.dart';
 
 class OnBoardingPage1 extends StatelessWidget {
+  final PageController pageController;
+  final int currentPage;
+
+  OnBoardingPage1({required this.pageController, required this.currentPage});
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: 400,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Image section
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Container(
-                    height: 297.02,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/img_splash_1.png'),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
+    return Padding(
+      padding: EdgeInsets.all(defaultMargin),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Image section
+          Padding(
+            padding: const EdgeInsets.all(0.0),
+            child: Container(
+              height: 297.02,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/img_splash_1.png'),
+                  fit: BoxFit.contain,
                 ),
-                SizedBox(height: 20),
-
-                Text(
-                  'Kemudahan Pencarian Dana',
-                  style: blackTextStyle.copyWith(
-                    fontSize: 16,
-                    fontWeight: bold,
-                  ),
-                ),
-                SizedBox(height: 10),
-                // Subtitle
-                Text(
-                  'Solusi Terbaik untuk Sponsor\ndalam Pencarian Dana',
-                  textAlign: TextAlign.center,
-                  style: grayTextStyle.copyWith(
-                    fontSize: 12,
-                    fontWeight: regular,
-                  ),
-                ),
-                SizedBox(height: 40),
-                // Dots Indicator
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    buildDot(context, isActive: true, page: 1),
-                    buildDot(context, isActive: false, page: 2),
-                    buildDot(context, isActive: false, page: 3),
-                  ],
-                ),
-                SizedBox(height: 40),
-                // Button
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: 330,
-                    ),
-                    child: SizedBox(
-                      height: 50,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: primaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        onPressed: () {
-                          // Navigate to the next page
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => OnBoardingPage2()),
-                          );
-                        },
-                        child: Center(
-                          child: Text(
-                            'L A N J U T',
-                            style: whiteTextStyle.copyWith(
-                              fontSize: 20,
-                              fontWeight: bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
+          SizedBox(height: 20),
+          Text(
+            'Kemudahan Pencarian Dana',
+            style: blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
+          ),
+          SizedBox(height: 10),
+          Text(
+            'Solusi Terbaik untuk Sponsor\ndalam Pencarian Dana',
+            textAlign: TextAlign.center,
+            style: grayTextStyle.copyWith(fontSize: 12, fontWeight: regular),
+          ),
+          SizedBox(height: 40),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              buildDot(isActive: currentPage == 0, index: 0),
+              buildDot(isActive: currentPage == 1, index: 1),
+              buildDot(isActive: currentPage == 2, index: 2),
+            ],
+          ),
+          SizedBox(height: 40),
+          SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onPressed: () {
+                pageController.nextPage(
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.easeIn,
+                );
+              },
+              child: Center(
+                child: Text(
+                  'L A N J U T',
+                  style: whiteTextStyle.copyWith(fontSize: 20, fontWeight: bold),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  // build tappable dots
-  Widget buildDot(BuildContext context, {required bool isActive, required int page}) {
+  Widget buildDot({required bool isActive, required int index}) {
     return GestureDetector(
       onTap: () {
-        // Navigate to the specific page when the dot is tap
-        if (page == 1) {
-          Navigator.pushReplacementNamed(context, '/boarding-1');
-        } else if (page == 2) {
-          Navigator.pushReplacementNamed(context, '/boarding-2');
-        } else if (page == 3) {
-          Navigator.pushReplacementNamed(context, '/boarding-3');
-        }
+        pageController.animateToPage(
+          index,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
       },
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 5),

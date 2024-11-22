@@ -3,139 +3,108 @@ import 'package:pad_fundation/pages/splash_screen/choose_role.dart';
 import 'package:pad_fundation/theme.dart';
 
 class OnBoardingPage3 extends StatelessWidget {
+  final PageController pageController;
+  final int currentPage;
+
+  OnBoardingPage3({required this.pageController, required this.currentPage});
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: 400,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Image section
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Container(
-                      height: 297.02,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/img_splash_3.png'),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-
-                  Text(
-                    'Sukses Bersama,\nKolaborasi Tak Terbatas',
-                    textAlign: TextAlign.center,
-                    style: blackTextStyle.copyWith(
-                      fontSize: 16,
-                      fontWeight: bold,
-                    ),
-                  ),
-
-                  SizedBox(height: 10),
-
-                  Text(
-                    'Aplikasi Fundation untuk Organizer dan Mitra Industri',
-                    textAlign: TextAlign.center,
-                    style: grayTextStyle.copyWith(
-                      fontSize: 12,
-                      fontWeight: regular,
-                    ),
-                  ),
-
-                  SizedBox(height: 40),
-                  // Dots Indicator
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      buildDot(context, isActive: false, page: 1),
-                      buildDot(context, isActive: false, page: 2),
-                      buildDot(context, isActive: true, page: 3),
-                    ],
-                  ),
-                  SizedBox(height: 40),
-                  // Button
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        maxWidth: 330,
-                      ),
-                      child: SizedBox(
-                        height: 50,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: primaryColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => ChooseRole()),
-                            );
-                          },
-                          child: Center(
-                            child: Text(
-                              'M U L A I',
-                              style: whiteTextStyle.copyWith(
-                                fontSize: 20,
-                                fontWeight: bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 15, top: 5),
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/home');
-                        },
-                        child: Text(
-                          'Masuk Tanpa Akun',
-                          style: greenTextStyle.copyWith(
-                            fontSize: 12,
-                            fontWeight: bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+    return Padding(
+      padding: EdgeInsets.all(defaultMargin),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(height: 45),
+          Padding(
+            padding: const EdgeInsets.all(0),
+            child: Container(
+              height: 297.02,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/img_splash_3.png'),
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
           ),
-        ),
+          SizedBox(height: 20),
+          Text(
+            'Sukses Bersama,\nKolaborasi Tak Terbatas',
+            textAlign: TextAlign.center,
+            style: blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
+          ),
+          SizedBox(height: 10),
+          Text(
+            'Aplikasi Fundation untuk Organizer dan Mitra Industri',
+            textAlign: TextAlign.center,
+            style: grayTextStyle.copyWith(fontSize: 12, fontWeight: regular),
+          ),
+          SizedBox(height: 35),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              buildDot(isActive: currentPage == 0, index: 0),
+              buildDot(isActive: currentPage == 1, index: 1),
+              buildDot(isActive: currentPage == 2, index: 2),
+            ],
+          ),
+          SizedBox(height: 40),
+          SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ChooseRole()),
+                );
+              },
+              child: Center(
+                child: Text(
+                  'M U L A I',
+                  style: whiteTextStyle.copyWith(fontSize: 20, fontWeight: bold),
+                ),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 0, top: 0),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/home');
+                },
+                child: Text(
+                  'Masuk Tanpa Akun',
+                  style: greenTextStyle.copyWith(
+                    fontSize: 12,
+                    fontWeight: bold,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget buildDot(BuildContext context, {required bool isActive, required int page}) {
+  Widget buildDot({required bool isActive, required int index}) {
     return GestureDetector(
       onTap: () {
-        if (page == 1) {
-          Navigator.pushReplacementNamed(context, '/boarding-1');
-        } else if (page == 2) {
-          Navigator.pushReplacementNamed(context, '/boarding-2');
-        } else if (page == 3) {
-          Navigator.pushReplacementNamed(context, '/boarding-3');
-        }
+        pageController.animateToPage(
+          index,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
       },
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 5),
@@ -149,4 +118,3 @@ class OnBoardingPage3 extends StatelessWidget {
     );
   }
 }
-
