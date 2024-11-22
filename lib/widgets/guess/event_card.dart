@@ -2,22 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 
-class EventCard extends StatefulWidget {
-  @override
-  _EventCardState createState() => _EventCardState();
-}
+class EventCard extends StatelessWidget {
+  final String imagePath;
+  final String status;
+  final String title;
+  final String collectedAmount;
+  final double progress;
+  final int daysRemaining;
+  final int donorshipCount;
+  final List<String> categories;
+  final VoidCallback? onTap;
 
-class _EventCardState extends State<EventCard> {
+  const EventCard({
+    Key? key,
+    required this.imagePath,
+    required this.status,
+    required this.title,
+    required this.collectedAmount,
+    required this.progress,
+    required this.daysRemaining,
+    required this.donorshipCount,
+    required this.categories,
+    this.onTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, '/detail-event');
-      },
+      onTap: onTap ?? () => Navigator.pushNamed(context, '/detail-event'),
       child: Container(
         width: 225,
-        margin: EdgeInsets.only(right: 10),
+        margin: const EdgeInsets.only(right: 10),
         decoration: BoxDecoration(
           color: backgroundColor3,
           borderRadius: BorderRadius.circular(5),
@@ -30,24 +45,24 @@ class _EventCardState extends State<EventCard> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(5),
                   child: Image.asset(
-                    'assets/img_music_fest.png',
+                    imagePath,
                     width: double.infinity,
                     height: 100,
                     fit: BoxFit.cover,
                   ),
                 ),
-      
                 Positioned(
                   top: 10,
                   left: 10,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
                       color: sageGreen3,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      'OFFLINE',
+                      status.toUpperCase(),
                       style: orangeTextStyle.copyWith(
                         fontSize: 10,
                         fontWeight: bold,
@@ -62,37 +77,40 @@ class _EventCardState extends State<EventCard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Event Title
                   Text(
-                    'Music Fest 2024',
+                    title,
                     style: grayTextStyle.copyWith(
                       fontSize: 14,
                       fontWeight: bold,
                     ),
                   ),
-      
+                  // Collected Amount
                   Text(
-                    'Terkumpul Rp90.000.000',
+                    'Terkumpul $collectedAmount',
                     style: lighGrayTextStyle.copyWith(
                       fontSize: 10,
                       fontWeight: regular,
                     ),
                   ),
-      
+                  // Progress Bar
                   Row(
                     children: [
                       Expanded(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8),
                           child: LinearProgressIndicator(
-                            value: 0.9,
+                            value: progress,
                             backgroundColor: lineColor2,
-                            valueColor: AlwaysStoppedAnimation<Color>(lineColor),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              lineColor,
+                            ),
                           ),
                         ),
                       ),
-                      SizedBox(width: 5),
+                      const SizedBox(width: 5),
                       Text(
-                        '90%',
+                        '${(progress * 100).toInt()}%',
                         style: blackTextStyle.copyWith(
                           fontSize: 10,
                           fontWeight: regular,
@@ -100,73 +118,55 @@ class _EventCardState extends State<EventCard> {
                       ),
                     ],
                   ),
-      
-                  SizedBox(height: 7),
-      
+                  const SizedBox(height: 7),
+                  // Donorship and Days Remaining
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
                           Image.asset('assets/icon_donorship.png', width: 18),
-                          SizedBox(width: 4),
-                          Text('100 Donorship', style: veryLightGrayTextStyle.copyWith(fontSize: 10, fontWeight: regular,),),
+                          const SizedBox(width: 4),
+                          Text(
+                            '$donorshipCount Donorship',
+                            style: veryLightGrayTextStyle.copyWith(
+                              fontSize: 10,
+                              fontWeight: regular,
+                            ),
+                          ),
                         ],
                       ),
                       Row(
                         children: [
                           Image.asset('assets/icon_timer.png', width: 13),
-                          SizedBox(width: 4),
-                          Text('230 hari lagi', style: veryLightGrayTextStyle.copyWith(fontSize: 10, fontWeight: regular,),),
+                          const SizedBox(width: 4),
+                          Text(
+                            '$daysRemaining hari lagi',
+                            style: veryLightGrayTextStyle.copyWith(
+                              fontSize: 10,
+                              fontWeight: regular,
+                            ),
+                          ),
                         ],
                       ),
                     ],
                   ),
-      
-                  SizedBox(height: 7),
-      
+                  const SizedBox(height: 7),
+                  // Categories
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Wrap(
                       spacing: 5,
-                      children: [
-                        CategoryButton(
-                          label: 'Festival',
+                      children: categories
+                          .map(
+                            (category) => CategoryButton(
+                          label: category,
                           onTap: () {
-                            print('Festival');
+                            print(category);
                           },
                         ),
-                        CategoryButton(
-                          label: 'Musik',
-                          onTap: () {
-                            print('Musik');
-                          },
-                        ),
-                        CategoryButton(
-                          label: 'EDM',
-                          onTap: () {
-                            print('EDM');
-                          },
-                        ),
-                        CategoryButton(
-                          label: 'Hiburan',
-                          onTap: () {
-                            print('Hiburan');
-                          },
-                        ),
-                        CategoryButton(
-                          label: 'DJ',
-                          onTap: () {
-                            print('DJ');
-                          },
-                        ),
-                        CategoryButton(
-                          label: 'Live',
-                          onTap: () {
-                            print('Live');
-                          },
-                        ),
-                      ],
+                      )
+                          .toList(),
                     ),
                   ),
                 ],

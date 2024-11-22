@@ -60,7 +60,7 @@ class DetailChatEventOrganizer extends StatelessWidget {
                             fontWeight: medium,
                           ),
                           decoration: InputDecoration(
-                            hintText: 'Cari Event',
+                            hintText: 'Cari Chat',
                             hintStyle: veryLightGrayTextStyle.copyWith(
                               fontSize: 16,
                               fontWeight: medium,
@@ -87,10 +87,42 @@ class DetailChatEventOrganizer extends StatelessWidget {
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           children: [
-            ChatTileOrganizer(),
-            ChatTileOrganizer(),
-            ChatTileOrganizer(),
-            ChatTileOrganizer(),
+            ChatTileOrganizer(
+              imageUrl: 'assets/img_chat3.png',
+              name: 'Nama Mitra Industri',
+              message: 'Bagaimana Kak?',
+              time: '12:18 PM',
+              onTap: () {
+                Navigator.pushNamed(context, '/detail-chat-organizer');
+              },
+            ),
+            ChatTileOrganizer(
+              imageUrl: 'assets/img_chat5.png',
+              name: 'Nama Mitra Industri',
+              message: 'Bagaimana Kak?',
+              time: '12:18 PM',
+              onTap: () {
+                Navigator.pushNamed(context, '/detail-chat-organizer');
+              },
+            ),
+            ChatTileOrganizer(
+              imageUrl: 'assets/img_chat6.png',
+              name: 'Nama Mitra Industri',
+              message: 'Bagaimana Kak?',
+              time: '12:18 PM',
+              onTap: () {
+                Navigator.pushNamed(context, '/detail-chat-organizer');
+              },
+            ),
+            ChatTileOrganizer(
+              imageUrl: 'assets/img_chat7.png',
+              name: 'Nama Mitra Industri',
+              message: 'Bagaimana Kak?',
+              time: '12:18 PM',
+              onTap: () {
+                Navigator.pushNamed(context, '/detail-chat-organizer');
+              },
+            ),
           ],
         ),
       );

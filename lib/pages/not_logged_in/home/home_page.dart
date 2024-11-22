@@ -10,7 +10,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     Widget header() {
       return Container(
         child: Column(
@@ -187,7 +186,7 @@ class HomePage extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category');
+                    Navigator.pushNamed(context, '/festival');
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -216,7 +215,7 @@ class HomePage extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category');
+                    Navigator.pushNamed(context, '/kuliner');
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -245,7 +244,7 @@ class HomePage extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category');
+                    Navigator.pushNamed(context, '/pendidikan');
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -274,7 +273,7 @@ class HomePage extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category');
+                    Navigator.pushNamed(context, '/seniman');
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -349,7 +348,7 @@ class HomePage extends StatelessWidget {
             Container(
               child: TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/event-by-category');
+                  Navigator.pushNamed(context, '/populer');
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -383,9 +382,63 @@ class HomePage extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-                EventCard(),
-                EventCard(),
-                EventCard(),
+              EventCard(
+                imagePath: 'assets/img_music_fest.png',
+                status: 'Offline',
+                title: 'Music Fest 2024',
+                collectedAmount: 'Rp90.000.000',
+                progress: 0.9,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: [
+                  'Festival',
+                  'Musik',
+                  'EDM',
+                  'Hiburan',
+                  'DJ',
+                  'Live'
+                ],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
+              ),
+              EventCard(
+                imagePath: 'assets/img_educ_fest.png',
+                status: 'Online',
+                title: 'Educ Fest 2024',
+                collectedAmount: 'Rp10.000.000',
+                progress: 0.95,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: [
+                  'Pendidikan',
+                  'Seminar',
+                  'Konsultasi',
+                  'Formal'
+                ],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
+              ),
+              EventCard(
+                imagePath: 'assets/img_kulfood.png',
+                status: 'Offline',
+                title: 'KulFood 2024',
+                collectedAmount: 'Rp50.000.000',
+                progress: 0.2,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: [
+                  'Festival',
+                  'Kuliner',
+                  'Kompetisi',
+                  'Live Musik',
+                  'Live'
+                ],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
+              ),
             ],
           ),
         ),
@@ -442,28 +495,83 @@ class HomePage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              EventTile(),
-              EventTile(),
-              EventTile(),
-              EventTile(),
+              EventTile(
+                imagePath: 'assets/img_collegefair.png',
+                status: 'ONLINE',
+                title: 'COLLEGEFAIR 24',
+                collectedAmount: 'Terkumpul Rp900.000',
+                progress: 0.4,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                date: '20 Mei 2024',
+                categories: ['Pendidikan', 'Seminar', 'Karir', 'Konseling'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
+              ),
+              EventTile(
+                imagePath: 'assets/img_music_fest.png',
+                status: 'OFFLINE',
+                title: 'Music Fest 2024',
+                collectedAmount: 'Terkumpul Rp90.000.000',
+                progress: 0.8,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                date: '20 Mei 2024',
+                categories: ['Musik', 'Festival','Hiburan', 'DJ', 'Live', 'EDM'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
+              ),
+              EventTile(
+                imagePath: 'assets/img_kochella.png',
+                status: 'OFFLINE',
+                title: 'KoChella 2024',
+                collectedAmount: 'Terkumpul Rp90.000.000',
+                progress: 0.75,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                date: '20 Mei 2024',
+                categories: ['Musik', 'Festival', 'Budaya', 'Live'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
+              ),
+              EventTile(
+                imagePath: 'assets/img_foodfest.png',
+                status: 'OFFLINE',
+                title: 'Food Fest 2024 ',
+                collectedAmount: 'Terkumpul Rp15.000.000',
+                progress: 0.2,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                date: '20 Mei 2024',
+                categories: ['Makanan', 'Minuman', 'Musik', 'Art'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
+              ),
             ],
           ),
         ),
       );
     }
 
-    return ListView(
-      children: [
-        header(),
-        searchBar(),
-        promotion(),
-        categories(),
-        popularEventTitle(),
-        popularEvent(),
-        allEventTitle(),
-        allEvent(),
-        SizedBox(height: 80),
-      ],
+    return Scaffold(
+      backgroundColor: backgroundColor,
+      body: ListView(
+        children: [
+          header(),
+          searchBar(),
+          promotion(),
+          categories(),
+          popularEventTitle(),
+          popularEvent(),
+          allEventTitle(),
+          allEvent(),
+          SizedBox(height: 80)
+        ],
+      ),
     );
   }
 }

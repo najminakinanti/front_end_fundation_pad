@@ -112,7 +112,7 @@ class AllEventOrganizer extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category-organizer');
+                    Navigator.pushNamed(context, '/festival-organizer');
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -141,7 +141,7 @@ class AllEventOrganizer extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category-organizer');
+                    Navigator.pushNamed(context, '/kuliner-organizer');
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -170,7 +170,7 @@ class AllEventOrganizer extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category-organizer');
+                    Navigator.pushNamed(context, '/pendidikan-organizer');
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -199,7 +199,7 @@ class AllEventOrganizer extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category-organizer');
+                    Navigator.pushNamed(context, '/seniman-organizer');
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -282,10 +282,71 @@ class AllEventOrganizer extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              EventCardOrganizer(),
-              EventCardOrganizer(),
-              EventCardOrganizer(),
-              EventCardOrganizer(),
+              EventCardOrganizer(
+                imagePath: 'assets/img_music_fest.png',
+                status: 'OFFLINE',
+                title: 'Music Fest 2024',
+                collectedAmount: 'Rp90.000.000',
+                progress: 0.9,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: ['Festival', 'Musik', 'EDM', 'Hiburan', 'DJ', 'Live'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event-organizer');
+                },
+              ),
+              EventCardOrganizer(
+                imagePath: 'assets/img_kulfood.png',
+                status: 'OFFLINE',
+                title: 'KulFood 2024 ',
+                collectedAmount: 'Rp900.000',
+                progress: 0.2,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: ['Festival', 'Kuliner', 'Kompetisi', 'Live Musik', 'Live'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event-organizer');
+                },
+              ),
+              EventCardOrganizer(
+                imagePath: 'assets/img_summer_party.png',
+                status: 'OFFLINE',
+                title: 'Summer Shimer 2024',
+                collectedAmount: 'Rp900.000',
+                progress: 0.2,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: ['Pantai', 'Pesta', 'Liburan', 'Musik', 'Dress'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event-organizer');
+                },
+              ),
+              EventCardOrganizer(
+                imagePath: 'assets/img_food_fest.png',
+                status: 'OFFLINE',
+                title: 'FoodFest 2024',
+                collectedAmount: 'Rp900.000',
+                progress: 0.2,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: ['Festival', 'Kuliner', 'Weekend', 'Live Musik', 'Live'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event-organizer');
+                },
+              ),
+              EventCardOrganizer(
+                imagePath: 'assets/img_educ_fest.png',
+                status: 'ONLINE',
+                title: 'Educ Fest 2024',
+                collectedAmount: 'Rp10.000.000',
+                progress: 0.95,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: ['Pendidikan', 'Seminar', 'Konsultasi', 'Formal'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event-organizer');
+                },
+              ),
             ],
           ),
         ),
@@ -316,10 +377,66 @@ class AllEventOrganizer extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              EventTileOrganizer(),
-              EventTileOrganizer(),
-              EventTileOrganizer(),
-              EventTileOrganizer(),
+              EventTileOrganizer(
+                imagePath: 'assets/img_bali_fest.png',
+                status: 'OFFLINE',
+                title: 'Bali Fest 2024',
+                collectedAmount: 'Rp1.000.000',
+                progress: 0.1,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                eventDate: '20 Mei 2024',
+                categories: ['Festival', 'Budaya', 'Bali', 'Seni'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event-organizer');
+                  print('Navigate to detail');
+                },
+              ),
+              EventTileOrganizer(
+                imagePath: 'assets/img_summer_party.png',
+                status: 'OFFLINE',
+                title: 'Summer Party',
+                collectedAmount: 'Rp5.000.000',
+                progress: 0.2,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                eventDate: '20 Mei 2024',
+                categories: ['Pantai', 'Pesta', 'Musik', 'Liburan'],
+                onTap: () {
+                  print('Navigate to detail');
+                  Navigator.pushNamed(context, '/detail-event-organizer');
+                },
+              ),
+              EventTileOrganizer(
+                imagePath: 'assets/img_nobar_cinema.png',
+                status: 'OFFLINE',
+                title: 'Nobar Cinema',
+                collectedAmount: 'Rp1.900.000',
+                progress: 0.5,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                eventDate: '20 Mei 2024',
+                categories: ['Film', 'Spoiler', 'Diskusi', 'Nobar'],
+                onTap: () {
+                  print('Navigate to detail');
+                  Navigator.pushNamed(context, '/detail-event-organizer');
+                },
+              ),
+              EventTileOrganizer(
+                imagePath: 'assets/img_rock_fest.png',
+                status: 'OFFLINE',
+                title: 'Rock Fest',
+                collectedAmount: 'Rp5.900.000',
+                progress: 0.3,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                eventDate: '20 Mei 2024',
+                categories: ['Musik', 'Festival', 'Rock', 'Karaoke'],
+                onTap: () {
+                  print('Navigate to detail');
+                  Navigator.pushNamed(context, '/detail-event-organizer');
+                },
+              ),
             ],
           ),
         ),

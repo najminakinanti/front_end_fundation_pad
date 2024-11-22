@@ -122,21 +122,100 @@ class EventPage extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              GestureDetector(
-                onTap: () {},
-                child: EventCard(),
+              EventCard(
+                imagePath: 'assets/img_music_fest.png',
+                status: 'Offline',
+                title: 'Music Fest 2024',
+                collectedAmount: 'Rp90.000.000',
+                progress: 0.9,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: [
+                  'Festival',
+                  'Musik',
+                  'EDM',
+                  'Hiburan',
+                  'DJ',
+                  'Live'
+                ],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
               ),
-              GestureDetector(
-                onTap: () {},
-                child: EventCard(),
+              EventCard(
+                imagePath: 'assets/img_educ_fest.png',
+                status: 'Online',
+                title: 'Educ Fest 2024',
+                collectedAmount: 'Rp10.000.000',
+                progress: 0.95,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: [
+                  'Pendidikan',
+                  'Seminar',
+                  'Konsultasi',
+                  'Formal'
+                ],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
               ),
-              GestureDetector(
-                onTap: () {},
-                child: EventCard(),
+              EventCard(
+                imagePath: 'assets/img_kulfood.png',
+                status: 'Offline',
+                title: 'KulFood 2024',
+                collectedAmount: 'Rp50.000.000',
+                progress: 0.2,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: [
+                  'Festival',
+                  'Kuliner',
+                  'Kompetisi',
+                  'Live Musik',
+                  'Live'
+                ],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
               ),
-              GestureDetector(
-                onTap: () {},
-                child: EventCard(),
+              EventCard(
+                imagePath: 'assets/img_summer_shimer.png',
+                status: 'Offline',
+                title: 'Summer Shimer 2024',
+                collectedAmount: 'Rp900.000',
+                progress: 0.2,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: [
+                  'Pantai',
+                  'Pesta',
+                  'Liburan',
+                  'Musik',
+                  'Dress'
+                ],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
+              ),
+              EventCard(
+                imagePath: 'assets/img_food_fest.png',
+                status: 'Offline',
+                title: 'Summer Shimer 2024',
+                collectedAmount: 'Rp900.000',
+                progress: 0.2,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: [
+                  'Festival',
+                  'Kuliner',
+                  'Weekend',
+                  'Live Musik',
+                  'Live'
+                ],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
               ),
             ],
           ),
@@ -163,10 +242,62 @@ class EventPage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              EventTile(),
-              EventTile(),
-              EventTile(),
-              EventTile(),
+              EventTile(
+                imagePath: 'assets/img_bali_fest.png',
+                status: 'OFFLINE',
+                title: 'Bali Fest 2024',
+                collectedAmount: 'Terkumpul Rp1.000.000',
+                progress: 0.1,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                date: '20 Mei 2024',
+                categories: ['Festival', 'Budaya', 'Bali', 'Seni'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
+              ),
+              EventTile(
+                imagePath: 'assets/img_summer_party.png',
+                status: 'OFFLINE',
+                title: 'Summer Party',
+                collectedAmount: 'Terkumpul Rp5.000.000',
+                progress: 0.2,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                date: '20 Mei 2024',
+                categories: ['Pantai', 'Pesta','Musik', 'Liburan'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
+              ),
+              EventTile(
+                imagePath: 'assets/img_nobar_cinema.png',
+                status: 'ONLINE',
+                title: 'Nobar Cinema',
+                collectedAmount: 'Terkumpul Rp1.900.000',
+                progress: 0.5,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                date: '20 Mei 2024',
+                categories: ['Film', 'Spoiler', 'Diskusi', 'Nobar'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
+              ),
+              EventTile(
+                imagePath: 'assets/img_rock_fest.png',
+                status: 'OFFLINE',
+                title: 'Rock Fest',
+                collectedAmount: 'Terkumpul Rp5.900.000',
+                progress: 0.3,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                date: '20 Mei 2024',
+                categories: ['Musik', 'Festival', 'Rock', 'Karaoke'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event');
+                },
+              ),
             ],
           ),
         ),

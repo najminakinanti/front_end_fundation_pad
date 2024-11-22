@@ -2,20 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 
 class ChatTileOrganizer extends StatelessWidget {
+  final String imageUrl;
+  final String name;
+  final String message;
+  final String time;
+  final VoidCallback onTap;
+
+  ChatTileOrganizer({
+    required this.imageUrl,
+    required this.name,
+    required this.message,
+    required this.time,
+    required this.onTap,
+  });
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, '/detail-chat-organizer');
-      },
+      onTap: onTap,
       child: Container(
-        margin: EdgeInsets.only(top: 15, left: 0, right: 0),
+        color: Colors.transparent,
+        margin: EdgeInsets.only(top: 15),
         child: Column(
           children: [
             Row(
               children: [
                 Image.asset(
-                  'assets/img_chat3.png',
+                  imageUrl,
                   width: 40,
                 ),
                 SizedBox(
@@ -29,13 +42,13 @@ class ChatTileOrganizer extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Nama Mitra Industri',
+                            name,
                             style: blackTextStyle.copyWith(
                               fontSize: 14,
                             ),
                           ),
                           Text(
-                            '12.18 PM',
+                            time,
                             style: grayTextStyle.copyWith(
                               fontSize: 10,
                             ),
@@ -43,7 +56,7 @@ class ChatTileOrganizer extends StatelessWidget {
                         ],
                       ),
                       Text(
-                        'Bagaimana kak?',
+                        message,
                         style: grayTextStyle.copyWith(
                           fontWeight: light,
                           fontSize: 10,

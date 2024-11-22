@@ -325,28 +325,38 @@ class _LoginPageState extends State<LoginPageOrganizer> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.white,
+      backgroundColor: backgroundColor,
       body: SafeArea(
-        child: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                margin: EdgeInsets.symmetric(
-                  horizontal: defaultMargin,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    header(),
-                    image(),
-                    emailInput(),
-                    passwordInput(),
-                    forgotPassword(),
-                    rememberMe(),
-                    loginButton(),
-                    haveAccount(),
-                  ],
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                          horizontal: defaultMargin,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            header(),
+                            image(),
+                            emailInput(),
+                            passwordInput(),
+                            forgotPassword(),
+                            rememberMe(),
+                            loginButton(),
+                            haveAccount(),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               footer(),

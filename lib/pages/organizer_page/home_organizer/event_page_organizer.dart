@@ -140,8 +140,34 @@ class EventPageOrganizer extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              MyEventCardOrganizer(),
-              MyEventCardOrganizer(),
+              MyEventCardOrganizer(
+                imageUrl: 'assets/img_music_fest.png',
+                status: 'OFFLINE',
+                eventName: 'Music Fest 2024 ',
+                date: '20 Mei 2024',
+                progress: 0.7,
+                collectedAmount: 'Rp900.000',
+                donorshipCount: '100',
+                daysLeft: '230',
+                categories: ['Musik', 'Festival', 'Hiburan'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-my-event-organizer');
+                },
+              ),
+              MyEventCardOrganizer(
+                imageUrl: 'assets/img_kochella.png',
+                status: 'OFFLINE',
+                eventName: 'KoChella 2024',
+                date: '20 Mei 2024',
+                progress: 0.7,
+                collectedAmount: 'Rp900.000',
+                donorshipCount: '100',
+                daysLeft: '230',
+                categories: ['Musik', 'Festival', 'Budaya', 'Live', 'EDM', 'K-Pop'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-my-event-organizer');
+                },
+              ),
             ],
           ),
         ),

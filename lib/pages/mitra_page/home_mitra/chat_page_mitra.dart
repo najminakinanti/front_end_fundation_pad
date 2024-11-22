@@ -82,12 +82,60 @@ class ChatPageMitra extends StatelessWidget {
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           children: [
-            ChatTileMitra(),
-            ChatTileMitra(),
-            ChatTileMitra(),
-            ChatTileMitra(),
-            ChatTileMitra(),
-            ChatTileMitra(),
+            ChatTileMitra(
+              imageUrl: 'assets/img_chat3.png',
+              name: 'Nama Eo',
+              message: 'Bagaimana kak?',
+              time: '12:18 PM',
+              onTap: () {
+                Navigator.pushNamed(context, '/detail-chat-mitra');
+              },
+            ),
+            ChatTileMitra(
+              imageUrl: 'assets/img_chat6.png',
+              name: 'Nama Eo',
+              message: 'Bagaimana kak?',
+              time: '12:18 PM',
+              onTap: () {
+                Navigator.pushNamed(context, '/detail-chat-mitra');
+              },
+            ),
+            ChatTileMitra(
+              imageUrl: 'assets/img_chat9.png',
+              name: 'Nama Eo',
+              message: 'Bagaimana kak?',
+              time: '12:18 PM',
+              onTap: () {
+                Navigator.pushNamed(context, '/detail-chat-mitra');
+              },
+            ),
+            ChatTileMitra(
+              imageUrl: 'assets/img_chat10.png',
+              name: 'Nama Eo',
+              message: 'Bagaimana kak?',
+              time: '12:18 PM',
+              onTap: () {
+                Navigator.pushNamed(context, '/detail-chat-mitra');
+              },
+            ),
+            ChatTileMitra(
+              imageUrl: 'assets/img_chat3.png',
+              name: 'Nama Eo',
+              message: 'Bagaimana kak?',
+              time: '12:18 PM',
+              onTap: () {
+                Navigator.pushNamed(context, '/detail-chat-mitra');
+              },
+            ),
+            ChatTileMitra(
+              imageUrl: 'assets/img_chat15.png',
+              name: 'Nama Eo',
+              message: 'Bagaimana kak?',
+              time: '12:18 PM',
+              onTap: () {
+                Navigator.pushNamed(context, '/detail-chat-mitra');
+              },
+            ),
           ],
         ),
       );

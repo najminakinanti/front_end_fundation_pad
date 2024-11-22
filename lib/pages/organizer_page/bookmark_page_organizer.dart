@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
-import 'package:pad_fundation/widgets/guess/event_card_bookmark.dart';
-import 'package:pad_fundation/widgets/mitra/event_card_bookmark_mitra.dart';
 import 'package:pad_fundation/widgets/organizer/event_card_bookmark_organizer.dart';
 
 class BookmarkPageOrganizer extends StatelessWidget {
@@ -55,10 +53,48 @@ class BookmarkPageOrganizer extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              EventCardBookmarkOrganizer(),
-              EventCardBookmarkOrganizer(),
-              EventCardBookmarkOrganizer(),
-              EventCardBookmarkOrganizer(),
+              EventCardBookmarkOrganizer(
+                imageUrl: 'assets/img_music_fest.png',
+                status: 'OFFLINE',
+                eventName: 'Music Fest 2024',
+                date: '20 Mei 2024',
+                progress: 0.9,
+                collectedAmount: 'Rp90.000.000',
+                donorshipCount: '100',
+                daysLeft: '230',
+                categories: ['Festival', 'Musik', 'EDM', 'Hiburan', 'DJ', 'Live'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event-organizer');
+                },
+              ),
+              EventCardBookmarkOrganizer(
+                imageUrl: 'assets/img_foodfest.png',
+                status: 'OFFLINE',
+                eventName: 'KulFood 2024',
+                date: '20 Mei 2024',
+                progress: 0.8,
+                collectedAmount: 'Rp900.000',
+                donorshipCount: '100',
+                daysLeft: '230',
+                categories: ['Kuliner', 'Live Musik', 'Festival', 'Seafood', 'BBQ', 'Food Truck'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event-organizer');
+                },
+              ),
+              EventCardBookmarkOrganizer(
+                imageUrl: 'assets/img_kochella.png',
+                status: 'OFFLINE',
+                eventName: 'KoChella 2024',
+                date: '20 Mei 2024',
+                progress: 0.7,
+                collectedAmount: 'Rp900.000',
+                donorshipCount: '100',
+                daysLeft: '230',
+                categories: ['Musik', 'Festival', 'Budaya', 'Live', 'EDM', 'K-Pop'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event-organizer');
+                },
+              ),
             ],
           ),
         ),

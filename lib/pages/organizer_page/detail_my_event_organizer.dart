@@ -332,8 +332,39 @@ class _DetailMyEventOrganizerState extends State<DetailMyEventOrganizer> {
                 fontWeight: medium,
               ),
             ),
-            SponsorCardOrg(),
-            SponsorCardOrg(),
+            SponsorCardOrg(
+              sponsorName: "Bittersweet by Najla",
+              sponsorType: "Gold",
+              sponsorshipAmount: "Rp35.000.000",
+              sponsorLogo: 'assets/img_bittersweet.png',
+              imageList: [
+                'assets/img_kontraprestasi_1.png',
+                'assets/img_kontraprestasi_1.png',
+                'assets/img_kontraprestasi_1.png',
+                'assets/img_kontraprestasi_1.png',
+                'assets/img_kontraprestasi_1.png',
+                'assets/img_kontraprestasi_1.png',
+              ],
+              iconPath: 'assets/icon_gold.png',
+            ),
+            SponsorCardOrg(
+              sponsorName: "Bittersweet by Najla",
+              sponsorType: "Gold",
+              sponsorshipAmount: "Rp35.000.000",
+              sponsorLogo: 'assets/img_bittersweet.png',
+              imageList: [
+              ],
+              iconPath: 'assets/icon_gold.png',
+            ),
+            SponsorCardOrg(
+              sponsorName: "Bittersweet by Najla",
+              sponsorType: "Gold",
+              sponsorshipAmount: "Rp35.000.000",
+              sponsorLogo: 'assets/img_bittersweet.png',
+              imageList: [
+              ],
+              iconPath: 'assets/icon_gold.png',
+            ),
             SizedBox(height: 10),
             Text(
               'Silver',
@@ -342,8 +373,35 @@ class _DetailMyEventOrganizerState extends State<DetailMyEventOrganizer> {
                 fontWeight: medium,
               ),
             ),
-            SponsorCardOrg(),
-            SponsorCardOrg(),
+            SponsorCardOrg(
+              sponsorName: "Bittersweet by Najla",
+              sponsorType: "Silver",
+              sponsorshipAmount: "Rp15.000.000",
+              sponsorLogo: 'assets/img_bittersweet.png',
+              imageList: [
+              ],
+              iconPath: 'assets/icon_silver.png',
+            ),
+            SponsorCardOrg(
+              sponsorName: "Bittersweet by Najla",
+              sponsorType: "Silver",
+              sponsorshipAmount: "Rp15.000.000",
+              sponsorLogo: 'assets/img_bittersweet.png',
+              imageList: [
+                'assets/img_kontraprestasi_1.png',
+                'assets/img_kontraprestasi_1.png',
+              ],
+              iconPath: 'assets/icon_silver.png',
+            ),
+            SponsorCardOrg(
+              sponsorName: "Bittersweet by Najla",
+              sponsorType: "Silver",
+              sponsorshipAmount: "Rp15.000.000",
+              sponsorLogo: 'assets/img_bittersweet.png',
+              imageList: [
+              ],
+              iconPath: 'assets/icon_silver.png',
+            ),
           ],
         ),
       );

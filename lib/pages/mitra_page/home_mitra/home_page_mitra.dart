@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
-import 'package:pad_fundation/widgets/guess/event_card.dart';
 import 'package:pad_fundation/widgets/mitra/event_card_mitra.dart';
-import 'package:pad_fundation/widgets/guess/event_tile.dart';
 import 'package:pad_fundation/widgets/mitra/event_tile_mitra.dart';
 
 class HomePageMitra extends StatelessWidget {
@@ -123,7 +121,7 @@ class HomePageMitra extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category-mitra');
+                    Navigator.pushNamed(context, '/festival-mitra');
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -152,7 +150,7 @@ class HomePageMitra extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category-mitra');},
+                    Navigator.pushNamed(context, '/kuliner-mitra');},
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -180,7 +178,7 @@ class HomePageMitra extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category-mitra');},
+                    Navigator.pushNamed(context, '/pendidikan-mitra');},
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -208,7 +206,7 @@ class HomePageMitra extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-by-category-mitra');},
+                    Navigator.pushNamed(context, '/seniman-mitra');},
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -281,7 +279,7 @@ class HomePageMitra extends StatelessWidget {
             Container(
               child: TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/event-by-category-mitra');
+                  Navigator.pushNamed(context, '/populer-mitra');
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -315,9 +313,45 @@ class HomePageMitra extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              EventCardMitra(),
-              EventCardMitra(),
-              EventCardMitra(),
+              EventCardMitra(
+                imagePath: 'assets/img_music_fest.png',
+                status: 'OFFLINE',
+                title: 'Music Fest 2024',
+                collectedAmount: 'Rp90.000.000',
+                progress: 0.9,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: ['Festival', 'Musik', 'EDM', 'Hiburan', 'DJ', 'Live'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event-mitra');
+                },
+              ),
+              EventCardMitra(
+                imagePath: 'assets/img_educ_fest.png',
+                status: 'OFFLINE',
+                title: 'Educ Fest 2024 ',
+                collectedAmount: 'Rp10.000.000',
+                progress: 0.95,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: ['Pendidikan', 'Seminar', 'Konsultasi', 'Formal'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event-mitra');
+                },
+              ),
+              EventCardMitra(
+                imagePath: 'assets/img_kulfood.png',
+                status: 'OFFLINE',
+                title: 'KulFood 2024',
+                collectedAmount: 'Rp50.000.000',
+                progress: 0.2,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                categories: ['Festival', 'Kuliner', 'Kompetisi', 'Live Musik', 'Live'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event-mitra');
+                },
+              ),
             ],
           ),
         ),
@@ -374,10 +408,66 @@ class HomePageMitra extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              EventTileMitra(),
-              EventTileMitra(),
-              EventTileMitra(),
-              EventTileMitra(),
+              EventTileMitra(
+                imagePath: 'assets/img_collegefair.png',
+                status: 'ONLINE',
+                title: 'COLLEGEFAIR 24',
+                collectedAmount: 'Rp900.000',
+                progress: 0.4,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                eventDate: '20 Mei 2024',
+                categories: ['Pendidikan', 'Seminar', 'Karir', 'Konseling'],
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail-event-mitra');
+                  print('Navigate to detail');
+                },
+              ),
+              EventTileMitra(
+                imagePath: 'assets/img_music_fest.png',
+                status: 'OFFLINE',
+                title: 'Music Fest 2024',
+                collectedAmount: 'Rp10.000.000',
+                progress: 0.8,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                eventDate: '20 Mei 2024',
+                categories: ['Music', 'Festival', 'Hiburan', 'DJ', 'Live', 'EDM'],
+                onTap: () {
+                  print('Navigate to detail');
+                  Navigator.pushNamed(context, '/detail-event-mitra');
+                },
+              ),
+              EventTileMitra(
+                imagePath: 'assets/img_kochella.png',
+                status: 'OFFLINE',
+                title: 'KoChella 2024',
+                collectedAmount: 'Rp90.000.000',
+                progress: 0.75,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                eventDate: '20 Mei 2024',
+                categories: ['Music', 'Festival', 'Budaya', 'Live'],
+                onTap: () {
+                  print('Navigate to detail');
+                  Navigator.pushNamed(context, '/detail-event-mitra');
+                },
+              ),
+              EventTileMitra(
+                imagePath: 'assets/img_foodfest.png',
+                status: 'OFFLINE',
+                title: 'Food Fest 2024',
+                collectedAmount: 'Rp15.000.000',
+                progress: 0.2,
+                daysRemaining: 230,
+                donorshipCount: 100,
+                eventDate: '20 Mei 2024',
+                categories: ['Makanan', 'Minuman', 'Music', 'Art'],
+                onTap: () {
+                  print('Navigate to detail');
+                  Navigator.pushNamed(context, '/detail-event-mitra');
+                },
+              ),
             ],
           ),
         ),

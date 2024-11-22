@@ -3,22 +3,43 @@ import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 
 class EventCardOrganizer extends StatefulWidget {
+  final String imagePath;
+  final String status;
+  final String title;
+  final String collectedAmount;
+  final double progress;
+  final int daysRemaining;
+  final int donorshipCount;
+  final List<String> categories;
+  final VoidCallback? onTap;
+
+  const EventCardOrganizer({
+    Key? key,
+    required this.imagePath,
+    required this.status,
+    required this.title,
+    required this.collectedAmount,
+    required this.progress,
+    required this.daysRemaining,
+    required this.donorshipCount,
+    required this.categories,
+    this.onTap,
+  }) : super(key: key);
+
   @override
-  _EventCardState createState() => _EventCardState();
+  _EventCardOrganizerState createState() => _EventCardOrganizerState();
 }
 
-class _EventCardState extends State<EventCardOrganizer> {
+class _EventCardOrganizerState extends State<EventCardOrganizer> {
   bool isBookmarked = false;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, '/detail-event-organizer');
-      },
+      onTap: widget.onTap ?? () => Navigator.pushNamed(context, '/detail-event-organizer'),
       child: Container(
         width: 225,
-        margin: EdgeInsets.only(right: 10),
+        margin: const EdgeInsets.only(right: 10),
         decoration: BoxDecoration(
           color: backgroundColor3,
           borderRadius: BorderRadius.circular(5),
@@ -31,24 +52,23 @@ class _EventCardState extends State<EventCardOrganizer> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(5),
                   child: Image.asset(
-                    'assets/img_music_fest.png',
+                    widget.imagePath,
                     width: double.infinity,
                     height: 100,
                     fit: BoxFit.cover,
                   ),
                 ),
-      
                 Positioned(
                   top: 10,
                   left: 10,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
                       color: sageGreen3,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      'OFFLINE',
+                      widget.status.toUpperCase(),
                       style: orangeTextStyle.copyWith(
                         fontSize: 10,
                         fontWeight: bold,
@@ -56,7 +76,7 @@ class _EventCardState extends State<EventCardOrganizer> {
                     ),
                   ),
                 ),
-                
+                // Bookmark Icon
                 Positioned(
                   top: 10,
                   right: 10,
@@ -75,7 +95,9 @@ class _EventCardState extends State<EventCardOrganizer> {
                       ),
                       child: Center(
                         child: Image.asset(
-                          isBookmarked ? 'assets/icon_bookmark_on.png' : 'assets/icon_bookmark_off.png',
+                          isBookmarked
+                              ? 'assets/icon_bookmark_on.png'
+                              : 'assets/icon_bookmark_off.png',
                           width: 15,
                           height: 15,
                         ),
@@ -91,36 +113,36 @@ class _EventCardState extends State<EventCardOrganizer> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Music org 2024',
+                    widget.title,
                     style: grayTextStyle.copyWith(
                       fontSize: 14,
                       fontWeight: bold,
                     ),
                   ),
-      
                   Text(
-                    'Terkumpul Rp90.000.000',
+                    'Terkumpul ${widget.collectedAmount}',
                     style: lighGrayTextStyle.copyWith(
                       fontSize: 10,
                       fontWeight: regular,
                     ),
                   ),
-      
                   Row(
                     children: [
                       Expanded(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8),
                           child: LinearProgressIndicator(
-                            value: 0.9,
+                            value: widget.progress,
                             backgroundColor: lineColor2,
-                            valueColor: AlwaysStoppedAnimation<Color>(lineColor),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              lineColor,
+                            ),
                           ),
                         ),
                       ),
-                      SizedBox(width: 5),
+                      const SizedBox(width: 5),
                       Text(
-                        '90%',
+                        '${(widget.progress * 100).toInt()}%',
                         style: blackTextStyle.copyWith(
                           fontSize: 10,
                           fontWeight: regular,
@@ -128,73 +150,53 @@ class _EventCardState extends State<EventCardOrganizer> {
                       ),
                     ],
                   ),
-      
-                  SizedBox(height: 7),
-      
+                  const SizedBox(height: 7),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
                           Image.asset('assets/icon_donorship.png', width: 18),
-                          SizedBox(width: 4),
-                          Text('100 Donorship', style: veryLightGrayTextStyle.copyWith(fontSize: 10, fontWeight: regular,),),
+                          const SizedBox(width: 4),
+                          Text(
+                            '${widget.donorshipCount} Donorship',
+                            style: veryLightGrayTextStyle.copyWith(
+                              fontSize: 10,
+                              fontWeight: regular,
+                            ),
+                          ),
                         ],
                       ),
                       Row(
                         children: [
                           Image.asset('assets/icon_timer.png', width: 13),
-                          SizedBox(width: 4),
-                          Text('230 hari lagi', style: veryLightGrayTextStyle.copyWith(fontSize: 10, fontWeight: regular,),),
+                          const SizedBox(width: 4),
+                          Text(
+                            '${widget.daysRemaining} hari lagi',
+                            style: veryLightGrayTextStyle.copyWith(
+                              fontSize: 10,
+                              fontWeight: regular,
+                            ),
+                          ),
                         ],
                       ),
                     ],
                   ),
-      
-                  SizedBox(height: 7),
-      
+                  const SizedBox(height: 7),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Wrap(
                       spacing: 5,
-                      children: [
-                        CategoryButton(
-                          label: 'Festival',
+                      children: widget.categories
+                          .map(
+                            (category) => CategoryButton(
+                          label: category,
                           onTap: () {
-                            print('Festival');
+                            print(category);
                           },
                         ),
-                        CategoryButton(
-                          label: 'Musik',
-                          onTap: () {
-                            print('Musik');
-                          },
-                        ),
-                        CategoryButton(
-                          label: 'EDM',
-                          onTap: () {
-                            print('EDM');
-                          },
-                        ),
-                        CategoryButton(
-                          label: 'Hiburan',
-                          onTap: () {
-                            print('Hiburan');
-                          },
-                        ),
-                        CategoryButton(
-                          label: 'DJ',
-                          onTap: () {
-                            print('DJ');
-                          },
-                        ),
-                        CategoryButton(
-                          label: 'Live',
-                          onTap: () {
-                            print('Live');
-                          },
-                        ),
-                      ],
+                      )
+                          .toList(),
                     ),
                   ),
                 ],

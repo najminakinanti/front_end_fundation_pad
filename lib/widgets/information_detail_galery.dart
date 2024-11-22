@@ -9,14 +9,11 @@ class InformationDetailWidget extends StatefulWidget {
 class _InformationDetailWidgetState extends State<InformationDetailWidget> {
   final int imagesPerBatch = 4;
   final List<String> images = [
-    'assets/img_splash_1.png',
-    'assets/img_music_fest.png',
-    'assets/img_music_fest.png',
-    'assets/img_logo.png',
-    'assets/img_music_fest.png',
-    'assets/img_logo.png',
-    'assets/img_music_fest.png',
-    'assets/img_music_fest.png',
+    'assets/img_detail_info_1.png',
+    'assets/img_detail_info_2.png',
+    'assets/img_detail_info_3.png',
+    'assets/img_detail_info_4.png',
+    'assets/img_detail_info_1.png',
   ];
 
   int currentBatch = 0;
@@ -115,7 +112,7 @@ class _InformationDetailWidgetState extends State<InformationDetailWidget> {
                     }
                   },
                   child: Image.asset(
-                    'assets/icon_button_panah_kanan.png', 
+                    'assets/icon_button_panah_kanan.png',
                     width: 24,
                   ),
                 ),
@@ -129,7 +126,13 @@ class _InformationDetailWidgetState extends State<InformationDetailWidget> {
 
   List<Widget> _getCurrentBatchImages() {
     int startIndex = currentBatch * imagesPerBatch;
-    int endIndex = (startIndex + imagesPerBatch).clamp(0, images.length);
+    int endIndex = startIndex + imagesPerBatch;
+
+    if (endIndex > images.length) {
+      endIndex = images.length;
+      startIndex = (endIndex - imagesPerBatch).clamp(0, images.length);
+    }
+
     return images
         .sublist(startIndex, endIndex)
         .map((imagePath) => GestureDetector(
@@ -143,6 +146,7 @@ class _InformationDetailWidgetState extends State<InformationDetailWidget> {
     ))
         .toList();
   }
+
 
   @override
   Widget build(BuildContext context) {

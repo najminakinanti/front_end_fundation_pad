@@ -77,7 +77,7 @@ class DetailChatOrganizer extends StatelessWidget {
 
     Widget chatInput() {
       return Container(
-        margin: EdgeInsets.all(20),
+        margin: EdgeInsets.all(30),
         child: Row(
           children: [
             Expanded(

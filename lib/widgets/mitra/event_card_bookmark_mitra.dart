@@ -3,19 +3,42 @@ import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 
 class EventCardBookmarkMitra extends StatefulWidget {
+  final String imageUrl;
+  final String status;
+  final String eventName;
+  final String date;
+  final double progress;
+  final String collectedAmount;
+  final String donorshipCount;
+  final String daysLeft;
+  final List<String> categories;
+  final VoidCallback onTap;
+
+  const EventCardBookmarkMitra({
+    Key? key,
+    required this.imageUrl,
+    required this.status,
+    required this.eventName,
+    required this.date,
+    required this.progress,
+    required this.collectedAmount,
+    required this.donorshipCount,
+    required this.daysLeft,
+    required this.categories,
+    required this.onTap,
+  }) : super(key: key);
+
   @override
   _EventCardBookmarkState createState() => _EventCardBookmarkState();
 }
 
 class _EventCardBookmarkState extends State<EventCardBookmarkMitra> {
-  bool isBookmarked = false;
+  bool isBookmarked = true;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, '/detail-event-mitra');
-      },
+      onTap: widget.onTap,
       child: Container(
         width: double.infinity,
         margin: EdgeInsets.only(bottom: 20),
@@ -31,13 +54,12 @@ class _EventCardBookmarkState extends State<EventCardBookmarkMitra> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(5),
                   child: Image.asset(
-                    'assets/img_music_fest.png',
+                    widget.imageUrl,
                     width: double.infinity,
                     height: 230,
                     fit: BoxFit.cover,
                   ),
                 ),
-
                 Positioned(
                   top: 10,
                   left: 10,
@@ -48,7 +70,7 @@ class _EventCardBookmarkState extends State<EventCardBookmarkMitra> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      'OFFLINE',
+                      widget.status,
                       style: orangeTextStyle.copyWith(
                         fontSize: 14,
                         fontWeight: bold,
@@ -56,7 +78,6 @@ class _EventCardBookmarkState extends State<EventCardBookmarkMitra> {
                     ),
                   ),
                 ),
-
                 Positioned(
                   top: 10,
                   right: 10,
@@ -75,7 +96,9 @@ class _EventCardBookmarkState extends State<EventCardBookmarkMitra> {
                       ),
                       child: Center(
                         child: Image.asset(
-                          isBookmarked ? 'assets/icon_bookmark_on.png' : 'assets/icon_bookmark_off.png',
+                          isBookmarked
+                              ? 'assets/icon_bookmark_on.png'
+                              : 'assets/icon_bookmark_off.png',
                           width: 15,
                           height: 15,
                         ),
@@ -93,35 +116,38 @@ class _EventCardBookmarkState extends State<EventCardBookmarkMitra> {
                   Row(
                     children: [
                       Text(
-                        'Mufest mitra',
+                        widget.eventName,
                         style: grayTextStyle.copyWith(
                           fontSize: 14,
                           fontWeight: bold,
                         ),
                       ),
                       Spacer(),
-
                       Image.asset('assets/icon_calendar.png', width: 11),
                       SizedBox(width: 4),
-                      Text('20 Mei 2024', style: veryLightGrayTextStyle.copyWith(fontSize: 10, fontWeight: regular,),),
+                      Text(
+                        widget.date,
+                        style: lighGrayTextStyle.copyWith(
+                          fontSize: 10,
+                          fontWeight: regular,
+                        ),
+                      ),
                     ],
                   ),
-
                   Text(
-                    'Terkumpul Rp90.000.000',
+                    'Terkumpul ${widget.collectedAmount}',
                     style: lighGrayTextStyle.copyWith(
                       fontSize: 10,
                       fontWeight: regular,
                     ),
                   ),
-
                   Row(
                     children: [
                       Expanded(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8),
                           child: LinearProgressIndicator(
-                            value: 0.9,
+                            value: widget.progress,
                             backgroundColor: lineColor2,
                             valueColor: AlwaysStoppedAnimation<Color>(lineColor),
                           ),
@@ -129,7 +155,7 @@ class _EventCardBookmarkState extends State<EventCardBookmarkMitra> {
                       ),
                       SizedBox(width: 5),
                       Text(
-                        '90%',
+                        '${(widget.progress * 100).toInt()}%',
                         style: blackTextStyle.copyWith(
                           fontSize: 10,
                           fontWeight: regular,
@@ -137,73 +163,45 @@ class _EventCardBookmarkState extends State<EventCardBookmarkMitra> {
                       ),
                     ],
                   ),
-
                   SizedBox(height: 7),
-
                   Row(
                     children: [
-                      Row(
-                        children: [
-                          Image.asset('assets/icon_donorship.png', width: 18),
-                          SizedBox(width: 4),
-                          Text('100 Donorship', style: veryLightGrayTextStyle.copyWith(fontSize: 10, fontWeight: regular,),),
-                        ],
+                      Image.asset('assets/icon_donorship.png', width: 18),
+                      SizedBox(width: 4),
+                      Text(
+                        '${widget.donorshipCount} Donorship',
+                        style: veryLightGrayTextStyle.copyWith(
+                          fontSize: 10,
+                          fontWeight: regular,
+                        ),
                       ),
-                      SizedBox(width: 20,),
-                      Row(
-                        children: [
-                          Image.asset('assets/icon_timer.png', width: 13),
-                          SizedBox(width: 4),
-                          Text('230 hari lagi', style: veryLightGrayTextStyle.copyWith(fontSize: 10, fontWeight: regular,),),
-                        ],
+                      Spacer(),
+                      Image.asset('assets/icon_timer.png', width: 13),
+                      SizedBox(width: 4),
+                      Text(
+                        '${widget.daysLeft} hari lagi',
+                        style: veryLightGrayTextStyle.copyWith(
+                          fontSize: 10,
+                          fontWeight: regular,
+                        ),
                       ),
                     ],
                   ),
-
                   SizedBox(height: 7),
-
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Wrap(
                       spacing: 5,
-                      children: [
-                        CategoryButton(
-                          label: 'Festival',
+                      children: widget.categories
+                          .map(
+                            (category) => CategoryButton(
+                          label: category,
                           onTap: () {
-                            print('Festival');
+                            print(category);
                           },
                         ),
-                        CategoryButton(
-                          label: 'Musik',
-                          onTap: () {
-                            print('Musik');
-                          },
-                        ),
-                        CategoryButton(
-                          label: 'EDM',
-                          onTap: () {
-                            print('EDM');
-                          },
-                        ),
-                        CategoryButton(
-                          label: 'Hiburan',
-                          onTap: () {
-                            print('Hiburan');
-                          },
-                        ),
-                        CategoryButton(
-                          label: 'DJ',
-                          onTap: () {
-                            print('DJ');
-                          },
-                        ),
-                        CategoryButton(
-                          label: 'Live',
-                          onTap: () {
-                            print('Live');
-                          },
-                        ),
-                      ],
+                      )
+                          .toList(),
                     ),
                   ),
                 ],
