@@ -53,22 +53,14 @@ class TransactionCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: getColorByStatus(status),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40),
-                      ),
+                  Text(
+                    status,
+                    style: blackTextStyle.copyWith(
+                      fontSize: 15,
+                      fontWeight: medium,
+                      color: getColorByStatus(status),
                     ),
-                    child: Text(
-                      status,
-                      style: whiteTextStyle.copyWith(
-                        fontSize: 15,
-                        fontWeight: medium,
-                      ),
-                    ),
-                  ),
+                  )
                 ],
               ),
             ],

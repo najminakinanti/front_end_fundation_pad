@@ -422,21 +422,31 @@ class _DetailEventState extends State<DetailEventOrganizer> {
             child: Stack(
               children: [
                 Positioned(
-                  top: 30,
-                  left: 15,
+                  top: 17.5,
+                  left: 2.5,
                   child: GestureDetector(
                     onTap: () {
                       Navigator.pop(context);
                     },
                     child: Container(
-                      width: 25,
-                      height: 25,
+                      width: 50,
+                      height: 50,
                       decoration: BoxDecoration(
-                        color: backgroundColor,
-                        borderRadius: BorderRadius.circular(100),
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(50),
                       ),
-                      child: Image.asset(
-                        'assets/icon_tanda_panah_kiri.png',
+                      child: Center(
+                        child: Container(
+                          width: 25,
+                          height: 25,
+                          decoration: BoxDecoration(
+                            color: backgroundColor,
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Image.asset(
+                            'assets/icon_tanda_panah_kiri.png',
+                          ),
+                        ),
                       ),
                     ),
                   ),
