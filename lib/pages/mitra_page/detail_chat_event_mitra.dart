@@ -2,8 +2,44 @@ import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/mitra/chat_bubble_mitra.dart';
 
+class DetailChatEventMitra extends StatefulWidget {
+  @override
+  _DetailChatEventMitraState createState() => _DetailChatEventMitraState();
+}
 
-class DetailChatEventMitra extends StatelessWidget {
+class _DetailChatEventMitraState extends State<DetailChatEventMitra> with WidgetsBindingObserver {
+  late ScrollController _scrollController;
+  late FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _focusNode = FocusNode();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _scrollController.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    if (bottomInset > 0) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     PreferredSize header() {
@@ -89,28 +125,35 @@ class DetailChatEventMitra extends StatelessWidget {
 
     Widget chatInput() {
       return Container(
-        margin: EdgeInsets.all(defaultMargin),
+        margin: EdgeInsets.fromLTRB(defaultMargin, 8, defaultMargin, 20),
         child: Row(
           children: [
             Expanded(
               child: Container(
                 height: 45,
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding: EdgeInsets.only(left: 20, right: 5),
                 decoration: BoxDecoration(
                   color: Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: Colors.grey,
+                    color: grayBorderChatInput,
                   ),
                 ),
                 child: Center(
                   child: TextFormField(
+                    focusNode: _focusNode,
                     decoration: InputDecoration(
                       hintText: 'Ketikkan Pesan',
+                      hintStyle: grayChatTextStyle.copyWith(fontSize: 14, fontWeight: regular),
                       border: InputBorder.none,
-                      suffixIcon: Image.asset(
-                        'assets/icon_send.png',
-                        width: 25,
+                      suffixIcon: IconButton(
+                        icon: Image.asset(
+                          'assets/icon_send.png',
+                          width: 25,
+                        ),
+                        onPressed: () {
+                          print('Pesan dikirim');
+                        },
                       ),
                     ),
                   ),
@@ -124,6 +167,7 @@ class DetailChatEventMitra extends StatelessWidget {
 
     Widget content() {
       return ListView(
+        controller: _scrollController,
         padding: EdgeInsets.symmetric(
             horizontal: defaultMargin
         ),
@@ -161,9 +205,13 @@ class DetailChatEventMitra extends StatelessWidget {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: header(),
-      bottomNavigationBar: chatInput(),
-      body: content(),
-
+      body: Column(
+        children: [
+          Expanded(child: content()),
+          chatInput(),
+        ],
+      ),
+      resizeToAvoidBottomInset: true,
     );
   }
 }

@@ -2,19 +2,56 @@ import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/organizer/chat_bubble_organizer.dart';
 
-class DetailChatOrganizer extends StatelessWidget {
+class DetailChatOrganizer extends StatefulWidget {
+  @override
+  _DetailChatOrganizerState createState() => _DetailChatOrganizerState();
+}
+
+class _DetailChatOrganizerState extends State<DetailChatOrganizer> with WidgetsBindingObserver {
+  late ScrollController _scrollController;
+  late FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _focusNode = FocusNode();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _scrollController.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    if (bottomInset > 0) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
     PreferredSize header() {
       return PreferredSize(
-        preferredSize: Size.fromHeight(75.0),
+        preferredSize: Size.fromHeight(65.0),
         child: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: backgroundColor,
           centerTitle: false,
           flexibleSpace: Container(
-            margin: EdgeInsets.fromLTRB(defaultMargin, defaultMargin, defaultMargin, 20),
+            margin: EdgeInsets.fromLTRB(defaultMargin, defaultMargin, defaultMargin, 10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -77,28 +114,35 @@ class DetailChatOrganizer extends StatelessWidget {
 
     Widget chatInput() {
       return Container(
-        margin: EdgeInsets.all(30),
+        margin: EdgeInsets.fromLTRB(defaultMargin, 8, defaultMargin, 20),
         child: Row(
           children: [
             Expanded(
               child: Container(
                 height: 45,
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding: EdgeInsets.only(left: 20, right: 5),
                 decoration: BoxDecoration(
                   color: Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: Colors.grey,
+                    color: grayBorderChatInput,
                   ),
                 ),
                 child: Center(
                   child: TextFormField(
+                    focusNode: _focusNode,
                     decoration: InputDecoration(
                       hintText: 'Ketikkan Pesan',
+                      hintStyle: grayChatTextStyle.copyWith(fontSize: 14, fontWeight: regular),
                       border: InputBorder.none,
-                      suffixIcon: Image.asset(
-                        'assets/icon_send.png',
-                        width: 25,
+                      suffixIcon: IconButton(
+                        icon: Image.asset(
+                          'assets/icon_send.png',
+                          width: 25,
+                        ),
+                        onPressed: () {
+                          print('Pesan dikirim');
+                        },
                       ),
                     ),
                   ),
@@ -112,6 +156,7 @@ class DetailChatOrganizer extends StatelessWidget {
 
     Widget content() {
       return ListView(
+        controller: _scrollController,
         padding: EdgeInsets.symmetric(
             horizontal: defaultMargin
         ),
@@ -149,8 +194,13 @@ class DetailChatOrganizer extends StatelessWidget {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: header(),
-      bottomNavigationBar: chatInput(),
-      body: content(),
+      body: Column(
+        children: [
+          Expanded(child: content()),
+          chatInput(),
+        ],
+      ),
+      resizeToAvoidBottomInset: true,
     );
   }
 }

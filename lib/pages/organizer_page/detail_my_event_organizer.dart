@@ -452,25 +452,41 @@ class _DetailMyEventOrganizerState extends State<DetailMyEventOrganizer> {
               ),
             ),
           ),
-          Positioned(
-            top: 50,
-            left: 15,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Container(
-                width: 25,
-                height: 25,
-                decoration: BoxDecoration(
-                  color: backgroundColor,
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                child: Image.asset(
-                  'assets/icon_tanda_panah_kiri.png',
-                ),
+          SafeArea(
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: 17.5,
+                    left: 2.5,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Center(
+                          child: Container(
+                            width: 25,
+                            height: 25,
+                            decoration: BoxDecoration(
+                              color: backgroundColor,
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            child: Image.asset(
+                              'assets/icon_tanda_panah_kiri.png',
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
           ),
           Positioned(
             bottom: 90,

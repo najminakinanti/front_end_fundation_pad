@@ -491,7 +491,7 @@ class _DetailEventState extends State<DetailEventMitra> {
           ),
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
+              padding: const EdgeInsets.fromLTRB(2.5, 17.5, 15, 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -500,14 +500,24 @@ class _DetailEventState extends State<DetailEventMitra> {
                       Navigator.pop(context);
                     },
                     child: Container(
-                      width: 25,
-                      height: 25,
+                      width: 50,
+                      height: 50,
                       decoration: BoxDecoration(
-                        color: backgroundColor,
-                        borderRadius: BorderRadius.circular(100),
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(50),
                       ),
-                      child: Image.asset(
-                        'assets/icon_tanda_panah_kiri.png',
+                      child: Center(
+                        child: Container(
+                          width: 25,
+                          height: 25,
+                          decoration: BoxDecoration(
+                            color: backgroundColor,
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Image.asset(
+                            'assets/icon_tanda_panah_kiri.png',
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -575,27 +585,21 @@ class _DetailEventState extends State<DetailEventMitra> {
             width: 250,
             child: Text(
               'Download Berhasil!',
-                style: blackTextStyle.copyWith(fontSize: 14, fontWeight: bold),
-                textAlign: TextAlign.center,
+              style: blackTextStyle.copyWith(fontSize: 14, fontWeight: bold),
+              textAlign: TextAlign.center,
             ),
           ),
-          contentPadding: EdgeInsets.fromLTRB(0, 30, 0, 10),
+          contentPadding: EdgeInsets.fromLTRB(0, 30, 0, 30),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5),
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/detail-event-mitra');
-              },
-              child: Text(
-                'OK',
-                style: navyTextStyle.copyWith(fontSize: 12, fontWeight: regular),
-              ),
-            ),
-          ],
         );
       },
     );
+
+    Future.delayed(Duration(seconds: 3), () {
+      Navigator.of(context, rootNavigator: true).pop();
+    });
   }
+
 }

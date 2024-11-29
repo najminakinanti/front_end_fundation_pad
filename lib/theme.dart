@@ -38,6 +38,7 @@ Color button = Color(0xffFACE98);
 Color backgroundyellow = Color(0xffFFEF4E9);
 Color grayStepper = Color(0xffCCCCCC);
 Color grayBorderPayment = Color(0xffABABAB);
+Color grayBorderChatInput = Color(0xff7A828F);
 
 // warna font
 TextStyle blackTextStyle = TextStyle(
@@ -83,6 +84,11 @@ TextStyle veryLightGrayTextStyle = TextStyle(
 TextStyle navyTextStyle = TextStyle(
   fontFamily: 'Poppins',
   color: navy,
+);
+
+TextStyle grayChatTextStyle = TextStyle(
+  fontFamily: 'Poppins',
+  color: grayBorderChatInput
 );
 
 // Font weights
