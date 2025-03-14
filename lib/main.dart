@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pad_fundation/API/auth_check.dart';
 import 'package:pad_fundation/pages/mitra_page/bookmark_page_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/create_new_password_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/daftar_sponsor_mitra.dart';
@@ -33,7 +34,6 @@ import 'package:pad_fundation/pages/not_logged_in/event_by_category_page/populer
 import 'package:pad_fundation/pages/not_logged_in/event_by_category_page/seniman_page.dart';
 import 'package:pad_fundation/pages/not_logged_in/event_page_by_category.dart';
 import 'package:pad_fundation/pages/not_logged_in/home/main_page.dart';
-import 'package:pad_fundation/pages/mitra_page/login_page_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/register_page_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/register_page_mitra_add.dart';
 import 'package:pad_fundation/pages/organizer_page/add_event.dart';
@@ -76,6 +76,7 @@ import 'package:pad_fundation/pages/organizer_page/withdrawal_request_waiting.da
 import 'package:pad_fundation/pages/organizer_page/withdrawal_request_failed.dart';
 import 'package:pad_fundation/pages/organizer_page/withdrawal_request_done.dart';
 import 'package:pad_fundation/pages/splash_screen/choose_role.dart';
+import 'package:pad_fundation/pages/mitra_page/login_page_mitra.dart';
 import 'package:pad_fundation/pages/splash_screen/on_boarding_page.dart';
 import 'package:pad_fundation/pages/splash_screen/splash_page.dart';
 import 'package:pad_fundation/pages/splash_screen/on_boarding_page_1.dart';
@@ -83,8 +84,9 @@ import 'package:pad_fundation/pages/splash_screen/on_boarding_page_2.dart';
 import 'package:pad_fundation/pages/splash_screen/on_boarding_page_3.dart';
 import 'package:pad_fundation/pages/organizer_page/ubah_bukti_kontraprestasi.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(MyApp(
 
+));
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -92,6 +94,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      // home: AuthCheck(),
       routes: {
         '/': (context) => SplashPage(),
         '/choose-role': (context) => ChooseRole(),

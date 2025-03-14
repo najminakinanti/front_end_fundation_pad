@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pad_fundation/API/api_service.dart';
+import 'package:pad_fundation/API/auth_api.dart';
 import 'package:pad_fundation/theme.dart';
 
 class LoginPageMitra extends StatefulWidget {
@@ -7,6 +9,9 @@ class LoginPageMitra extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPageMitra> {
+  final ApiService apiService = ApiService();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   bool _isObscured = true;
   bool _rememberMe = false;
 
@@ -86,6 +91,7 @@ class _LoginPageState extends State<LoginPageMitra> {
             SizedBox(
               height: 50,
               child: TextFormField(
+                controller: emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
                   labelStyle: grayTextStyle.copyWith(
@@ -122,6 +128,7 @@ class _LoginPageState extends State<LoginPageMitra> {
             SizedBox(
               height: 50,
               child: TextFormField(
+                controller: passwordController,
                 obscureText: _isObscured,
                 decoration: InputDecoration(
                   labelText: 'Kata sandi',
@@ -208,8 +215,12 @@ class _LoginPageState extends State<LoginPageMitra> {
         width: double.infinity,
         margin: EdgeInsets.only(top: 30),
         child: TextButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/home-mitra');
+          onPressed: () async {
+            try {
+              await AuthApi.loginMitra(emailController.text, passwordController.text, context);
+            } catch (e) {
+              print('Error: $e');
+            }
           },
           style: TextButton.styleFrom(
             backgroundColor: primaryColor,

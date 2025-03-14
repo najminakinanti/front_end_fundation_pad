@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pad_fundation/API/api_service.dart';
+import 'package:pad_fundation/API/auth_api.dart';
 import 'package:pad_fundation/theme.dart';
 
 class LoginPageOrganizer extends StatefulWidget {
@@ -7,6 +9,9 @@ class LoginPageOrganizer extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPageOrganizer> {
+  final ApiService apiService = ApiService();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   bool _isObscured = true;
   bool _rememberMe = false;
 
@@ -18,7 +23,7 @@ class _LoginPageState extends State<LoginPageOrganizer> {
 
   void _toggleRememberMe(bool? value) {
     setState(() {
-      _rememberMe = value ?? false;
+      _rememberMe = value ?? false; // Update checkbox state
     });
   }
 
@@ -86,6 +91,7 @@ class _LoginPageState extends State<LoginPageOrganizer> {
             SizedBox(
               height: 50,
               child: TextFormField(
+                controller: emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
                   labelStyle: grayTextStyle.copyWith(
@@ -122,6 +128,7 @@ class _LoginPageState extends State<LoginPageOrganizer> {
             SizedBox(
               height: 50,
               child: TextFormField(
+                controller: passwordController,
                 obscureText: _isObscured,
                 decoration: InputDecoration(
                   labelText: 'Kata sandi',
@@ -164,7 +171,7 @@ class _LoginPageState extends State<LoginPageOrganizer> {
         padding: EdgeInsets.only(top: 4),
         child: GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, '/forgot-password-organizer');
+            Navigator.pushNamed(context, '/forgot-password');
           },
           child: Align(
             alignment: Alignment.centerRight,
@@ -208,8 +215,12 @@ class _LoginPageState extends State<LoginPageOrganizer> {
         width: double.infinity,
         margin: EdgeInsets.only(top: 30),
         child: TextButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/home-organizer');
+          onPressed: () async {
+            try {
+              await AuthApi.loginOrganizer(emailController.text, passwordController.text, context);
+            } catch (e) {
+              print('Error: $e');
+            }
           },
           style: TextButton.styleFrom(
             backgroundColor: primaryColor,
@@ -231,7 +242,7 @@ class _LoginPageState extends State<LoginPageOrganizer> {
 
     Widget haveAccount() {
       return Container(
-        margin: EdgeInsets.only(top: 0, bottom: 25,),
+        margin: EdgeInsets.only(top: 3),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -365,5 +376,6 @@ class _LoginPageState extends State<LoginPageOrganizer> {
         ),
       ),
     );
+
   }
 }

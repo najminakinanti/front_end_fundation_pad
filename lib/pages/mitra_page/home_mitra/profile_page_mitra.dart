@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pad_fundation/API/auth_api.dart';
 import '../../../theme.dart';
 
 class ProfilePageMitra extends StatelessWidget {
@@ -392,8 +393,13 @@ class ProfilePageMitra extends StatelessWidget {
         margin: EdgeInsets.only(bottom: 80, top: 10),
         width: double.infinity,
         child: TextButton(
-          onPressed: () {
-            showConfirmationDialog(context);
+          onPressed: () async {
+            // showConfirmationDialog(context);
+            try {
+            await AuthApi.logout(context);
+            } catch (e) {
+              print('Error: $e');
+            }
           },
           style: TextButton.styleFrom(
             backgroundColor: buttonColor,
