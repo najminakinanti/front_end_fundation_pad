@@ -81,6 +81,7 @@ class AuthApi {
     );
   }
 
+
   static Future<void> _saveUserSession(String? token, String? role) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', token ?? ''); // Jika null, ubah menjadi string kosong
