@@ -71,13 +71,12 @@ class AuthApi {
 
   static Future<void> logout(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token');
-    await prefs.remove('role');
+    await prefs.clear(); // Menghapus semua data sesi
 
-    Navigator.pushAndRemoveUntil(
+    // Pindah ke halaman ChooseRole setelah logout
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => ChooseRole()),
-          (route) => false,
     );
   }
 

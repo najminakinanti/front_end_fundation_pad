@@ -7,16 +7,27 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthCheck extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<String?>(
-      future: _getStoredRole(),
+    return FutureBuilder<Map<String, String?>>(
+      future: _getStoredCredentials(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         }
 
-        if (snapshot.hasData) {
-          String? role = snapshot.data;
-          if (role == 'entrepreneur') {
+        if (snapshot.hasData && snapshot.data != null) {
+          String? token = snapshot.data?['token'];
+          String? role = snapshot.data?['role'];
+
+          // Debugging output
+          print('Token: $token');
+          print('Role: $role');
+
+          if (token == null || token.isEmpty) {
+            // Jika token kosong, langsung ke ChooseRole (bukan SplashPage)
+            return ChooseRole();
+          } else if (role == 'entrepreneur') {
             return MainPageMitra();
           } else if (role == 'organizer') {
             return MainPageOrganizer();
@@ -28,8 +39,11 @@ class AuthCheck extends StatelessWidget {
     );
   }
 
-  Future<String?> _getStoredRole() async {
+  Future<Map<String, String?>> _getStoredCredentials() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('role');
+    return {
+      'token': prefs.getString('token') ?? '', // Pastikan tidak null
+      'role': prefs.getString('role') ?? '',
+    };
   }
 }

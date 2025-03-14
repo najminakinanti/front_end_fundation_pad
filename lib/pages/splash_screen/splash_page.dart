@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:pad_fundation/API/auth_check.dart';
 import 'package:pad_fundation/theme.dart';
 
 class SplashPage extends StatefulWidget {
@@ -12,13 +13,18 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
-    // mengatur pindah halaman dari logo selama 3 detik
+    super.initState();
+
+    // Tunggu 3 detik, lalu arahkan ke AuthCheck agar token dicek ulang
     Timer(
       Duration(seconds: 3),
-          () => Navigator.pushNamed(context, '/boarding'),
+          () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => AuthCheck()),
+        );
+      },
     );
-
-    super.initState();
   }
 
   @override
