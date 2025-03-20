@@ -14,14 +14,33 @@ class AuthApi {
         'password': password,
       });
 
+      print('Response Status: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
 
         String? token = data['data']['token'];
         String? role = data['data']['user']['role'];
 
+        print('Token yang diterima: $token');
+        print('Role yang diterima: $role');
+
+        if (token == null || role == null) {
+          _showErrorDialog(context, 'Terjadi kesalahan. Data login tidak lengkap.');
+          return;
+        }
+
         if (role == 'entrepreneur') {
-          await _saveUserSession(token ?? '', role ?? '');
+          await _saveUserSession(token, role);
+
+          // Cek apakah SharedPreferences sudah menyimpan dengan benar
+          final prefs = await SharedPreferences.getInstance();
+          String? savedToken = prefs.getString('token');
+          String? savedRole = prefs.getString('role');
+          print('Token di SharedPreferences: $savedToken');
+          print('Role di SharedPreferences: $savedRole');
+
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => MainPageMitra()),
@@ -34,6 +53,7 @@ class AuthApi {
         _showErrorDialog(context, errorData['message']);
       }
     } catch (e) {
+      print('Error saat login: $e');
       _showErrorDialog(context, 'Periksa koneksi internet Anda atau coba lagi nanti.');
     }
   }
@@ -45,14 +65,33 @@ class AuthApi {
         'password': password,
       });
 
+      print('Response Status: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
 
         String? token = data['data']['token'];
         String? role = data['data']['user']['role'];
 
+        print('Token yang diterima: $token');
+        print('Role yang diterima: $role');
+
+        if (token == null || role == null) {
+          _showErrorDialog(context, 'Terjadi kesalahan. Data login tidak lengkap.');
+          return;
+        }
+
         if (role == 'organizer') {
-          await _saveUserSession(token ?? '', role ?? '');
+          await _saveUserSession(token, role);
+
+          // Cek apakah SharedPreferences sudah menyimpan dengan benar
+          final prefs = await SharedPreferences.getInstance();
+          String? savedToken = prefs.getString('token');
+          String? savedRole = prefs.getString('role');
+          print('Token di SharedPreferences: $savedToken');
+          print('Role di SharedPreferences: $savedRole');
+
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => MainPageOrganizer()),
@@ -65,25 +104,63 @@ class AuthApi {
         _showErrorDialog(context, errorData['message']);
       }
     } catch (e) {
+      print('Error saat login: $e');
       _showErrorDialog(context, 'Periksa koneksi internet Anda atau coba lagi nanti.');
     }
   }
 
   static Future<void> logout(BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear(); // Menghapus semua data sesi
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token'); // Ambil token dari SharedPreferences
 
-    // Pindah ke halaman ChooseRole setelah logout
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => ChooseRole()),
-    );
+      print('Token sebelum logout: $token');
+      print('Role sebelum logout: ${prefs.getString('role')}');
+
+      if (token != null) {
+        // Kirim request logout ke backend dengan header Authorization
+        final response = await ApiService.post(
+            'logout',
+            {},
+            headers: {
+              'Authorization': 'Bearer $token', // Tambahkan token ke header
+            }
+        );
+
+        if (response.statusCode == 200) {
+          print('Logout berhasil di backend');
+        } else {
+          print('Logout gagal di backend: ${response.body}');
+        }
+      } else {
+        print('Token tidak ditemukan, logout lokal saja.');
+      }
+
+      // Hapus data lokal setelah logout sukses
+      bool isCleared = await prefs.clear();
+      print('SharedPreferences cleared: $isCleared');
+      print('Token setelah logout: ${prefs.getString('token')}');
+      print('Role setelah logout: ${prefs.getString('role')}');
+
+      // Navigasi ke halaman ChooseRole setelah logout
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => ChooseRole()),
+      );
+    } catch (e) {
+      print('Error saat logout: $e');
+    }
   }
 
-  static Future<void> _saveUserSession(String? token, String? role) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('token', token ?? ''); // Jika null, ubah menjadi string kosong
-    await prefs.setString('role', role ?? '');   // Jika null, ubah menjadi string kosong
+  static Future<void> _saveUserSession(String token, String role) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('token', token);
+      await prefs.setString('role', role);
+      print('Data berhasil disimpan di SharedPreferences');
+    } catch (e) {
+      print('Gagal menyimpan data ke SharedPreferences: $e');
+    }
   }
 
   static void _showErrorDialog(BuildContext context, String message) {

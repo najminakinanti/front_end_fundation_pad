@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pad_fundation/API/auth_api.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:flutter/services.dart';
 
@@ -539,27 +540,20 @@ class ProfilePageOrganizer extends StatelessWidget {
   void showConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) { // Gunakan context lokal dari builder
         return AlertDialog(
           title: Text(
             'Konfirmasi Keluar',
             style: blackTextStyle.copyWith(fontSize: 14, fontWeight: bold),
           ),
-          content: Container(
-            width: 250,
-            child: Text(
-              'Apakah Anda yakin ingin keluar dari aplikasi?',
-              style: blackTextStyle.copyWith(fontSize: 12, fontWeight: regular),
-            ),
-          ),
-          contentPadding: EdgeInsets.fromLTRB(25, 10, 10, 0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
+          content: Text(
+            'Apakah Anda yakin ingin keluar dari aplikasi?',
+            style: blackTextStyle.copyWith(fontSize: 12, fontWeight: regular),
           ),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(dialogContext).pop(); // Gunakan dialogContext, bukan context utama
               },
               child: Text(
                 'BATAL',
@@ -568,7 +562,17 @@ class ProfilePageOrganizer extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/choose-role');
+                Navigator.of(dialogContext).pop(); // Tutup dialog sebelum logout
+
+                // Jalankan logout setelah navigasi selesai untuk menghindari error context
+                Future.delayed(Duration.zero, () async {
+                  try {
+                    await AuthApi.logout(context); // Gunakan context asli untuk navigasi
+                    print('Logout API called successfully');
+                  } catch (e) {
+                    print('Error saat logout: $e');
+                  }
+                });
               },
               child: Text(
                 'YA',

@@ -393,13 +393,8 @@ class ProfilePageMitra extends StatelessWidget {
         margin: EdgeInsets.only(bottom: 80, top: 10),
         width: double.infinity,
         child: TextButton(
-          onPressed: () async {
-            // showConfirmationDialog(context);
-            try {
-            await AuthApi.logout(context);
-            } catch (e) {
-              print('Error: $e');
-            }
+          onPressed: () {
+            showConfirmationDialog(context);
           },
           style: TextButton.styleFrom(
             backgroundColor: buttonColor,
@@ -538,27 +533,20 @@ class ProfilePageMitra extends StatelessWidget {
   void showConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) { // Gunakan context lokal dari builder
         return AlertDialog(
           title: Text(
             'Konfirmasi Keluar',
             style: blackTextStyle.copyWith(fontSize: 14, fontWeight: bold),
           ),
-          content: Container(
-            width: 250,
-            child: Text(
-              'Apakah Anda yakin ingin keluar dari aplikasi?',
-              style: blackTextStyle.copyWith(fontSize: 12, fontWeight: regular),
-            ),
-          ),
-          contentPadding: EdgeInsets.fromLTRB(25, 10, 10, 0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
+          content: Text(
+            'Apakah Anda yakin ingin keluar dari aplikasi?',
+            style: blackTextStyle.copyWith(fontSize: 12, fontWeight: regular),
           ),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(dialogContext).pop(); // Gunakan dialogContext, bukan context utama
               },
               child: Text(
                 'BATAL',
@@ -567,7 +555,17 @@ class ProfilePageMitra extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/choose-role');
+                Navigator.of(dialogContext).pop(); // Tutup dialog sebelum logout
+
+                // Jalankan logout setelah navigasi selesai untuk menghindari error context
+                Future.delayed(Duration.zero, () async {
+                  try {
+                    await AuthApi.logout(context); // Gunakan context asli untuk navigasi
+                    print('Logout API called successfully');
+                  } catch (e) {
+                    print('Error saat logout: $e');
+                  }
+                });
               },
               child: Text(
                 'YA',
