@@ -152,6 +152,192 @@ class AuthApi {
     }
   }
 
+  // static Future<void> registerMitra(
+  //     String name, String email, String phone, String password, String nameMitra,  BuildContext context) async {
+  //   try {
+  //     final response = await ApiService.post('register', {
+  //       'name': name,
+  //       'email': email,
+  //       'phone': phone,
+  //       'password': password,
+  //       'role': 'entrepreneur', // Pastikan role mitra
+  //     });
+  //
+  //     print('Response Status: ${response.statusCode}');
+  //     print('Response Body: ${response.body}');
+  //
+  //     if (response.statusCode == 201) {
+  //       var data = jsonDecode(response.body);
+  //       String? token = data['data']['token'];
+  //       String? role = data['data']['user']['role'];
+  //
+  //       if (token == null || role == null) {
+  //         _showErrorDialog(context, 'Terjadi kesalahan. Data pendaftaran tidak lengkap.');
+  //         return;
+  //       }
+  //
+  //       if (role == 'entrepreneur') {
+  //         await _saveUserSession(token, role);
+  //
+  //         Navigator.pushReplacement(
+  //           context,
+  //           MaterialPageRoute(builder: (context) => MainPageMitra()),
+  //         );
+  //       } else {
+  //         _showErrorDialog(context, 'Pendaftaran gagal! Hanya Mitra yang dapat mendaftar.');
+  //       }
+  //     } else {
+  //       var errorData = jsonDecode(response.body);
+  //       _showErrorDialog(context, errorData['message']);
+  //     }
+  //   } catch (e) {
+  //     print('Error saat registrasi: $e');
+  //     _showErrorDialog(context, 'Periksa koneksi internet Anda atau coba lagi nanti.');
+  //   }
+  // }
+
+  static Future<void> registerMitra(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // Ambil data yang telah disimpan dari kedua form
+    String? name = prefs.getString('name');
+    String? email = prefs.getString('email');
+    String? phone = prefs.getString('phone');
+    String? password = prefs.getString('password');
+    String? nameMitra = prefs.getString('mitra_name');
+    String? address = prefs.getString('address');
+    String? description = prefs.getString('description');
+    String? province = prefs.getString('province');
+    String? city = prefs.getString('city');
+
+    if (name == null || email == null || phone == null || password == null || nameMitra == null || address == null || description == null) {
+      _showErrorDialog(context, "Data tidak lengkap. Silakan isi semua form.");
+      return;
+    }
+
+    try {
+      print("📤 Mengirim request ke API: register-entrepreneur...");
+      print("➡ Data: {full_name: $name, email: $email, phone: $phone, password: $password}");
+
+      final userResponse = await ApiService.post('register-entrepreneur', {
+        "full_name": name,
+        "email": email,
+        "phone": phone,
+        "password": password,
+        "role": "entrepreneur",
+      });
+
+      print("📥 Response API (register-entrepreneur): ${userResponse.statusCode}");
+      print("🔍 Response body: ${userResponse.body}");
+
+      if (userResponse.statusCode == 201) {
+        final userData = jsonDecode(userResponse.body);
+        int? userId = userData['data']['user']['id']; // Ambil user_id
+        String? token = userData['data']['token']; // Ambil token untuk request berikutnya
+
+        if (userId == null) {
+          _showErrorDialog(context, "Gagal mendapatkan User ID atau Token.");
+          return;
+        }
+        print("User ID: $userId");
+        print("Mengirim request ke API: mitra-form/$userId...");
+
+        final mitraResponse = await ApiService.post(
+          'mitra-form/$userId',
+          {
+            "name": nameMitra,
+            "address": address,
+            "description": description,
+            "province": province,
+            "city": city,
+          },
+          // token: token, // Kirim token sebagai Authorization header
+
+        );
+        print("Response API (mitra-form/$userId): ${mitraResponse.statusCode}");
+        print("Response body: ${mitraResponse.body}");
+
+        if (mitraResponse.statusCode == 201) {
+          print("Registrasi Mitra sukses!");
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => MainPageMitra()),
+          );
+        } else {
+          var errorData = jsonDecode(mitraResponse.body);
+          _showErrorDialog(context, errorData['message'] ?? "Registrasi Mitra gagal!");
+        }
+      } else {
+        var errorData = jsonDecode(userResponse.body);
+        _showErrorDialog(context, errorData['message'] ?? "Registrasi User gagal!");
+      }
+    } catch (e) {
+      print("Error saat registrasi: $e");
+      _showErrorDialog(context, "Terjadi kesalahan. Silakan coba lagi.");
+    }
+  }
+
+  // Fungsi untuk menampilkan pesan error dalam dialog
+  static void _showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Error"),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+  static Future<void> registerOrganizer(
+      String name, String email, String phone, String password, BuildContext context) async {
+    try {
+      final response = await ApiService.post('register', {
+        'name': name,
+        'email': email,
+        'phone': phone,
+        'password': password,
+        'role': 'organizer', // Pastikan role organizer
+      });
+
+      print('Response Status: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
+      if (response.statusCode == 201) {
+        var data = jsonDecode(response.body);
+        String? token = data['data']['token'];
+        String? role = data['data']['user']['role'];
+
+        if (token == null || role == null) {
+          _showErrorDialog(context, 'Terjadi kesalahan. Data pendaftaran tidak lengkap.');
+          return;
+        }
+
+        if (role == 'organizer') {
+          await _saveUserSession(token, role);
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => MainPageOrganizer()),
+          );
+        } else {
+          _showErrorDialog(context, 'Pendaftaran gagal! Hanya Organizer yang dapat mendaftar.');
+        }
+      } else {
+        var errorData = jsonDecode(response.body);
+        _showErrorDialog(context, errorData['message']);
+      }
+    } catch (e) {
+      print('Error saat registrasi: $e');
+      _showErrorDialog(context, 'Periksa koneksi internet Anda atau coba lagi nanti.');
+    }
+  }
+
+
   static Future<void> _saveUserSession(String token, String role) async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -163,23 +349,23 @@ class AuthApi {
     }
   }
 
-  static void _showErrorDialog(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Login Gagal'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // static void _showErrorDialog(BuildContext context, String message) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         title: const Text('Login Gagal'),
+  //         content: Text(message),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.pop(context);
+  //             },
+  //             child: const Text('OK'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 }

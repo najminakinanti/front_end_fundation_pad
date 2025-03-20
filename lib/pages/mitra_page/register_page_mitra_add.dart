@@ -1,7 +1,90 @@
 import 'package:flutter/material.dart';
+import 'package:pad_fundation/API/auth_api.dart';
 import 'package:pad_fundation/theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class AddMitra extends StatelessWidget{
+class AddMitra extends StatefulWidget {
+  @override
+  _AddMitraState createState() => _AddMitraState();
+}
+
+class _AddMitraState extends State<AddMitra> {
+  final TextEditingController nameMitraController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  String? selectedProvince;
+  String? selectedCity;
+  // File? _imageFile;
+
+  List<String> provinces = ['Jawa Barat', 'Jawa Tengah', 'Jawa Timur'];
+  Map<String, List<String>> cities = {
+    'Jawa Barat': ['Bandung', 'Bogor', 'Bekasi'],
+    'Jawa Tengah': ['Semarang', 'Solo', 'Magelang'],
+    'Jawa Timur': ['Surabaya', 'Malang', 'Kediri'],
+  };
+
+  // Data dari halaman pertama
+  String? name;
+  String? email;
+  String? phone;
+  String? password;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFromSharedPreferences();
+  }
+
+  Future<void> _loadFromSharedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      name = prefs.getString('name');
+      email = prefs.getString('email');
+      phone = prefs.getString('phone');
+      password = prefs.getString('password');
+    });
+  }
+
+  Future<void> saveData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('name', nameMitraController.text);
+    await prefs.setString('address', addressController.text);
+    await prefs.setString('description', descriptionController.text);
+    await prefs.setString('province', selectedProvince ?? '');
+    await prefs.setString('city', selectedCity ?? '');
+
+    Map<String, String> finalData = {
+      "name": name ?? '',
+      "email": email ?? '',
+      "phone": phone ?? '',
+      "password": password ?? '',
+      "mitra_name": nameMitraController.text,
+      "address": addressController.text,
+      "province": selectedProvince ?? '',
+      "city": selectedCity ?? '',
+      "description": descriptionController.text,
+    };
+
+    // Simulasikan pengiriman data (gantilah ini dengan API request jika diperlukan)
+    print("Data dikirim: $finalData");
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Data berhasil disimpan!")),
+      );
+    }
+  }
+
+  // Future<void> pickImage() async {
+  //   final picker = ImagePicker();
+  //   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       _imageFile = File(pickedFile.path);
+  //     });
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
 
@@ -93,6 +176,7 @@ class AddMitra extends StatelessWidget{
             SizedBox(
               height: 48,
               child: TextFormField(
+                controller: nameMitraController,
                 decoration: InputDecoration(
                   labelText: 'Nama Mitra Industri',
                   labelStyle: grayTextStyle.copyWith(fontSize: 16),
@@ -128,127 +212,78 @@ class AddMitra extends StatelessWidget{
     }
 
     Widget provinceInput() {
-      final List<String> provinces = [
-        'Jawa Tengah',
-        'Jawa Barat',
-        'Jakarta',
-        'Surabaya',
-      ];
-      String? selectedProvince;
-
       return Container(
         margin: EdgeInsets.only(top: 18),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 48,
-              child: DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  labelText: 'Provinsi Mitra',
-                  labelStyle: grayTextStyle.copyWith(fontSize: 16),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
-                  prefixIcon: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: Image.asset(
-                      'assets/icon_location.png',
-                      width: 15,
-                      height: 15,
-                    ),
-                  ),
-                ),
-                value: selectedProvince,
-                items: provinces.map((String province) {
-                  return DropdownMenuItem<String>(
-                    value: province,
-                    child: Text(
-                      province,
-                      style: grayTextStyle.copyWith(fontSize: 12),
-                    ),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  selectedProvince = newValue;
-                },
-              ),
+        child: DropdownButtonFormField<String>(
+          decoration: InputDecoration(
+            labelText: 'Provinsi Mitra',
+            labelStyle: grayTextStyle.copyWith(fontSize: 16),
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: primaryColor),
             ),
-          ],
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: primaryColor),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: primaryColor),
+            ),
+            prefixIcon: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Image.asset('assets/icon_location.png', width: 15, height: 15),
+            ),
+          ),
+          value: selectedProvince,
+          items: provinces.map((String province) {
+            return DropdownMenuItem<String>(
+              value: province,
+              child: Text(province, style: grayTextStyle.copyWith(fontSize: 12)),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              selectedProvince = newValue;
+              selectedCity = null; // Reset kota saat provinsi berubah
+            });
+          },
         ),
       );
     }
 
     Widget cityInput() {
-      final List<String> cities = [
-        'Semarang',
-        'Karanganyar',
-        'Sukoharjo',
-        'Salatiga',
-      ];
-      String? selectedCity;
-
       return Container(
         margin: EdgeInsets.only(top: 18),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 48,
-              child: DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  labelText: 'Kota',
-                  labelStyle: grayTextStyle.copyWith(fontSize: 16),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
-                  prefixIcon: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: Image.asset(
-                      'assets/icon_location.png',
-                      width: 15,
-                      height: 15,
-                    ),
-                  ),
-                ),
-                value: selectedCity,
-                items: cities.map((String city) {
-                  return DropdownMenuItem<String>(
-                    value: city,
-                    child: Text(
-                      city,
-                      style: grayTextStyle.copyWith(fontSize: 12),
-                    ),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  selectedCity = newValue;
-                },
-              ),
+        child: DropdownButtonFormField<String>(
+          decoration: InputDecoration(
+            labelText: 'Kota',
+            labelStyle: grayTextStyle.copyWith(fontSize: 16),
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: primaryColor),
             ),
-          ],
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: primaryColor),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: primaryColor),
+            ),
+            prefixIcon: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Image.asset('assets/icon_location.png', width: 15, height: 15),
+            ),
+          ),
+          value: selectedCity,
+          items: selectedProvince != null
+              ? cities[selectedProvince!]!.map((String city) {
+            return DropdownMenuItem<String>(
+              value: city,
+              child: Text(city, style: grayTextStyle.copyWith(fontSize: 12)),
+            );
+          }).toList()
+              : [],
+          onChanged: (String? newValue) {
+            setState(() {
+              selectedCity = newValue;
+            });
+          },
         ),
       );
     }
@@ -261,6 +296,7 @@ class AddMitra extends StatelessWidget{
             SizedBox(
               height: 48,
               child: TextFormField(
+                controller: addressController,
                 decoration: InputDecoration(
                   labelText: 'Alamat lengkap Mitra Industri',
                   labelStyle: grayTextStyle.copyWith(fontSize: 16),
@@ -370,6 +406,7 @@ class AddMitra extends StatelessWidget{
             SizedBox(
               height: 50,
               child: TextFormField(
+                controller: descriptionController,
                 maxLines: 5,
                 decoration: InputDecoration(
                   labelText: 'Deskripsi Mitra Industri',
@@ -430,7 +467,7 @@ class AddMitra extends StatelessWidget{
             Expanded(
               child: TextButton(
                 onPressed: () {
-                  //
+                  AuthApi.registerMitra(context);
                 },
                 style: TextButton.styleFrom(
                   backgroundColor: primaryColor,

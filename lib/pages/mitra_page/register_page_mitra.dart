@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pad_fundation/theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterPageMitra extends StatefulWidget {
   @override
@@ -7,6 +9,11 @@ class RegisterPageMitra extends StatefulWidget {
 }
 
 class _RegisterPageMitraState extends State<RegisterPageMitra> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController numberController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   bool _isPasswordObscured = true;
   bool _isConfirmPasswordObscured = true;
 
@@ -20,6 +27,18 @@ class _RegisterPageMitraState extends State<RegisterPageMitra> {
     setState(() {
       _isConfirmPasswordObscured = !_isConfirmPasswordObscured;
     });
+  }
+
+  Future<void>  _saveToSharedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('full_name', nameController.text);
+    await prefs.setString('email', emailController.text);
+    await prefs.setString('phone', numberController.text);
+    await prefs.setString('password', passwordController.text);
+  }
+
+  void _navigateToNextPage() {
+    Navigator.pushNamed(context, '/add-mitra');
   }
 
   @override
@@ -109,6 +128,7 @@ class _RegisterPageMitraState extends State<RegisterPageMitra> {
             SizedBox(
               height: 48,
               child: TextFormField(
+                controller: nameController,
                 decoration: InputDecoration(
                   labelText: 'Nama Lengkap',
                   labelStyle: grayTextStyle.copyWith(
@@ -145,6 +165,9 @@ class _RegisterPageMitraState extends State<RegisterPageMitra> {
             SizedBox(
               height: 48,
               child: TextFormField(
+                controller: numberController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: InputDecoration(
                   labelText: 'Nomor Handphone',
                   labelStyle: grayTextStyle.copyWith(
@@ -181,6 +204,7 @@ class _RegisterPageMitraState extends State<RegisterPageMitra> {
             SizedBox(
               height: 48,
               child: TextFormField(
+                controller: emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
                   labelStyle: grayTextStyle.copyWith(
@@ -215,6 +239,7 @@ class _RegisterPageMitraState extends State<RegisterPageMitra> {
         child: SizedBox(
           height: 50,
           child: TextFormField(
+            controller: passwordController,
             obscureText: _isPasswordObscured,
             decoration: InputDecoration(
               labelText: 'Kata sandi',
@@ -285,14 +310,15 @@ class _RegisterPageMitraState extends State<RegisterPageMitra> {
         margin: EdgeInsets.only(bottom: 30, top: 30),
         width: double.infinity,
         child: TextButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/add-mitra');
+          onPressed: () async {
+            await _saveToSharedPreferences(); // Simpan data ke SharedPreferences
+            _navigateToNextPage(); // Pindah ke halaman berikutnya
           },
           style: TextButton.styleFrom(
-              backgroundColor: primaryColor,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)
-              )
+            backgroundColor: primaryColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
           ),
           child: Text(
             'LANJUT',
@@ -304,6 +330,7 @@ class _RegisterPageMitraState extends State<RegisterPageMitra> {
         ),
       );
     }
+
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
