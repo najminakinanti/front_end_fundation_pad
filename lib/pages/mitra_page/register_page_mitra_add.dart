@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pad_fundation/API/auth_api.dart';
+import 'package:http/http.dart' as http;
 import 'package:pad_fundation/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,7 +18,6 @@ class _AddMitraState extends State<AddMitra> {
   final TextEditingController descriptionController = TextEditingController();
   String? selectedProvince;
   String? selectedCity;
-  // File? _imageFile;
 
   List<String> provinces = ['Jawa Barat', 'Jawa Tengah', 'Jawa Timur'];
   Map<String, List<String>> cities = {
@@ -23,11 +26,9 @@ class _AddMitraState extends State<AddMitra> {
     'Jawa Timur': ['Surabaya', 'Malang', 'Kediri'],
   };
 
-  // Data dari halaman pertama
-  String? name;
-  String? email;
-  String? phone;
-  String? password;
+  String? name, email, phone, password;
+  File? _imageFile; // File gambar yang dipilih
+  final picker = ImagePicker();
 
   @override
   void initState() {
@@ -43,6 +44,35 @@ class _AddMitraState extends State<AddMitra> {
       phone = prefs.getString('phone');
       password = prefs.getString('password');
     });
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<void> _uploadImage() async {
+    if (_imageFile == null) return;
+
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse('http://127.0.0.1:8000/api/upload'), // Ganti dengan endpoint API Anda
+    );
+
+    request.files.add(
+      await http.MultipartFile.fromPath('image', _imageFile!.path),
+    );
+
+    var response = await request.send();
+    if (response.statusCode == 200) {
+      print('Gambar berhasil diunggah');
+    } else {
+      print('Gagal mengunggah gambar');
+    }
   }
 
   Future<void> saveData() async {
@@ -65,8 +95,9 @@ class _AddMitraState extends State<AddMitra> {
       "description": descriptionController.text,
     };
 
-    // Simulasikan pengiriman data (gantilah ini dengan API request jika diperlukan)
     print("Data dikirim: $finalData");
+
+    await _uploadImage(); // Unggah gambar sebelum menyimpan data
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -74,16 +105,6 @@ class _AddMitraState extends State<AddMitra> {
       );
     }
   }
-
-  // Future<void> pickImage() async {
-  //   final picker = ImagePicker();
-  //   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       _imageFile = File(pickedFile.path);
-  //     });
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -335,62 +356,23 @@ class _AddMitraState extends State<AddMitra> {
       return Container(
         margin: EdgeInsets.only(top: 18),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: 48,
-              child: TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Gambar Mitra Industri',
-                  labelStyle: grayTextStyle.copyWith(
-                    fontSize: 16,
-                  ),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
-                  suffixIcon: GestureDetector(
-                    onTap: () {
-                      //
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(right: 0),
-                      width: 80,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        border: Border(
-                          top: BorderSide(color: primaryColor),
-                          right: BorderSide(color: primaryColor),
-                          bottom: BorderSide(color: primaryColor),
-                        ),
-                        color: sageGreen2,
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(5),
-                          bottomRight: Radius.circular(5),
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Unggah',
-                          style: greenTextStyle.copyWith(
-                            fontSize: 14,
-                            fontWeight: regular,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+            Text("Gambar Mitra Industri", style: TextStyle(fontSize: 16, color: Colors.grey)),
+            SizedBox(height: 8),
+            GestureDetector(
+              onTap: _pickImage,
+              child: Container(
+                width: double.infinity,
+                height: 150,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.grey[200],
                 ),
+                child: _imageFile == null
+                    ? Center(child: Text("Pilih Gambar", style: TextStyle(color: Colors.grey)))
+                    : Image.file(_imageFile!, fit: BoxFit.cover),
               ),
             ),
           ],

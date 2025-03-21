@@ -242,15 +242,18 @@ class AuthApi {
         print("User ID: $userId");
         print("Mengirim request ke API: mitra-form/$userId...");
 
-        final mitraResponse = await ApiService.post(
+        final mitraResponse = await ApiService.postFormData(
           'mitra-form/$userId',
           {
             "name": nameMitra,
             "address": address,
             "description": description,
-            "province": province,
-            "city": city,
+            "province": province!,
+            "city": city!,
           },
+            headers: {
+              "Accept": "application/json",
+          }
           // token: token, // Kirim token sebagai Authorization header
 
         );

@@ -30,4 +30,32 @@ class ApiService {
       rethrow;
     }
   }
+  static Future<http.Response> postFormData(
+      String endpoint,
+      Map<String, String> fields, {
+        Map<String, String>? headers,
+        // Jika perlu upload file, tambahkan parameter file dan fileField
+        // File? file,
+        // String fileField = 'file',
+      }) async {
+    var uri = Uri.parse('$baseUrl/$endpoint');
+    var request = http.MultipartRequest('POST', uri);
+
+    // Tambahkan fields form-data
+    request.fields.addAll(fields);
+
+    // Tambahkan header jika diperlukan
+    if (headers != null) {
+      request.headers.addAll(headers);
+    }
+
+    // Jika ingin mengirim file, gunakan kode berikut:
+    // if (file != null) {
+    //   request.files.add(await http.MultipartFile.fromPath(fileField, file.path));
+    // }
+
+    // Kirim request dan tunggu respons
+    var streamedResponse = await request.send();
+    return await http.Response.fromStream(streamedResponse);
+  }
 }
