@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pad_fundation/theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterPageOrganizer extends StatefulWidget {
   @override
@@ -7,6 +9,11 @@ class RegisterPageOrganizer extends StatefulWidget {
 }
 
 class _RegisterPageOrganizerState extends State<RegisterPageOrganizer> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController numberController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   bool _isPasswordObscured = true;
   bool _isConfirmPasswordObscured = true;
 
@@ -20,6 +27,18 @@ class _RegisterPageOrganizerState extends State<RegisterPageOrganizer> {
     setState(() {
       _isConfirmPasswordObscured = !_isConfirmPasswordObscured;
     });
+  }
+
+  Future<void>  _saveToSharedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('full_name', nameController.text);
+    await prefs.setString('email', emailController.text);
+    await prefs.setString('phone', numberController.text);
+    await prefs.setString('password', passwordController.text);
+  }
+
+  void _navigateToNextPage() {
+    Navigator.pushNamed(context, '/add-organizer');
   }
 
   @override
@@ -109,6 +128,7 @@ class _RegisterPageOrganizerState extends State<RegisterPageOrganizer> {
             SizedBox(
               height: 48,
               child: TextFormField(
+                controller: nameController,
                 decoration: InputDecoration(
                   labelText: 'Nama Lengkap',
                   labelStyle: grayTextStyle.copyWith(
@@ -145,6 +165,9 @@ class _RegisterPageOrganizerState extends State<RegisterPageOrganizer> {
             SizedBox(
               height: 48,
               child: TextFormField(
+                controller: numberController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: InputDecoration(
                   labelText: 'Nomor Handphone',
                   labelStyle: grayTextStyle.copyWith(
@@ -181,6 +204,7 @@ class _RegisterPageOrganizerState extends State<RegisterPageOrganizer> {
             SizedBox(
               height: 48,
               child: TextFormField(
+                controller: emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
                   labelStyle: grayTextStyle.copyWith(
@@ -215,6 +239,7 @@ class _RegisterPageOrganizerState extends State<RegisterPageOrganizer> {
         child: SizedBox(
           height: 50,
           child: TextFormField(
+            controller: passwordController,
             obscureText: _isPasswordObscured,
             decoration: InputDecoration(
               labelText: 'Kata sandi',
@@ -285,8 +310,9 @@ class _RegisterPageOrganizerState extends State<RegisterPageOrganizer> {
         margin: EdgeInsets.only(bottom: 30, top: 30),
         width: double.infinity,
         child: TextButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/add-organizer');
+          onPressed: () async {
+            await _saveToSharedPreferences(); // Simpan data ke SharedPreferences
+            _navigateToNextPage(); // Pindah ke halaman berikutnya
           },
           style: TextButton.styleFrom(
               backgroundColor: primaryColor,

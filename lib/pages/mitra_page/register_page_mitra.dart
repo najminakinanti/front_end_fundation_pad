@@ -331,7 +331,6 @@ class _RegisterPageMitraState extends State<RegisterPageMitra> {
       );
     }
 
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,

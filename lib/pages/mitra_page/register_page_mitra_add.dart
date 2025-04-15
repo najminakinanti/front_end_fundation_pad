@@ -1,11 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:pad_fundation/API/auth_api.dart';
 import 'package:http/http.dart' as http;
 import 'package:pad_fundation/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddMitra extends StatefulWidget {
   @override
@@ -16,8 +19,10 @@ class _AddMitraState extends State<AddMitra> {
   final TextEditingController nameMitraController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController _imageController = TextEditingController();
   String? selectedProvince;
   String? selectedCity;
+  String? photo_file;
 
   List<String> provinces = ['Jawa Barat', 'Jawa Tengah', 'Jawa Timur'];
   Map<String, List<String>> cities = {
@@ -26,9 +31,29 @@ class _AddMitraState extends State<AddMitra> {
     'Jawa Timur': ['Surabaya', 'Malang', 'Kediri'],
   };
 
-  String? name, email, phone, password;
-  File? _imageFile; // File gambar yang dipilih
-  final picker = ImagePicker();
+  String? fullName, email, phone, password;
+  File? _imageFile;
+  final ImagePicker _picker = ImagePicker();
+
+  void _pickImageBase64() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if(image == null) return;
+
+    Uint8List imagebyte = await image!.readAsBytes();
+    String _base64 = base64.encode(imagebyte);
+
+    print(_base64);
+
+    final imagetamppath = File(image.path);
+
+    setState(() {
+      _imageController.text = image.name;
+      this._imageFile = imagetamppath;
+      photo_file = _base64;
+    });
+
+    print(imagetamppath);
+  }
 
   @override
   void initState() {
@@ -39,40 +64,11 @@ class _AddMitraState extends State<AddMitra> {
   Future<void> _loadFromSharedPreferences() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      name = prefs.getString('name');
+      fullName = prefs.getString('full_name');
       email = prefs.getString('email');
       phone = prefs.getString('phone');
       password = prefs.getString('password');
     });
-  }
-
-  Future<void> _pickImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
-    }
-  }
-
-  Future<void> _uploadImage() async {
-    if (_imageFile == null) return;
-
-    var request = http.MultipartRequest(
-      'POST',
-      Uri.parse('http://127.0.0.1:8000/api/upload'), // Ganti dengan endpoint API Anda
-    );
-
-    request.files.add(
-      await http.MultipartFile.fromPath('image', _imageFile!.path),
-    );
-
-    var response = await request.send();
-    if (response.statusCode == 200) {
-      print('Gambar berhasil diunggah');
-    } else {
-      print('Gagal mengunggah gambar');
-    }
   }
 
   Future<void> saveData() async {
@@ -82,22 +78,22 @@ class _AddMitraState extends State<AddMitra> {
     await prefs.setString('description', descriptionController.text);
     await prefs.setString('province', selectedProvince ?? '');
     await prefs.setString('city', selectedCity ?? '');
+    await prefs.setString('photo_file',photo_file ?? '' );
 
-    Map<String, String> finalData = {
-      "name": name ?? '',
+    Map<String, dynamic> finalData = {
+      "full_name": fullName ?? '',
       "email": email ?? '',
       "phone": phone ?? '',
       "password": password ?? '',
-      "mitra_name": nameMitraController.text,
+      "name": nameMitraController.text,
       "address": addressController.text,
       "province": selectedProvince ?? '',
       "city": selectedCity ?? '',
       "description": descriptionController.text,
+      "photo_file": photo_file ?? '',
     };
 
     print("Data dikirim: $finalData");
-
-    await _uploadImage(); // Unggah gambar sebelum menyimpan data
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -356,23 +352,63 @@ class _AddMitraState extends State<AddMitra> {
       return Container(
         margin: EdgeInsets.only(top: 18),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Gambar Mitra Industri", style: TextStyle(fontSize: 16, color: Colors.grey)),
-            SizedBox(height: 8),
-            GestureDetector(
-              onTap: _pickImage,
-              child: Container(
-                width: double.infinity,
-                height: 150,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.grey[200],
+            SizedBox(
+              height: 48,
+              child: TextFormField(
+                controller: _imageController,
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText: 'Gambar Mitra Industri',
+                  labelStyle: grayTextStyle.copyWith(
+                    fontSize: 16,
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: primaryColor,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: primaryColor,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: primaryColor,
+                    ),
+                  ),
+                  suffixIcon: GestureDetector(
+                    onTap: () {
+                      _pickImageBase64();
+                    },
+                    child: Container(
+                      width: 80,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(color: primaryColor),
+                          right: BorderSide(color: primaryColor),
+                          bottom: BorderSide(color: primaryColor),
+                        ),
+                        color: sageGreen2,
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(5),
+                          bottomRight: Radius.circular(5),
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Unggah',
+                          style: greenTextStyle.copyWith(
+                            fontSize: 14,
+                            fontWeight: regular,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-                child: _imageFile == null
-                    ? Center(child: Text("Pilih Gambar", style: TextStyle(color: Colors.grey)))
-                    : Image.file(_imageFile!, fit: BoxFit.cover),
               ),
             ),
           ],
@@ -448,8 +484,9 @@ class _AddMitraState extends State<AddMitra> {
             SizedBox(width: 10),
             Expanded(
               child: TextButton(
-                onPressed: () {
-                  AuthApi.registerMitra(context);
+                onPressed: () async {
+                  await saveData();
+                  await AuthApi.registerMitra(context);
                 },
                 style: TextButton.styleFrom(
                   backgroundColor: primaryColor,

@@ -1,7 +1,106 @@
-import 'package:flutter/material.dart';
-import 'package:pad_fundation/theme.dart';
+import 'dart:convert';
+import 'dart:io';
 
-class AddOrganizer extends StatelessWidget{
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:pad_fundation/API/auth_api.dart';
+import 'package:pad_fundation/theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+
+class AddOrganizer extends StatefulWidget {
+  @override
+  _AddOrganizerState createState() => _AddOrganizerState();
+}
+
+class _AddOrganizerState extends State<AddOrganizer> {
+  final TextEditingController nameMitraController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController _imageController = TextEditingController();
+  String? selectedProvince;
+  String? selectedCity;
+  String? photo_file;
+
+  List<String> provinces = ['Jawa Barat', 'Jawa Tengah', 'Jawa Timur'];
+  Map<String, List<String>> cities = {
+    'Jawa Barat': ['Bandung', 'Bogor', 'Bekasi'],
+    'Jawa Tengah': ['Semarang', 'Solo', 'Magelang'],
+    'Jawa Timur': ['Surabaya', 'Malang', 'Kediri'],
+  };
+
+  String? fullName, email, phone, password;
+  File? _imageFile;
+  final ImagePicker _picker = ImagePicker();
+
+  void _pickImageBase64() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if(image == null) return;
+
+    Uint8List imagebyte = await image!.readAsBytes();
+    String _base64 = base64.encode(imagebyte);
+
+    print(_base64);
+
+    final imagetamppath = File(image.path);
+
+    setState(() {
+      _imageController.text = image.name;
+      this._imageFile = imagetamppath;
+      photo_file = _base64;
+    });
+
+    print(imagetamppath);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFromSharedPreferences();
+  }
+
+  Future<void> _loadFromSharedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      fullName = prefs.getString('full_name');
+      email = prefs.getString('email');
+      phone = prefs.getString('phone');
+      password = prefs.getString('password');
+    });
+  }
+
+  Future<void> saveData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('name', nameMitraController.text);
+    await prefs.setString('address', addressController.text);
+    await prefs.setString('description', descriptionController.text);
+    await prefs.setString('province', selectedProvince ?? '');
+    await prefs.setString('city', selectedCity ?? '');
+    await prefs.setString('photo_file',photo_file ?? '' );
+
+    Map<String, dynamic> finalData = {
+      "full_name": fullName ?? '',
+      "email": email ?? '',
+      "phone": phone ?? '',
+      "password": password ?? '',
+      "name": nameMitraController.text,
+      "address": addressController.text,
+      "province": selectedProvince ?? '',
+      "city": selectedCity ?? '',
+      "description": descriptionController.text,
+      "photo_file": photo_file ?? '',
+    };
+
+    print("Data dikirim: $finalData");
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Data berhasil disimpan!")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -93,6 +192,7 @@ class AddOrganizer extends StatelessWidget{
             SizedBox(
               height: 48,
               child: TextFormField(
+                controller: nameMitraController,
                 decoration: InputDecoration(
                   labelText: 'Nama Organizer',
                   labelStyle: grayTextStyle.copyWith(fontSize: 16),
@@ -128,127 +228,78 @@ class AddOrganizer extends StatelessWidget{
     }
 
     Widget provinceInput() {
-      final List<String> provinces = [
-        'Jawa Tengah',
-        'Jawa Barat',
-        'Jakarta',
-        'Surabaya',
-      ];
-      String? selectedProvince;
-
       return Container(
         margin: EdgeInsets.only(top: 18),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 48,
-              child: DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  labelText: 'Provinsi',
-                  labelStyle: grayTextStyle.copyWith(fontSize: 16),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
-                  prefixIcon: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: Image.asset(
-                      'assets/icon_location.png',
-                      width: 15,
-                      height: 15,
-                    ),
-                  ),
-                ),
-                value: selectedProvince,
-                items: provinces.map((String province) {
-                  return DropdownMenuItem<String>(
-                    value: province,
-                    child: Text(
-                      province,
-                      style: grayTextStyle.copyWith(fontSize: 12),
-                    ),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  selectedProvince = newValue;
-                },
-              ),
+        child: DropdownButtonFormField<String>(
+          decoration: InputDecoration(
+            labelText: 'Provinsi Mitra',
+            labelStyle: grayTextStyle.copyWith(fontSize: 16),
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: primaryColor),
             ),
-          ],
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: primaryColor),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: primaryColor),
+            ),
+            prefixIcon: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Image.asset('assets/icon_location.png', width: 15, height: 15),
+            ),
+          ),
+          value: selectedProvince,
+          items: provinces.map((String province) {
+            return DropdownMenuItem<String>(
+              value: province,
+              child: Text(province, style: grayTextStyle.copyWith(fontSize: 12)),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              selectedProvince = newValue;
+              selectedCity = null; // Reset kota saat provinsi berubah
+            });
+          },
         ),
       );
     }
 
     Widget cityInput() {
-      final List<String> cities = [
-        'Semarang',
-        'Karanganyar',
-        'Sukoharjo',
-        'Salatiga',
-      ];
-      String? selectedCity;
-
       return Container(
         margin: EdgeInsets.only(top: 18),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 48,
-              child: DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  labelText: 'Kota',
-                  labelStyle: grayTextStyle.copyWith(fontSize: 16),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
-                  prefixIcon: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: Image.asset(
-                      'assets/icon_location.png',
-                      width: 15,
-                      height: 15,
-                    ),
-                  ),
-                ),
-                value: selectedCity,
-                items: cities.map((String city) {
-                  return DropdownMenuItem<String>(
-                    value: city,
-                    child: Text(
-                      city,
-                      style: grayTextStyle.copyWith(fontSize: 12),
-                    ),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  selectedCity = newValue;
-                },
-              ),
+        child: DropdownButtonFormField<String>(
+          decoration: InputDecoration(
+            labelText: 'Kota',
+            labelStyle: grayTextStyle.copyWith(fontSize: 16),
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: primaryColor),
             ),
-          ],
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: primaryColor),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: primaryColor),
+            ),
+            prefixIcon: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Image.asset('assets/icon_location.png', width: 15, height: 15),
+            ),
+          ),
+          value: selectedCity,
+          items: selectedProvince != null
+              ? cities[selectedProvince!]!.map((String city) {
+            return DropdownMenuItem<String>(
+              value: city,
+              child: Text(city, style: grayTextStyle.copyWith(fontSize: 12)),
+            );
+          }).toList()
+              : [],
+          onChanged: (String? newValue) {
+            setState(() {
+              selectedCity = newValue;
+            });
+          },
         ),
       );
     }
@@ -261,6 +312,7 @@ class AddOrganizer extends StatelessWidget{
             SizedBox(
               height: 48,
               child: TextFormField(
+                controller: addressController,
                 decoration: InputDecoration(
                   labelText: 'Alamat lengkap Organizer',
                   labelStyle: grayTextStyle.copyWith(fontSize: 16),
@@ -303,6 +355,8 @@ class AddOrganizer extends StatelessWidget{
             SizedBox(
               height: 48,
               child: TextFormField(
+                controller: _imageController,
+                readOnly: true,
                 decoration: InputDecoration(
                   labelText: 'Gambar Organizer',
                   labelStyle: grayTextStyle.copyWith(
@@ -325,10 +379,9 @@ class AddOrganizer extends StatelessWidget{
                   ),
                   suffixIcon: GestureDetector(
                     onTap: () {
-                      //
+                      _pickImageBase64();
                     },
                     child: Container(
-                      margin: EdgeInsets.only(right: 0),
                       width: 80,
                       height: 40,
                       decoration: BoxDecoration(
@@ -370,6 +423,7 @@ class AddOrganizer extends StatelessWidget{
             SizedBox(
               height: 50,
               child: TextFormField(
+                controller: descriptionController,
                 maxLines: 5,
                 decoration: InputDecoration(
                   labelText: 'Deskripsi Organizer',
@@ -429,8 +483,9 @@ class AddOrganizer extends StatelessWidget{
             SizedBox(width: 10),
             Expanded(
               child: TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/home-organizer');
+                onPressed: () async {
+                  await saveData();
+                  await AuthApi.registerOrganizer(context);
                 },
                 style: TextButton.styleFrom(
                   backgroundColor: primaryColor,

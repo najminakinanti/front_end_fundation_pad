@@ -152,80 +152,56 @@ class AuthApi {
     }
   }
 
-  // static Future<void> registerMitra(
-  //     String name, String email, String phone, String password, String nameMitra,  BuildContext context) async {
-  //   try {
-  //     final response = await ApiService.post('register', {
-  //       'name': name,
-  //       'email': email,
-  //       'phone': phone,
-  //       'password': password,
-  //       'role': 'entrepreneur', // Pastikan role mitra
-  //     });
-  //
-  //     print('Response Status: ${response.statusCode}');
-  //     print('Response Body: ${response.body}');
-  //
-  //     if (response.statusCode == 201) {
-  //       var data = jsonDecode(response.body);
-  //       String? token = data['data']['token'];
-  //       String? role = data['data']['user']['role'];
-  //
-  //       if (token == null || role == null) {
-  //         _showErrorDialog(context, 'Terjadi kesalahan. Data pendaftaran tidak lengkap.');
-  //         return;
-  //       }
-  //
-  //       if (role == 'entrepreneur') {
-  //         await _saveUserSession(token, role);
-  //
-  //         Navigator.pushReplacement(
-  //           context,
-  //           MaterialPageRoute(builder: (context) => MainPageMitra()),
-  //         );
-  //       } else {
-  //         _showErrorDialog(context, 'Pendaftaran gagal! Hanya Mitra yang dapat mendaftar.');
-  //       }
-  //     } else {
-  //       var errorData = jsonDecode(response.body);
-  //       _showErrorDialog(context, errorData['message']);
-  //     }
-  //   } catch (e) {
-  //     print('Error saat registrasi: $e');
-  //     _showErrorDialog(context, 'Periksa koneksi internet Anda atau coba lagi nanti.');
-  //   }
-  // }
-
   static Future<void> registerMitra(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
 
     // Ambil data yang telah disimpan dari kedua form
-    String? name = prefs.getString('name');
+    String? fullName = prefs.getString('full_name');
     String? email = prefs.getString('email');
     String? phone = prefs.getString('phone');
     String? password = prefs.getString('password');
-    String? nameMitra = prefs.getString('mitra_name');
+    String? name = prefs.getString('name');
     String? address = prefs.getString('address');
     String? description = prefs.getString('description');
     String? province = prefs.getString('province');
     String? city = prefs.getString('city');
+    String? photo_file = prefs.getString('photo_file');
 
-    if (name == null || email == null || phone == null || password == null || nameMitra == null || address == null || description == null) {
+    print('Full Name: $fullName');
+    print('Email: $email');
+    print('Phone: $phone');
+    print('Password: $password');
+    print('Mitra Name: $name');
+    print('Address: $address');
+    print('Description: $description');
+    print('Province: $province');
+    print('City: $city');
+    print('Image (base64): $photo_file');
+
+
+    if (fullName == null || email == null || phone == null || password == null || name == null || address == null || description == null) {
       _showErrorDialog(context, "Data tidak lengkap. Silakan isi semua form.");
       return;
     }
 
     try {
       print("📤 Mengirim request ke API: register-entrepreneur...");
-      print("➡ Data: {full_name: $name, email: $email, phone: $phone, password: $password}");
+      print("➡ Data: {full_name: $fullName, email: $email, phone: $phone, password: $password}");
 
-      final userResponse = await ApiService.post('register-entrepreneur', {
-        "full_name": name,
-        "email": email,
-        "phone": phone,
-        "password": password,
-        "role": "entrepreneur",
-      });
+      final userResponse = await ApiService.post(
+        'register-entrepreneur',
+        {
+          "full_name": fullName,
+          "email": email,
+          "phone": phone,
+          "password": password,
+          "role": "entrepreneur",
+        },
+        headers: {
+          "Accept": "application/json",
+        },
+      );
+
 
       print("📥 Response API (register-entrepreneur): ${userResponse.statusCode}");
       print("🔍 Response body: ${userResponse.body}");
@@ -245,11 +221,12 @@ class AuthApi {
         final mitraResponse = await ApiService.postFormData(
           'mitra-form/$userId',
           {
-            "name": nameMitra,
+            "name": name,
             "address": address,
             "description": description,
             "province": province!,
             "city": city!,
+            "photo_file": photo_file!,
           },
             headers: {
               "Accept": "application/json",
@@ -260,7 +237,7 @@ class AuthApi {
         print("Response API (mitra-form/$userId): ${mitraResponse.statusCode}");
         print("Response body: ${mitraResponse.body}");
 
-        if (mitraResponse.statusCode == 201) {
+        if (mitraResponse.statusCode == 200) {
           print("Registrasi Mitra sukses!");
           Navigator.pushReplacement(
             context,
@@ -280,7 +257,6 @@ class AuthApi {
     }
   }
 
-  // Fungsi untuk menampilkan pesan error dalam dialog
   static void _showErrorDialog(BuildContext context, String message) {
     showDialog(
       context: context,
@@ -296,50 +272,110 @@ class AuthApi {
       ),
     );
   }
-  static Future<void> registerOrganizer(
-      String name, String email, String phone, String password, BuildContext context) async {
+
+  static Future<void> registerOrganizer(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // Ambil data yang telah disimpan dari kedua form
+    String? fullName = prefs.getString('full_name');
+    String? email = prefs.getString('email');
+    String? phone = prefs.getString('phone');
+    String? password = prefs.getString('password');
+    String? name = prefs.getString('name');
+    String? address = prefs.getString('address');
+    String? description = prefs.getString('description');
+    String? province = prefs.getString('province');
+    String? city = prefs.getString('city');
+    String? photo_file = prefs.getString('photo_file');
+
+    print('Full Name: $fullName');
+    print('Email: $email');
+    print('Phone: $phone');
+    print('Password: $password');
+    print('Mitra Name: $name');
+    print('Address: $address');
+    print('Description: $description');
+    print('Province: $province');
+    print('City: $city');
+    print('Image (base64): $photo_file');
+
+
+    if (fullName == null || email == null || phone == null || password == null || name == null || address == null || description == null) {
+      _showErrorDialog(context, "Data tidak lengkap. Silakan isi semua form.");
+      return;
+    }
+
     try {
-      final response = await ApiService.post('register', {
-        'name': name,
-        'email': email,
-        'phone': phone,
-        'password': password,
-        'role': 'organizer', // Pastikan role organizer
-      });
+      print("📤 Mengirim request ke API: register-entrepreneur...");
+      print("➡ Data: {full_name: $fullName, email: $email, phone: $phone, password: $password}");
 
-      print('Response Status: ${response.statusCode}');
-      print('Response Body: ${response.body}');
+      final userResponse = await ApiService.post(
+        'register-organizer',
+        {
+          "full_name": fullName,
+          "email": email,
+          "phone": phone,
+          "password": password,
+          "role": "entrepreneur",
+        },
+        headers: {
+          "Accept": "application/json",
+        },
+      );
 
-      if (response.statusCode == 201) {
-        var data = jsonDecode(response.body);
-        String? token = data['data']['token'];
-        String? role = data['data']['user']['role'];
+      print("📥 Response API (register-organizer): ${userResponse.statusCode}");
+      print("🔍 Response body: ${userResponse.body}");
 
-        if (token == null || role == null) {
-          _showErrorDialog(context, 'Terjadi kesalahan. Data pendaftaran tidak lengkap.');
+      if (userResponse.statusCode == 201) {
+        final userData = jsonDecode(userResponse.body);
+        int? userId = userData['data']['user']['id'];
+        String? token = userData['data']['token'];
+
+        if (userId == null) {
+          _showErrorDialog(context, "Gagal mendapatkan User ID atau Token.");
           return;
         }
+        print("User ID: $userId");
+        print("Mengirim request ke API: organizer-form/$userId...");
 
-        if (role == 'organizer') {
-          await _saveUserSession(token, role);
+        final mitraResponse = await ApiService.postFormData(
+            'organizer-form/$userId',
+            {
+              "name": name,
+              "address": address,
+              "description": description,
+              "province": province!,
+              "city": city!,
+              "photo_file": photo_file!,
+            },
+            headers: {
+              "Accept": "application/json",
+            }
+          // token: token, // Kirim token sebagai Authorization header
 
+        );
+        print("Response API (organizer-form/$userId): ${mitraResponse.statusCode}");
+        print("Response body: ${mitraResponse.body}");
+
+        if (mitraResponse.statusCode == 200) {
+          print("Registrasi Organizer sukses!");
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => MainPageOrganizer()),
           );
         } else {
-          _showErrorDialog(context, 'Pendaftaran gagal! Hanya Organizer yang dapat mendaftar.');
+          var errorData = jsonDecode(mitraResponse.body);
+          _showErrorDialog(context, errorData['message'] ?? "Registrasi Organizer gagal!");
         }
       } else {
-        var errorData = jsonDecode(response.body);
-        _showErrorDialog(context, errorData['message']);
+        var errorData = jsonDecode(userResponse.body);
+        _showErrorDialog(context, errorData['message'] ?? "Registrasi User gagal!");
       }
     } catch (e) {
-      print('Error saat registrasi: $e');
-      _showErrorDialog(context, 'Periksa koneksi internet Anda atau coba lagi nanti.');
+      print("Error saat registrasi: $e");
+      _showErrorDialog(context, "Terjadi kesalahan. Silakan coba lagi.");
     }
   }
-
 
   static Future<void> _saveUserSession(String token, String role) async {
     try {
@@ -351,24 +387,4 @@ class AuthApi {
       print('Gagal menyimpan data ke SharedPreferences: $e');
     }
   }
-
-  // static void _showErrorDialog(BuildContext context, String message) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return AlertDialog(
-  //         title: const Text('Login Gagal'),
-  //         content: Text(message),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.pop(context);
-  //             },
-  //             child: const Text('OK'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 }
