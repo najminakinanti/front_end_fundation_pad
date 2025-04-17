@@ -1,8 +1,52 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pad_fundation/API/auth_api.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../theme.dart';
 
-class ProfilePageMitra extends StatelessWidget {
+class ProfilePageMitra extends StatefulWidget {
+  @override
+  _ProfilePageMitraState createState() => _ProfilePageMitraState();
+}
+
+class _ProfilePageMitraState extends State<ProfilePageMitra> {
+
+  String? fullName, mail, phone;
+  String? mitraName, address, description, province, city, photo_file;
+  File? _imageFile;
+  Uint8List? _imageBytes;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFromSharedPreferences();
+  }
+
+  // Load data from SharedPreferences
+  Future<void> _loadFromSharedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      fullName = prefs.getString('full_name');
+      mail = prefs.getString('email');
+      phone = prefs.getString('phone');
+      mitraName = prefs.getString('name');
+      address = prefs.getString('address');
+      description = prefs.getString('description');
+      province = prefs.getString('province');
+      city = prefs.getString('city');
+      photo_file = prefs.getString('photo_file');
+      print('photo_file dari SharedPreferences: $photo_file');
+
+      if (photo_file != null && photo_file!.isNotEmpty) {
+        _imageBytes = base64Decode(photo_file!);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget header() {
@@ -18,15 +62,27 @@ class ProfilePageMitra extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 40),
+          SizedBox(height: 30),
 
           Center(
             child: Column(
               children: [
-                Image.asset(
-                  'assets/img_chat3.png',
-                  width: 80,
-                  height: 80,
+                _imageBytes != null
+                    ? ClipOval(
+                  child: Image.memory(
+                    _imageBytes!,
+                    height: 100,
+                    width: 100,
+                    fit: BoxFit.cover,
+                  ),
+                )
+                    : ClipOval(
+                  child: Image.asset(
+                    'assets/img_chat3.png',
+                    width: 80,
+                    height: 80,
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 SizedBox(height: 10),
                 Text(
@@ -90,7 +146,7 @@ class ProfilePageMitra extends StatelessWidget {
     Widget nama() {
       return buildTextFormField(
         labelText: 'Nama Lengkap',
-        initialValue: 'Govan Dwi',
+        initialValue: fullName ?? '',
         iconPath: 'assets/icon_user.png',
       );
     }
@@ -98,7 +154,7 @@ class ProfilePageMitra extends StatelessWidget {
     Widget email() {
       return buildTextFormField(
         labelText: 'Email',
-        initialValue: 'govandwi@gmail.com',
+        initialValue: mail ?? '',
         iconPath: 'assets/icon_email.png',
       );
     }
@@ -106,7 +162,7 @@ class ProfilePageMitra extends StatelessWidget {
     Widget telp() {
       return buildTextFormField(
         labelText: 'Nomor Telephone',
-        initialValue: '088851453890',
+        initialValue: phone ?? '',
         iconPath: 'assets/icon_telp.png',
       );
     }
@@ -173,7 +229,7 @@ class ProfilePageMitra extends StatelessWidget {
     }
 
     Widget namaMitra() {
-      TextEditingController nominalController = TextEditingController(text: 'GOVAN');
+      TextEditingController nominalController = TextEditingController(text: mitraName ?? '',);
 
       return Container(
         margin: EdgeInsets.only(top: 25),
@@ -206,9 +262,8 @@ class ProfilePageMitra extends StatelessWidget {
       );
     }
 
-
     Widget provinsi() {
-      TextEditingController nominalController = TextEditingController(text: 'Jawa Tengah');
+      TextEditingController nominalController = TextEditingController(text: province ?? '',);
 
       return Container(
         margin: EdgeInsets.only(top: 25),
@@ -250,7 +305,7 @@ class ProfilePageMitra extends StatelessWidget {
     }
 
     Widget kota() {
-      TextEditingController nominalController = TextEditingController(text: 'Semarang');
+      TextEditingController nominalController = TextEditingController(text: city ?? '',);
 
       return Container(
         margin: EdgeInsets.only(top: 25),
@@ -292,7 +347,7 @@ class ProfilePageMitra extends StatelessWidget {
     }
 
     Widget alamat() {
-      TextEditingController nominalController = TextEditingController(text: 'Jalan Mawar No 23');
+      TextEditingController nominalController = TextEditingController(text: address ?? '',);
       return Container(
         margin: EdgeInsets.only(top: 25),
         child: Column(
@@ -325,7 +380,7 @@ class ProfilePageMitra extends StatelessWidget {
     }
 
     Widget deskripsi() {
-      TextEditingController nominalController = TextEditingController(text: 'Di industri musik');
+      TextEditingController nominalController = TextEditingController(text: description ?? '',);
       return Container(
         margin: EdgeInsets.only(top: 25),
         child: Column(

@@ -1,9 +1,51 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/API/auth_api.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfilePageOrganizer extends StatelessWidget {
+class ProfilePageOrganizer extends StatefulWidget {
+  @override
+  _ProfilePageOrganizerState createState() => _ProfilePageOrganizerState();
+}
+
+class _ProfilePageOrganizerState extends State<ProfilePageOrganizer> {
+
+  String? fullName, mail, phone;
+  String? mitraName, address, description, province, city, photo_file;
+  File? _imageFile;
+  Uint8List? _imageBytes;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFromSharedPreferences();
+  }
+
+  // Load data from SharedPreferences
+  Future<void> _loadFromSharedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      fullName = prefs.getString('full_name');
+      mail = prefs.getString('email');
+      phone = prefs.getString('phone');
+      mitraName = prefs.getString('name');
+      address = prefs.getString('address');
+      description = prefs.getString('description');
+      province = prefs.getString('province');
+      city = prefs.getString('city');
+      photo_file = prefs.getString('photo_file');
+      print('photo_file dari SharedPreferences: $photo_file');
+
+      if (photo_file != null && photo_file!.isNotEmpty) {
+        _imageBytes = base64Decode(photo_file!);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     PreferredSize header() {
@@ -44,10 +86,22 @@ class ProfilePageOrganizer extends StatelessWidget {
             Center(
               child: Column(
                 children: [
-                  Image.asset(
-                    'assets/img_chat4.png',
-                    width: 80,
-                    height: 80,
+                  _imageBytes != null
+                      ? ClipOval(
+                    child: Image.memory(
+                      _imageBytes!,
+                      height: 100,
+                      width: 100,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                      : ClipOval(
+                    child: Image.asset(
+                      'assets/img_chat3.png',
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                   SizedBox(height: 10),
                   Text(
@@ -113,7 +167,7 @@ class ProfilePageOrganizer extends StatelessWidget {
     Widget nama() {
       return buildTextFormField(
         labelText: 'Nama Lengkap',
-        initialValue: 'Fazaya',
+        initialValue: fullName ?? '',
         iconPath: 'assets/icon_user.png',
       );
     }
@@ -121,7 +175,7 @@ class ProfilePageOrganizer extends StatelessWidget {
     Widget email() {
       return buildTextFormField(
         labelText: 'Email',
-        initialValue: 'fazaya123@gmail.com',
+        initialValue: mail ?? '',
         iconPath: 'assets/icon_email.png',
       );
     }
@@ -129,7 +183,7 @@ class ProfilePageOrganizer extends StatelessWidget {
     Widget telp() {
       return buildTextFormField(
         labelText: 'Nomor Telephone',
-        initialValue: '08658646376453',
+        initialValue: phone ?? '',
         iconPath: 'assets/icon_telp.png',
       );
     }
@@ -197,7 +251,7 @@ class ProfilePageOrganizer extends StatelessWidget {
 
     Widget namaMitra() {
       TextEditingController nominalController = TextEditingController(
-          text: 'FAZA');
+          text: mitraName ?? '',);
 
       return Container(
         margin: EdgeInsets.only(top: 25),
@@ -233,7 +287,7 @@ class ProfilePageOrganizer extends StatelessWidget {
 
     Widget provinsi() {
       TextEditingController nominalController = TextEditingController(
-          text: 'Jawa Tengah');
+          text: province ?? '',);
 
       return Container(
         margin: EdgeInsets.only(top: 25),
@@ -277,7 +331,7 @@ class ProfilePageOrganizer extends StatelessWidget {
 
     Widget kota() {
       TextEditingController nominalController = TextEditingController(
-          text: 'Semarang');
+          text: city ?? '',);
 
       return Container(
         margin: EdgeInsets.only(top: 25),
@@ -321,7 +375,7 @@ class ProfilePageOrganizer extends StatelessWidget {
 
     Widget alamat() {
       TextEditingController nominalController = TextEditingController(
-          text: 'Jalan Mawar');
+          text: address ?? '',);
       return Container(
         margin: EdgeInsets.only(top: 25),
         child: Column(
