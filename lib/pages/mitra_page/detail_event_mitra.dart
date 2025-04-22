@@ -523,23 +523,23 @@ class _DetailEventState extends State<DetailEventMitra> {
                   ),
                   Row(
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          showConfirmationDialog(context);
-                        },
-                        child: Container(
-                          width: 25,
-                          height: 25,
-                          decoration: BoxDecoration(
-                            color: backgroundColor,
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          child: Image.asset(
-                            'assets/icon_download.png',
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 15),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     showConfirmationDialog(context);
+                      //   },
+                      //   child: Container(
+                      //     width: 25,
+                      //     height: 25,
+                      //     decoration: BoxDecoration(
+                      //       color: backgroundColor,
+                      //       borderRadius: BorderRadius.circular(100),
+                      //     ),
+                      //     child: Image.asset(
+                      //       'assets/icon_download.png',
+                      //     ),
+                      //   ),
+                      // ),
+                      // SizedBox(width: 15),
                       GestureDetector(
                         onTap: () {
                           setState(() {

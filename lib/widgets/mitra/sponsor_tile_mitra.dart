@@ -35,7 +35,7 @@ class SponsorTileMitra extends StatelessWidget {
         height: 135,
         margin: EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
-          color: navbarColor,
+          color: backgroundColor3,
           borderRadius: BorderRadius.circular(5),
         ),
         child: Row(
@@ -129,6 +129,7 @@ class SponsorTileMitra extends StatelessWidget {
                     Row(
                       children: [
                         Container(
+                          height: 25,
                           padding:
                           EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                           decoration: BoxDecoration(
@@ -143,7 +144,7 @@ class SponsorTileMitra extends StatelessWidget {
                                 height: 18,
                                 fit: BoxFit.cover,
                               ),
-                              SizedBox(width: 4),
+                              SizedBox(width: 5),
                               Text(
                                 '$kontraprestasiAmount juta',
                                 style: blackTextStyle.copyWith(
@@ -155,10 +156,14 @@ class SponsorTileMitra extends StatelessWidget {
                           ),
                         ),
                         Spacer(),
-                        GestureDetector(
-                          onTap: () {
-                            _showLargeImage(context, kontraprestasiImages, 0);
-                          },
+                        Container(
+                          height: 25,
+                          padding:
+                          EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: lightYellow,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           child: Row(
                             children: [
                               Image.asset(

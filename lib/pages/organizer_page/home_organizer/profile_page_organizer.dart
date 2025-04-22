@@ -448,7 +448,7 @@ class _ProfilePageOrganizerState extends State<ProfilePageOrganizer> {
             showConfirmationDialog(context);
           },
           style: TextButton.styleFrom(
-            backgroundColor: buttonColor,
+            backgroundColor: darkBrown,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
               side: BorderSide(

@@ -370,7 +370,7 @@ class _LoginPageState extends State<LoginPageOrganizer> {
                   ),
                 ),
               ),
-              footer(),
+              // footer(),
             ],
           ),
         ),

@@ -370,7 +370,7 @@ class _LoginPageState extends State<LoginPageMitra> {
                   ),
                 ),
               ),
-              footer(),
+              // footer(),
             ],
           ),
         ),

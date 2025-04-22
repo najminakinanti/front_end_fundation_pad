@@ -452,7 +452,7 @@ class _ProfilePageMitraState extends State<ProfilePageMitra> {
             showConfirmationDialog(context);
           },
           style: TextButton.styleFrom(
-            backgroundColor: buttonColor,
+            backgroundColor: darkBrown,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
               side: BorderSide(
