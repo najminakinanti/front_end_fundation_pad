@@ -22,23 +22,30 @@ class AuthApi {
 
         String? token = data['data']['token'];
         String? role = data['data']['user']['role'];
+        var user_id = data['data']['user']['user_id'];  // Handle this as a dynamic type
+
+        // If user_id is an int, convert it to a string
+        String userIdString = user_id.toString();
 
         print('Token yang diterima: $token');
         print('Role yang diterima: $role');
+        print('Id yang diterima: $userIdString');  // Use the string version of user_id
 
-        if (token == null || role == null) {
+        if (token == null || role == null || userIdString.isEmpty) {
           _showErrorDialog(context, 'Terjadi kesalahan. Data login tidak lengkap.');
           return;
         }
 
         if (role == 'entrepreneur') {
-          await _saveUserSession(token, role);
+          await _saveUserSession(token, role, userIdString);
 
           // Cek apakah SharedPreferences sudah menyimpan dengan benar
           final prefs = await SharedPreferences.getInstance();
           String? savedToken = prefs.getString('token');
           String? savedRole = prefs.getString('role');
+          String? savedId = prefs.getString('user_id');
           print('Token di SharedPreferences: $savedToken');
+          print('id di SharedPreferences: $savedId');
           print('Role di SharedPreferences: $savedRole');
 
           Navigator.pushReplacement(
@@ -58,6 +65,7 @@ class AuthApi {
     }
   }
 
+
   static Future<void> loginOrganizer(String email, String password, BuildContext context) async {
     try {
       final response = await ApiService.post('login', {
@@ -73,24 +81,31 @@ class AuthApi {
 
         String? token = data['data']['token'];
         String? role = data['data']['user']['role'];
+        var user_id = data['data']['user']['user_id'];  // Handle this as a dynamic type
+
+        // If user_id is an int, convert it to a string
+        String userIdString = user_id.toString();
 
         print('Token yang diterima: $token');
         print('Role yang diterima: $role');
+        print('Id yang diterima: $userIdString');  // Use the string version of user_id
 
-        if (token == null || role == null) {
+        if (token == null || role == null || userIdString.isEmpty) {
           _showErrorDialog(context, 'Terjadi kesalahan. Data login tidak lengkap.');
           return;
         }
 
         if (role == 'organizer') {
-          await _saveUserSession(token, role);
+          await _saveUserSession(token, role, userIdString);
 
           // Cek apakah SharedPreferences sudah menyimpan dengan benar
           final prefs = await SharedPreferences.getInstance();
           String? savedToken = prefs.getString('token');
           String? savedRole = prefs.getString('role');
+          String? savedId = prefs.getString('user_id');
           print('Token di SharedPreferences: $savedToken');
           print('Role di SharedPreferences: $savedRole');
+          print('ID di SharedPreferences: $savedId');
 
           Navigator.pushReplacement(
             context,
@@ -377,10 +392,11 @@ class AuthApi {
     }
   }
 
-  static Future<void> _saveUserSession(String token, String role) async {
+  static Future<void> _saveUserSession(String token, String role, String user_id) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('token', token);
+      await prefs.setString('user_id', user_id);
       await prefs.setString('role', role);
       print('Data berhasil disimpan di SharedPreferences');
     } catch (e) {

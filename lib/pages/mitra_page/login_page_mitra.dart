@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pad_fundation/API/api_service.dart';
 import 'package:pad_fundation/API/auth_api.dart';
 import 'package:pad_fundation/theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPageMitra extends StatefulWidget {
   @override
@@ -20,12 +21,22 @@ class _LoginPageState extends State<LoginPageMitra> {
       _isObscured = !_isObscured;
     });
   }
-
   void _toggleRememberMe(bool? value) {
     setState(() {
       _rememberMe = value ?? false; // Update checkbox state
     });
   }
+
+  Future<void> _saveToSharedPreferences(Map<String, dynamic> user) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // Simpan account_id (kalau string)
+    prefs.setString('id', user['id']);
+
+    // Simpan nama juga kalau mau
+    prefs.setString('full_name', user['full_name']);
+  }
+
 
   Widget build(BuildContext context) {
 
@@ -217,6 +228,8 @@ class _LoginPageState extends State<LoginPageMitra> {
         child: TextButton(
           onPressed: () async {
             try {
+              // final userData = await AuthApi.loginMitra(emailController.text, passwordController.text, context);
+              // await _saveToSharedPreferences(userData);
               await AuthApi.loginMitra(emailController.text, passwordController.text, context);
             } catch (e) {
               print('Error: $e');

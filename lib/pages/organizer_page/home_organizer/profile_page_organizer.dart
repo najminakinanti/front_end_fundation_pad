@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/API/auth_api.dart';
+import 'package:pad_fundation/API/profile_api.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,15 +16,61 @@ class ProfilePageOrganizer extends StatefulWidget {
 class _ProfilePageOrganizerState extends State<ProfilePageOrganizer> {
 
   String? fullName, mail, phone;
-  String? mitraName, address, description, province, city, photo_file;
+  String? organizerName, address, description, province, city, photo_file;
   File? _imageFile;
   Uint8List? _imageBytes;
 
   @override
   void initState() {
     super.initState();
-    _loadFromSharedPreferences();
+    // _loadProfileFromApi();
+    // _loadOrganizerFromApi();
+    // _loadFromSharedPreferences();
   }
+
+  // load data dari be
+  // Future<void> _loadProfileFromApi() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final token = prefs.getString('token');
+  //   final userId = prefs.getInt('userId') ?? 36;
+  //
+  //   if (token == null) return;
+  //
+  //   final response = await ProfileApi.getUserForm(userId, token);
+  //   final data = response?['data'];
+  //
+  //   if (data != null && mounted) {
+  //     print('Data user dari API: $data');
+  //     setState(() {
+  //       fullName = data['full_name'];
+  //       mail = data['email'];
+  //       phone = data['phone'];
+  //     });
+  //   }
+  // }
+
+  // Future<void> _loadOrganizerFromApi() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final token = prefs.getString('token');
+  //   final userId = prefs.getInt('user_id') ?? 37;
+  //
+  //   if (token == null) return;
+  //
+  //   final response = await ProfileApi.getOrganizerProfile(userId, token);
+  //   final data = response?['data'];
+  //
+  //   if (data != null && mounted) {
+  //     print('Data organizer dari API: $data');
+  //     setState(() {
+  //       organizerName = data['name'];
+  //       address = data['address'];
+  //       description = data['description'];
+  //       province = data['province'];
+  //       city = data['city'];
+  //       photo_file = data['photo_file'];
+  //     });
+  //   }
+  // }
 
   // Load data from SharedPreferences
   Future<void> _loadFromSharedPreferences() async {
@@ -32,7 +79,7 @@ class _ProfilePageOrganizerState extends State<ProfilePageOrganizer> {
       fullName = prefs.getString('full_name');
       mail = prefs.getString('email');
       phone = prefs.getString('phone');
-      mitraName = prefs.getString('name');
+      organizerName = prefs.getString('name');
       address = prefs.getString('address');
       description = prefs.getString('description');
       province = prefs.getString('province');
@@ -96,8 +143,8 @@ class _ProfilePageOrganizerState extends State<ProfilePageOrganizer> {
                     ),
                   )
                       : ClipOval(
-                    child: Image.asset(
-                      'assets/img_chat3.png',
+                    child: Image.network(
+                      '${ProfileApi.photourl}$photo_file',
                       width: 80,
                       height: 80,
                       fit: BoxFit.cover,
@@ -251,7 +298,7 @@ class _ProfilePageOrganizerState extends State<ProfilePageOrganizer> {
 
     Widget namaMitra() {
       TextEditingController nominalController = TextEditingController(
-          text: mitraName ?? '',);
+          text: organizerName ?? '',);
 
       return Container(
         margin: EdgeInsets.only(top: 25),

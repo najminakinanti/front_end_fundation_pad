@@ -20,10 +20,12 @@ class AuthCheck extends StatelessWidget {
         if (snapshot.hasData && snapshot.data != null) {
           String? token = snapshot.data?['token'];
           String? role = snapshot.data?['role'];
+          String? id = snapshot.data?['id'];
 
           // Debugging output
           print('Token: $token');
           print('Role: $role');
+          print('ID: $id');
 
           if (token == null || token.isEmpty) {
             // Jika token kosong, langsung ke SplashPage
@@ -45,6 +47,7 @@ class AuthCheck extends StatelessWidget {
     return {
       'token': prefs.getString('token') ?? '', // Pastikan tidak null
       'role': prefs.getString('role') ?? '',
+      'id': prefs.getString('user_id') ?? '',  // Handle user_id as a string
     };
   }
 }

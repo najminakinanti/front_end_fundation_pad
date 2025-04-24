@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pad_fundation/API/auth_api.dart';
+import 'package:pad_fundation/API/profile_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../theme.dart';
 
@@ -15,36 +16,130 @@ class ProfilePageMitra extends StatefulWidget {
 
 class _ProfilePageMitraState extends State<ProfilePageMitra> {
 
-  String? fullName, mail, phone;
+
+  Map<String, dynamic>? _userProfile;
+  Map<String, dynamic>? _mitraProfile;
+
+  String? fullName, mail, phone, userId;
   String? mitraName, address, description, province, city, photo_file;
   File? _imageFile;
   Uint8List? _imageBytes;
 
+  Future<void> _loadProfileFromApi() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    String? userIdString = prefs.getString('user_id');
+
+    if (token != null && userIdString != null) {
+      int userId = int.parse(userIdString);
+
+      final userData = await ProfileApi.getUserProfile(userId, token);
+      if (userData != null) {
+        print('User Data: $userData');
+
+        setState(() {
+          _userProfile = userData;
+          fullName = userData['data']['full_name'];
+          mail = userData['data']['email'];
+          phone = userData['data']['phone'];
+          userId = userData['data']['id']; // simpan sebagai String jika perlu
+        });
+      }
+    } else {
+      print('Token atau User ID tidak ditemukan');
+    }
+  }
+
+  Future<void> _loadMitraFromApi() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    String? userIdString = prefs.getString('user_id');
+
+    if (token != null && userIdString != null) {
+      int userId = int.parse(userIdString);
+
+      final mitraData = await ProfileApi.getMitraProfile(userId, token);
+      if (mitraData != null  && mounted ) {
+        print('Mitra Data: $mitraData');
+
+        // Simpan data ke dalam state
+        setState(() {
+          _mitraProfile = mitraData;
+          mitraName = mitraData['data']['name'];
+          address = mitraData['data']['address'];
+          description = mitraData['data']['description'];
+          province = mitraData['data']['province'];
+          city = mitraData['data']['city'];
+          photo_file = mitraData['data']['photo_file'];
+        });
+        print('Photo file path: $photo_file');
+      }
+    } else {
+      print('Token atau User ID tidak ditemukan');
+    }
+  }
+
+  // // load data dari be
+  // Future<void> _loadProfileFromApi() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final token = prefs.getString('token');
+  //
+  //   if (token == null) return;
+  //
+  //   final userResponse = await ProfileApi.getUserForm(token);
+  //
+  //   // Periksa apakah respons valid dan memiliki data
+  //   if (userResponse != null && userResponse['data'] != null) {
+  //     final userData = userResponse['data']['user'];  // Ambil data user dari response
+  //     final int? userId = userData['id'];  // Ambil userId dari API
+  //
+  //     // Panggil API untuk mengambil data profil pengguna menggunakan userId
+  //     final profileResponse = await ProfileApi.getUserProfile(userId, token);
+  //     final profileData = profileResponse?['data'];
+  //
+  //     if (profileData != null && mounted) {
+  //       print('Data user dari API: $profileData');
+  //       setState(() {
+  //         // Menyimpan data profil yang diterima dari API
+  //         fullName = profileData['full_name'];  // Menampilkan full_name
+  //         mail = profileData['email'];          // Menampilkan email
+  //         phone = profileData['phone'];         // Menampilkan phone
+  //       });
+  //     }
+  //   } else {
+  //     print('Gagal mendapatkan data user dari token');
+  //   }
+  // }
+
+  // Future<void> _loadMitraFromApi() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final token = prefs.getString('token');
+  //   final userId = prefs.getInt('user_id') ?? 36;
+  //
+  //   if (token == null) return;
+  //
+  //   final response = await ProfileApi.getMitraProfile(userId, token);
+  //   final data = response?['data'];
+  //
+  //   if (data != null && mounted) {
+  //     print('Data mitra dari API: $data');
+  //     setState(() {
+  //       mitraName = data['name'];
+  //       address = data['address'];
+  //       description = data['description'];
+  //       province = data['province'];
+  //       city = data['city'];
+  //       photo_file = data['photo_file'];
+  //     });
+  //   }
+  // }
+
   @override
   void initState() {
     super.initState();
-    _loadFromSharedPreferences();
-  }
-
-  // Load data from SharedPreferences
-  Future<void> _loadFromSharedPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      fullName = prefs.getString('full_name');
-      mail = prefs.getString('email');
-      phone = prefs.getString('phone');
-      mitraName = prefs.getString('name');
-      address = prefs.getString('address');
-      description = prefs.getString('description');
-      province = prefs.getString('province');
-      city = prefs.getString('city');
-      photo_file = prefs.getString('photo_file');
-      print('photo_file dari SharedPreferences: $photo_file');
-
-      if (photo_file != null && photo_file!.isNotEmpty) {
-        _imageBytes = base64Decode(photo_file!);
-      }
-    });
+    _loadProfileFromApi();
+    _loadMitraFromApi();
+    // _loadFromSharedPreferences();
   }
 
   @override
@@ -77,11 +172,19 @@ class _ProfilePageMitraState extends State<ProfilePageMitra> {
                   ),
                 )
                     : ClipOval(
-                  child: Image.asset(
-                    'assets/img_chat3.png',
+                  child: Image.network(
+                    '${ProfileApi.photourl}${photo_file ?? ''}',
                     width: 80,
                     height: 80,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        'assets/img_profile_picture.png',
+                        width: 80,
+                        height: 80,
+                        fit: BoxFit.cover,
+                      );
+                    },
                   ),
                 ),
                 SizedBox(height: 10),
@@ -550,7 +653,7 @@ class _ProfilePageMitraState extends State<ProfilePageMitra> {
                         provinsi(),
                         kota(),
                         alamat(),
-                        deskripsi(),
+                        // deskripsi(),
                         editMitraButton(),
                       ],
                     ),
