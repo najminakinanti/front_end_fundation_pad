@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:pad_fundation/API/event_api.dart';
+import 'package:pad_fundation/models/event.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/mitra/event_card_mitra.dart';
 import 'package:pad_fundation/widgets/mitra/event_tile_mitra.dart';
 
-class HomePageMitra extends StatelessWidget {
+class HomePageMitra extends StatefulWidget {
+  @override
+  _HomePageMitraState createState() => _HomePageMitraState();
+}
+
+class _HomePageMitraState extends State<HomePageMitra> {
+  late Future<List<Event>> events;
+
+  @override
+  void initState() {
+    super.initState();
+    events = EventApi.fetchEvents(); // Ambil data event dari API
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -309,54 +324,86 @@ class HomePageMitra extends StatelessWidget {
     Widget popularEvent() {
       return Container(
         margin: EdgeInsets.only(top: 10),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              EventCardMitra(
-                imagePath: 'assets/img_music_fest.png',
-                status: 'OFFLINE',
-                title: 'Music Fest 2024',
-                collectedAmount: 'Rp90.000.000',
-                progress: 0.9,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                categories: ['Festival', 'Musik', 'EDM', 'Hiburan', 'DJ', 'Live'],
-                onTap: () {
-                  Navigator.pushNamed(context, '/detail-event-mitra');
-                },
-              ),
-              EventCardMitra(
-                imagePath: 'assets/img_educ_fest.png',
-                status: 'OFFLINE',
-                title: 'Educ Fest 2024 ',
-                collectedAmount: 'Rp10.000.000',
-                progress: 0.95,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                categories: ['Pendidikan', 'Seminar', 'Konsultasi', 'Formal'],
-                onTap: () {
-                  Navigator.pushNamed(context, '/detail-event-mitra');
-                },
-              ),
-              EventCardMitra(
-                imagePath: 'assets/img_kulfood.png',
-                status: 'OFFLINE',
-                title: 'KulFood 2024',
-                collectedAmount: 'Rp50.000.000',
-                progress: 0.2,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                categories: ['Festival', 'Kuliner', 'Kompetisi', 'Live Musik', 'Live'],
-                onTap: () {
-                  Navigator.pushNamed(context, '/detail-event-mitra');
-                },
-              ),
-            ],
-          ),
+        child: FutureBuilder<List<Event>>(
+          future: events,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Text('No events found');
+            } else {
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: snapshot.data!
+                      .map((event) => EventCardMitra(
+                    event: event,
+                    onTap: () {
+                      Navigator.pushNamed(context, '/detail-event-mitra', arguments: event);
+                    },
+                  ))
+                      .toList(),
+                ),
+              );
+            }
+          },
         ),
       );
     }
+
+    // Widget popularEvent() {
+    //   return Container(
+    //     margin: EdgeInsets.only(top: 10),
+    //     child: SingleChildScrollView(
+    //       scrollDirection: Axis.horizontal,
+    //       child: Row(
+    //         children: [
+    //           // EventCardMitra(
+    //           //   imagePath: 'assets/img_music_fest.png',
+    //           //   status: 'OFFLINE',
+    //           //   title: 'Music Fest 2024',
+    //           //   collectedAmount: 'Rp90.000.000',
+    //           //   progress: 0.9,
+    //           //   daysRemaining: 230,
+    //           //   donorshipCount: 100,
+    //           //   categories: ['Festival', 'Musik', 'EDM', 'Hiburan', 'DJ', 'Live'],
+    //           //   onTap: () {
+    //           //     Navigator.pushNamed(context, '/detail-event-mitra');
+    //           //   },
+    //           // ),
+    //           // EventCardMitra(
+    //           //   imagePath: 'assets/img_educ_fest.png',
+    //           //   status: 'OFFLINE',
+    //           //   title: 'Educ Fest 2024 ',
+    //           //   collectedAmount: 'Rp10.000.000',
+    //           //   progress: 0.95,
+    //           //   daysRemaining: 230,
+    //           //   donorshipCount: 100,
+    //           //   categories: ['Pendidikan', 'Seminar', 'Konsultasi', 'Formal'],
+    //           //   onTap: () {
+    //           //     Navigator.pushNamed(context, '/detail-event-mitra');
+    //           //   },
+    //           // ),
+    //           // EventCardMitra(
+    //           //   imagePath: 'assets/img_kulfood.png',
+    //           //   status: 'OFFLINE',
+    //           //   title: 'KulFood 2024',
+    //           //   collectedAmount: 'Rp50.000.000',
+    //           //   progress: 0.2,
+    //           //   daysRemaining: 230,
+    //           //   donorshipCount: 100,
+    //           //   categories: ['Festival', 'Kuliner', 'Kompetisi', 'Live Musik', 'Live'],
+    //           //   onTap: () {
+    //           //     Navigator.pushNamed(context, '/detail-event-mitra');
+    //           //   },
+    //           // ),
+    //         ],
+    //       ),
+    //     ),
+    //   );
+    // }
 
     Widget allEventTitle() {
       return Container(
