@@ -5,6 +5,7 @@ import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 
 import '../../models/sponsor.dart';
+import '../../pages/mitra_page/detail_event_mitra.dart';
 
 class EventCardMitra extends StatefulWidget {
   final Event event;
@@ -69,14 +70,20 @@ class _EventCardMitraState extends State<EventCardMitra> {
     return (totalAmount / targetFund) * 100;
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final event = widget.event;
 
     return GestureDetector(
-      onTap: widget.onTap ?? () => Navigator.pushNamed(context, '/detail-event-mitra'),
+      // onTap: widget.onTap ?? () => Navigator.pushNamed(context, '/detail-event-mitra'),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => DetailEventMitra(event: event),
+          ),
+        );
+      },
       child: Container(
         width: 225,
         height: 225,

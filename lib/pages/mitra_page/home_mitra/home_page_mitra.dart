@@ -236,8 +236,15 @@ class _HomePageMitraState extends State<HomePageMitra> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/festival-mitra');
+                    Navigator.pushNamed(
+                      context,
+                      '/event-by-category-mitra',
+                      arguments: 2,
+                    );
                   },
+                  // onTap: () {
+                  //   Navigator.pushNamed(context, '/festival-mitra');
+                  // },
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -265,7 +272,14 @@ class _HomePageMitraState extends State<HomePageMitra> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/kuliner-mitra');},
+                    Navigator.pushNamed(
+                      context,
+                      '/event-by-category-mitra',
+                      arguments: 1,
+                    );
+                  },
+                  // onTap: () {
+                  //   Navigator.pushNamed(context, '/kuliner-mitra');},
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -293,7 +307,14 @@ class _HomePageMitraState extends State<HomePageMitra> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/pendidikan-mitra');},
+                    Navigator.pushNamed(
+                      context,
+                      '/event-by-category-mitra',
+                      arguments: 3,
+                    );
+                  },
+                  // onTap: () {
+                  //   Navigator.pushNamed(context, '/pendidikan-mitra');},
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -321,7 +342,14 @@ class _HomePageMitraState extends State<HomePageMitra> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/seniman-mitra');},
+                    Navigator.pushNamed(
+                      context,
+                      '/event-by-category-mitra',
+                      arguments: 4,
+                    );
+                  },
+                  // onTap: () {
+                  //   Navigator.pushNamed(context, '/seniman-mitra');},
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -349,7 +377,8 @@ class _HomePageMitraState extends State<HomePageMitra> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-page-by-category-mitra');},
+                    // Navigator.pushNamed(context, '/event-page-by-category-mitra');
+                    },
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(

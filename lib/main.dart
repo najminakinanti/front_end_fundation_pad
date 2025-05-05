@@ -8,11 +8,11 @@ import 'package:pad_fundation/pages/mitra_page/detail_chat_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/detail_event_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/edit_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/edit_password_mitra.dart';
-import 'package:pad_fundation/pages/mitra_page/event_by_category_page/festival_page_mitra.dart';
-import 'package:pad_fundation/pages/mitra_page/event_by_category_page/kuliner_page_mitra.dart';
-import 'package:pad_fundation/pages/mitra_page/event_by_category_page/pendidikan_page_mitra.dart';
-import 'package:pad_fundation/pages/mitra_page/event_by_category_page/populer_page_mitra.dart';
-import 'package:pad_fundation/pages/mitra_page/event_by_category_page/seniman_page_mitra.dart';
+// import 'package:pad_fundation/pages/mitra_page/event_by_category_page/festival_page_mitra.dart';
+// import 'package:pad_fundation/pages/mitra_page/event_by_category_page/kuliner_page_mitra.dart';
+// import 'package:pad_fundation/pages/mitra_page/event_by_category_page/pendidikan_page_mitra.dart';
+// import 'package:pad_fundation/pages/mitra_page/event_by_category_page/populer_page_mitra.dart';
+// import 'package:pad_fundation/pages/mitra_page/event_by_category_page/seniman_page_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/event_page_by_category_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/event_page_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/forgot_password_mitra.dart';
@@ -101,6 +101,8 @@ class MyApp extends StatelessWidget {
         '/choose-role': (context) => ChooseRole(),
         '/boarding': (context) => OnBoardingPageView(),
 
+
+
         // role mitra
         '/login-mitra': (context) => LoginPageMitra(),
         '/forgot-password': (context) => ForgotPasswordMitra(),
@@ -114,13 +116,14 @@ class MyApp extends StatelessWidget {
         },
         '/bookmark-mitra': (context) => BookmarkPageMitra(),
         '/event-mitra': (context) => EventPageMitra(),
-        '/populer-mitra': (context) => PopulerPageMitra(),
-        '/festival-mitra': (context) => FestivalPageMitra(),
-        '/kuliner-mitra': (context) => KulinerPageMitra(),
-        '/pendidikan-mitra': (context) => PendidikanPageMitra(),
-        '/seniman-mitra': (context) => SenimanPageMitra(),
+        // '/populer-mitra': (context) => PopulerPageMitra(),
+        // '/festival-mitra': (context) => FestivalPageMitra(),
+        // '/kuliner-mitra': (context) => KulinerPageMitra(),
+        // '/pendidikan-mitra': (context) => PendidikanPageMitra(),
+        // '/seniman-mitra': (context) => SenimanPageMitra(),
         '/event-page-by-category-mitra': (context) => EventPageByCategoryMitra(),
-        '/detail-event-mitra': (context) => DetailEventMitra(),
+        '/event-by-category-mitra': (context) => EventByCategoryMitra(),
+        // '/detail-event-mitra': (context) => DetailEventMitra(event: event),
         '/detail-chat-mitra': (context) => DetailChatMitra(),
         '/detail-chat-event-mitra': (context) => DetailChatEventMitra(),
         '/daftar-sponsor-mitra': (context) => DaftarSponsorMitra(),
