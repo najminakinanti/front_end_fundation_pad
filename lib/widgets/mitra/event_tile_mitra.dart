@@ -1,38 +1,70 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:pad_fundation/models/event.dart';
+import 'package:pad_fundation/models/sponsor.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 
-class EventTileMitra extends StatelessWidget {
-  final String imagePath;
-  final String status;
-  final String title;
-  final String collectedAmount;
-  final double progress;
-  final int daysRemaining;
-  final int donorshipCount;
-  final String eventDate;
-  final List<String> categories;
+import '../../pages/mitra_page/detail_event_mitra.dart';
+
+class EventTileMitra extends StatefulWidget {
+  final Event event;
   final VoidCallback? onTap;
 
   const EventTileMitra({
     Key? key,
-    required this.imagePath,
-    required this.status,
-    required this.title,
-    required this.collectedAmount,
-    required this.progress,
-    required this.daysRemaining,
-    required this.donorshipCount,
-    required this.eventDate,
-    required this.categories,
+    required this.event,
     this.onTap,
   }) : super(key: key);
 
   @override
+  _EventTileMitraState createState() => _EventTileMitraState();
+}
+
+class _EventTileMitraState extends State<EventTileMitra> {
+  bool isBookmarked = false;
+
+  String getTotalAmount(List<Sponsor> sponsors) {
+    final totalAmount = sponsors.fold<int>(0, (total, sponsor) => total + sponsor.amount.toInt());
+    final formatCurrency = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0);
+    return formatCurrency.format(totalAmount);
+  }
+
+  int getTotalSponsors(List<Sponsor> sponsors) {
+    return sponsors.length;
+  }
+
+  int getDaysRemaining(String eventStartDate) {
+    DateTime startDate = DateTime.parse(eventStartDate);
+    DateTime currentDate = DateTime.now();
+    Duration difference = startDate.difference(currentDate);
+    return difference.inDays;
+  }
+
+  double getProgress(Event event) {
+    String totalAmountStr = getTotalAmount(event.sponsors).replaceAll('Rp', '').replaceAll('.', '').trim();
+    double totalAmount = double.parse(totalAmountStr);
+    double targetFund = (event.eventFund?.targetFund ?? 0).toDouble();
+
+    if (targetFund == 0) {
+      return 0;
+    }
+
+    return (totalAmount / targetFund) * 100;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final event = widget.event;
+
     return GestureDetector(
-      onTap: onTap ?? () {
-        Navigator.pushNamed(context, '/detail-event-mitra');
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => DetailEventMitra(event: event),
+          ),
+        );
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -41,10 +73,7 @@ class EventTileMitra extends StatelessWidget {
         decoration: BoxDecoration(
           color: backgroundColor3,
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: sageGreen4,
-            width: 1.0,
-          ),
+          border: Border.all(color: sageGreen4, width: 1.0),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,15 +81,25 @@ class EventTileMitra extends StatelessWidget {
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(10),
                     bottomLeft: Radius.circular(10),
                   ),
-                  child: Image.asset(
-                    imagePath,
+                  child: Image.network(
+                    event.eventPhotos.isNotEmpty
+                        ? event.eventPhotos.first.photoFile
+                        : 'https://via.placeholder.com/150',
                     width: 127,
                     height: double.infinity,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        'assets/img_kochella.png',
+                        width: 127,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                      );
+                    },
                   ),
                 ),
                 Positioned(
@@ -73,11 +112,8 @@ class EventTileMitra extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      status.toUpperCase(),
-                      style: orangeTextStyle.copyWith(
-                        fontSize: 10,
-                        fontWeight: bold,
-                      ),
+                      event.statusEvent.toUpperCase(),
+                      style: orangeTextStyle.copyWith(fontSize: 10, fontWeight: bold),
                     ),
                   ),
                 ),
@@ -91,35 +127,34 @@ class EventTileMitra extends StatelessWidget {
                   children: [
                     Row(
                       children: [
+                        // Hanya judul saja yang scrollable
                         Expanded(
-                          child: Text(
-                            title,
-                            style: grayTextStyle.copyWith(
-                              fontSize: 14,
-                              fontWeight: bold,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Text(
+                              event.title,
+                              style: grayTextStyle.copyWith(
+                                fontSize: 14,
+                                fontWeight: bold,
+                              ),
                             ),
-                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        SizedBox(width: 5),
+                        const SizedBox(width: 5),
                         Image.asset('assets/icon_calendar.png', width: 11),
                         SizedBox(width: 4),
                         Text(
-                          eventDate,
-                          style: lighGrayTextStyle.copyWith(
-                            fontSize: 10,
-                            fontWeight: regular,
-                          ),
+                          event.eventPlacement?.eventStartDate != null
+                              ? DateFormat('dd MMM yyyy').format(DateTime.parse(event.eventPlacement!.eventStartDate))
+                              : '-',
+                          style: lighGrayTextStyle.copyWith(fontSize: 10, fontWeight: regular),
                         ),
                       ],
                     ),
                     SizedBox(height: 8),
                     Text(
-                      'Terkumpul $collectedAmount',
-                      style: lighGrayTextStyle.copyWith(
-                        fontSize: 10,
-                        fontWeight: regular,
-                      ),
+                      'Terkumpul ${getTotalAmount(event.sponsors)}',
+                      style: lighGrayTextStyle.copyWith(fontSize: 10, fontWeight: regular),
                     ),
                     Row(
                       children: [
@@ -127,7 +162,7 @@ class EventTileMitra extends StatelessWidget {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: LinearProgressIndicator(
-                              value: progress,
+                              value: getProgress(event) / 100,
                               backgroundColor: lineColor2,
                               valueColor: AlwaysStoppedAnimation<Color>(lineColor),
                             ),
@@ -135,49 +170,71 @@ class EventTileMitra extends StatelessWidget {
                         ),
                         SizedBox(width: 5),
                         Text(
-                          '${(progress * 100).toInt()}%',
-                          style: blackTextStyle.copyWith(
-                            fontSize: 10,
-                            fontWeight: regular,
-                          ),
+                          '${getProgress(event).toStringAsFixed(2)}%',
+                          style: blackTextStyle.copyWith(fontSize: 10, fontWeight: regular),
                         ),
                       ],
                     ),
                     SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Image.asset('assets/icon_donorship.png', width: 18),
-                        SizedBox(width: 4),
-                        Text(
-                          '$donorshipCount Donorship',
-                          style: veryLightGrayTextStyle.copyWith(
-                            fontSize: 10,
-                            fontWeight: regular,
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final sponsorWidget = Row(
+                          children: [
+                            Image.asset('assets/icon_donorship.png', width: 18),
+                            const SizedBox(width: 4),
+                            Text(
+                              '${getTotalSponsors(event.sponsors)} Donorship',
+                              style: veryLightGrayTextStyle.copyWith(
+                                fontSize: 10,
+                                fontWeight: regular,
+                              ),
+                            ),
+                          ],
+                        );
+
+                        final timerWidget = Row(
+                          children: [
+                            Image.asset('assets/icon_timer.png', width: 13),
+                            const SizedBox(width: 4),
+                            Text(
+                              event.eventPlacement?.eventStartDate != null
+                                  ? '${getDaysRemaining(event.eventPlacement!.eventStartDate)} hari lagi'
+                                  : 'Tanggal belum ditentukan',
+                              style: veryLightGrayTextStyle.copyWith(
+                                fontSize: 10,
+                                fontWeight: regular,
+                              ),
+                            ),
+                          ],
+                        );
+
+                        return SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(minWidth: constraints.maxWidth),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                sponsorWidget,
+                                const SizedBox(width: 10),
+                                timerWidget,
+                              ],
+                            ),
                           ),
-                        ),
-                        Spacer(),
-                        Image.asset('assets/icon_timer.png', width: 13),
-                        SizedBox(width: 4),
-                        Text(
-                          '$daysRemaining hari lagi',
-                          style: veryLightGrayTextStyle.copyWith(
-                            fontSize: 10,
-                            fontWeight: regular,
-                          ),
-                        ),
-                      ],
+                        );
+                      },
                     ),
                     SizedBox(height: 8),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Wrap(
                         spacing: 5,
-                        children: categories
+                        children: event.categories
                             .map(
                               (category) => CategoryButton(
-                            label: category,
+                            label: category.name,
                             onTap: () {
-                              print(category);
+                              print(category.name);
                             },
                           ),
                         )
@@ -194,3 +251,4 @@ class EventTileMitra extends StatelessWidget {
     );
   }
 }
+

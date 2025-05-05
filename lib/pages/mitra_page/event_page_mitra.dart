@@ -4,7 +4,23 @@ import 'package:pad_fundation/widgets/filter_sidebar.dart';
 import 'package:pad_fundation/widgets/mitra/event_card_mitra.dart';
 import 'package:pad_fundation/widgets/mitra/event_tile_mitra.dart';
 
-class EventPageMitra extends StatelessWidget {
+import '../../API/event_api.dart';
+import '../../models/event.dart';
+
+class EventPageMitra extends StatefulWidget {
+  @override
+  _EventPageMitraState createState() => _EventPageMitraState();
+}
+
+class _EventPageMitraState extends State<EventPageMitra> {
+  late Future<List<Event>> events;
+
+  @override
+  void initState() {
+    super.initState();
+    events = EventApi.fetchEvents();
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -373,69 +389,37 @@ class EventPageMitra extends StatelessWidget {
       return Container(
         margin: EdgeInsets.only(top: 10),
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              EventTileMitra(
-                imagePath: 'assets/img_bali_fest.png',
-                status: 'OFFLINE',
-                title: 'Bali Fest 2024',
-                collectedAmount: 'Rp1.000.000',
-                progress: 0.1,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                eventDate: '20 Mei 2024',
-                categories: ['Festival', 'Budaya', 'Bali', 'Seni'],
-                onTap: () {
-                  Navigator.pushNamed(context, '/detail-event-mitra');
-                  print('Navigate to detail');
-                },
-              ),
-              EventTileMitra(
-                imagePath: 'assets/img_summer_party.png',
-                status: 'OFFLINE',
-                title: 'Summer Party',
-                collectedAmount: 'Rp5.000.000',
-                progress: 0.2,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                eventDate: '20 Mei 2024',
-                categories: ['Pantai', 'Pesta', 'Musik', 'Liburan'],
-                onTap: () {
-                  print('Navigate to detail');
-                  Navigator.pushNamed(context, '/detail-event-mitra');
-                },
-              ),
-              EventTileMitra(
-                imagePath: 'assets/img_nobar_cinema.png',
-                status: 'OFFLINE',
-                title: 'Nobar Cinema',
-                collectedAmount: 'Rp1.900.000',
-                progress: 0.5,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                eventDate: '20 Mei 2024',
-                categories: ['Film', 'Spoiler', 'Diskusi', 'Nobar'],
-                onTap: () {
-                  print('Navigate to detail');
-                  Navigator.pushNamed(context, '/detail-event-mitra');
-                },
-              ),
-              EventTileMitra(
-                imagePath: 'assets/img_rock_fest.png',
-                status: 'OFFLINE',
-                title: 'Rock Fest',
-                collectedAmount: 'Rp5.900.000',
-                progress: 0.3,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                eventDate: '20 Mei 2024',
-                categories: ['Musik', 'Festival', 'Rock', 'Karaoke'],
-                onTap: () {
-                  print('Navigate to detail');
-                  Navigator.pushNamed(context, '/detail-event-mitra');
-                },
-              ),
-            ],
+          child: FutureBuilder<List<Event>>(
+            future: events,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return Center(child: Text('No events found'));
+              } else {
+                return SingleChildScrollView(
+                  child: Column(
+                    children: snapshot.data!
+                        .take(4)
+                        .map(
+                          (event) => EventTileMitra(
+                        event: event,
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/detail-event-mitra',
+                            arguments: event,
+                          );
+                        },
+                      ),
+                    )
+                        .toList(),
+                  ),
+                );
+              }
+            },
           ),
         ),
       );

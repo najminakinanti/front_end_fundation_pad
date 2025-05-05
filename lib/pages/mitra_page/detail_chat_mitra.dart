@@ -109,20 +109,20 @@ class _DetailChatMitraState extends State<DetailChatMitra> with WidgetsBindingOb
         child: SingleChildScrollView(
           child: Column(
             children: [
-              EventTileMitra(
-                imagePath: 'assets/img_music_fest.png',
-                status: 'Offline',
-                title: 'Music Fest 2024',
-                collectedAmount: 'Rp900.000',
-                progress: 0.1,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                eventDate: '20 Mei 2024',
-                categories: ['Musik', 'Hiburan', 'Live', 'EDM'],
-                onTap: () {
-                  print('Navigate to detail');
-                },
-              ),
+              // EventTileMitra(
+              //   imagePath: 'assets/img_music_fest.png',
+              //   status: 'Offline',
+              //   title: 'Music Fest 2024',
+              //   collectedAmount: 'Rp900.000',
+              //   progress: 0.1,
+              //   daysRemaining: 230,
+              //   donorshipCount: 100,
+              //   eventDate: '20 Mei 2024',
+              //   categories: ['Musik', 'Hiburan', 'Live', 'EDM'],
+              //   onTap: () {
+              //     print('Navigate to detail');
+              //   },
+              // ),
             ],
           ),
         ),

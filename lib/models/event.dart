@@ -36,7 +36,7 @@ class Event {
     required this.categories,
     this.eventFund,
     this.eventPlacement,
-    required this.sponsors, // Menambahkan sponsors di sini.
+    required this.sponsors,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
@@ -64,7 +64,7 @@ class Event {
       eventPlacement: json['event_placement'] != null
           ? EventPlacement.fromJson(json['event_placement'])
           : null,
-      sponsors: (json['sponsors'] as List) // Menambahkan sponsor parsing
+      sponsors: (json['sponsors'] as List)
           .map((e) => Sponsor.fromJson(e))
           .toList(),
     );

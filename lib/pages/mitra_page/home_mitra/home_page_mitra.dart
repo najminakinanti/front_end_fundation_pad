@@ -1,9 +1,17 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/API/event_api.dart';
 import 'package:pad_fundation/models/event.dart';
+import 'package:pad_fundation/pages/mitra_page/event_by_category_mitra.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/mitra/event_card_mitra.dart';
 import 'package:pad_fundation/widgets/mitra/event_tile_mitra.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../API/profile_api.dart';
+// import '../event_by_category_page/seniman_page_mitra.dart';
 
 class HomePageMitra extends StatefulWidget {
   @override
@@ -11,12 +19,80 @@ class HomePageMitra extends StatefulWidget {
 }
 
 class _HomePageMitraState extends State<HomePageMitra> {
+  String selectedCategory = '';
   late Future<List<Event>> events;
+  Map<String, dynamic>? _userProfile;
+  Map<String, dynamic>? _mitraProfile;
+  String? fullName;
+  String? photo_file;
+  File? _imageFile;
+  Uint8List? _imageBytes;
+
+  Future<void> _loadProfileFromApi() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    String? userIdString = prefs.getString('user_id');
+
+    if (token != null && userIdString != null) {
+      int userId = int.parse(userIdString);
+
+      final userData = await ProfileApi.getUserProfile(userId, token);
+      if (userData != null) {
+        setState(() {
+          _userProfile = userData;
+          fullName = userData['data']['full_name'];
+        });
+      }
+    }
+  }
+
+  Future<void> _loadMitraFromApi() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    String? userIdString = prefs.getString('user_id');
+
+    if (token != null && userIdString != null) {
+      int userId = int.parse(userIdString);
+
+      final mitraData = await ProfileApi.getMitraProfile(userId, token);
+      if (mitraData != null && mounted) {
+        setState(() {
+          _mitraProfile = mitraData;
+          photo_file = mitraData['data']['photo_file'];
+        });
+      }
+    }
+  }
+
+  void selectCategory(String category) {
+    setState(() {
+      selectedCategory = category;
+    });
+  }
+
+  Widget buildCategoryContent() {
+    switch (selectedCategory) {
+      case 'festival':
+        return Text('Konten Festival');
+      case 'kuliner':
+        return Text('Konten Kuliner');
+      case 'pendidikan':
+        return Text('Konten Pendidikan');
+      case 'seniman':
+        return Text('Konten Seniman');
+      case 'lainnya':
+        return Text('Konten Lainnya');
+      default:
+        return SizedBox();
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    events = EventApi.fetchEvents(); // Ambil data event dari API
+    _loadProfileFromApi();
+    _loadMitraFromApi();
+    events = EventApi.fetchEvents();
   }
 
   @override
@@ -28,10 +104,35 @@ class _HomePageMitraState extends State<HomePageMitra> {
         children: [
           Row(
             children: [
-              CircleAvatar(
-                radius: 25,
-                backgroundImage: AssetImage('assets/img_bittersweet.png'),
+              _imageBytes != null
+                  ? ClipOval(
+                child: Image.memory(
+                  _imageBytes!,
+                  height: 50,
+                  width: 50,
+                  fit: BoxFit.cover,
+                ),
+              )
+                  : ClipOval(
+                child: Image.network(
+                  '${ProfileApi.photourl}${photo_file ?? ''}',
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.asset(
+                      'assets/img_profile_picture.png',
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    );
+                  },
+                ),
               ),
+              // CircleAvatar(
+              //   radius: 25,
+              //   backgroundImage: AssetImage('assets/img_bittersweet.png'),
+              // ),
               SizedBox(width: 10,),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,7 +146,7 @@ class _HomePageMitraState extends State<HomePageMitra> {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'Govan Dwi',
+                    fullName ?? '',
                     style: greenTextStyle.copyWith(
                       fontSize: 14,
                       fontWeight: bold,
@@ -55,7 +156,6 @@ class _HomePageMitraState extends State<HomePageMitra> {
               ),
             ],
           ),
-
           Row(
             children: [
               GestureDetector(
@@ -277,6 +377,52 @@ class _HomePageMitraState extends State<HomePageMitra> {
       );
     }
 
+    // Widget _buildCategoryItem(BuildContext context, String label, String iconPath, String category) {
+    //   return Column(
+    //     children: [
+    //       GestureDetector(
+    //         onTap: () {
+    //           Navigator.pushNamed(
+    //             context,
+    //             '/event-by-category-mitra',
+    //             arguments: {'category': category},
+    //           );
+    //         },
+    //         child: Container(
+    //           padding: EdgeInsets.all(8),
+    //           decoration: BoxDecoration(
+    //             color: backgroundColor3,
+    //             borderRadius: BorderRadius.circular(8),
+    //           ),
+    //           child: Image.asset(iconPath, width: 30),
+    //         ),
+    //       ),
+    //       SizedBox(height: 8),
+    //       Text(
+    //         label,
+    //         style: blackTextStyle.copyWith(fontSize: 12, fontWeight: regular),
+    //       ),
+    //     ],
+    //   );
+    // }
+    //
+    //
+    // Widget categories(BuildContext context) {
+    //   return Container(
+    //     margin: EdgeInsets.only(top: 18),
+    //     child: Row(
+    //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+    //       children: [
+    //         _buildCategoryItem(context, 'Festival', 'assets/icon_festival.png', 'festival'),
+    //         _buildCategoryItem(context, 'Kuliner', 'assets/icon_kuliner.png', 'kuliner'),
+    //         _buildCategoryItem(context, 'Pendidikan', 'assets/icon_pendidikan.png', 'pendidikan'),
+    //         _buildCategoryItem(context, 'Seniman', 'assets/icon_seniman.png', 'seniman'),
+    //         _buildCategoryItem(context, 'Lainnya', 'assets/icon_lainnya.png', 'lainnya'),
+    //       ],
+    //     ),
+    //   );
+    // }
+
     Widget popularEventTitle() {
       return Container(
         margin: EdgeInsets.only(top: 28),
@@ -338,6 +484,7 @@ class _HomePageMitraState extends State<HomePageMitra> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: snapshot.data!
+                      .take(3)
                       .map((event) => EventCardMitra(
                     event: event,
                     onTap: () {
@@ -352,58 +499,6 @@ class _HomePageMitraState extends State<HomePageMitra> {
         ),
       );
     }
-
-    // Widget popularEvent() {
-    //   return Container(
-    //     margin: EdgeInsets.only(top: 10),
-    //     child: SingleChildScrollView(
-    //       scrollDirection: Axis.horizontal,
-    //       child: Row(
-    //         children: [
-    //           // EventCardMitra(
-    //           //   imagePath: 'assets/img_music_fest.png',
-    //           //   status: 'OFFLINE',
-    //           //   title: 'Music Fest 2024',
-    //           //   collectedAmount: 'Rp90.000.000',
-    //           //   progress: 0.9,
-    //           //   daysRemaining: 230,
-    //           //   donorshipCount: 100,
-    //           //   categories: ['Festival', 'Musik', 'EDM', 'Hiburan', 'DJ', 'Live'],
-    //           //   onTap: () {
-    //           //     Navigator.pushNamed(context, '/detail-event-mitra');
-    //           //   },
-    //           // ),
-    //           // EventCardMitra(
-    //           //   imagePath: 'assets/img_educ_fest.png',
-    //           //   status: 'OFFLINE',
-    //           //   title: 'Educ Fest 2024 ',
-    //           //   collectedAmount: 'Rp10.000.000',
-    //           //   progress: 0.95,
-    //           //   daysRemaining: 230,
-    //           //   donorshipCount: 100,
-    //           //   categories: ['Pendidikan', 'Seminar', 'Konsultasi', 'Formal'],
-    //           //   onTap: () {
-    //           //     Navigator.pushNamed(context, '/detail-event-mitra');
-    //           //   },
-    //           // ),
-    //           // EventCardMitra(
-    //           //   imagePath: 'assets/img_kulfood.png',
-    //           //   status: 'OFFLINE',
-    //           //   title: 'KulFood 2024',
-    //           //   collectedAmount: 'Rp50.000.000',
-    //           //   progress: 0.2,
-    //           //   daysRemaining: 230,
-    //           //   donorshipCount: 100,
-    //           //   categories: ['Festival', 'Kuliner', 'Kompetisi', 'Live Musik', 'Live'],
-    //           //   onTap: () {
-    //           //     Navigator.pushNamed(context, '/detail-event-mitra');
-    //           //   },
-    //           // ),
-    //         ],
-    //       ),
-    //     ),
-    //   );
-    // }
 
     Widget allEventTitle() {
       return Container(
@@ -452,71 +547,37 @@ class _HomePageMitraState extends State<HomePageMitra> {
     Widget allEvent() {
       return Container(
         margin: EdgeInsets.only(top: 10),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              EventTileMitra(
-                imagePath: 'assets/img_collegefair.png',
-                status: 'ONLINE',
-                title: 'COLLEGEFAIR 24',
-                collectedAmount: 'Rp900.000',
-                progress: 0.4,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                eventDate: '20 Mei 2024',
-                categories: ['Pendidikan', 'Seminar', 'Karir', 'Konseling'],
-                onTap: () {
-                  Navigator.pushNamed(context, '/detail-event-mitra');
-                  print('Navigate to detail');
-                },
-              ),
-              EventTileMitra(
-                imagePath: 'assets/img_music_fest.png',
-                status: 'OFFLINE',
-                title: 'Music Fest 2024',
-                collectedAmount: 'Rp10.000.000',
-                progress: 0.8,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                eventDate: '20 Mei 2024',
-                categories: ['Music', 'Festival', 'Hiburan', 'DJ', 'Live', 'EDM'],
-                onTap: () {
-                  print('Navigate to detail');
-                  Navigator.pushNamed(context, '/detail-event-mitra');
-                },
-              ),
-              EventTileMitra(
-                imagePath: 'assets/img_kochella.png',
-                status: 'OFFLINE',
-                title: 'KoChella 2024',
-                collectedAmount: 'Rp90.000.000',
-                progress: 0.75,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                eventDate: '20 Mei 2024',
-                categories: ['Music', 'Festival', 'Budaya', 'Live'],
-                onTap: () {
-                  print('Navigate to detail');
-                  Navigator.pushNamed(context, '/detail-event-mitra');
-                },
-              ),
-              EventTileMitra(
-                imagePath: 'assets/img_foodfest.png',
-                status: 'OFFLINE',
-                title: 'Food Fest 2024',
-                collectedAmount: 'Rp15.000.000',
-                progress: 0.2,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                eventDate: '20 Mei 2024',
-                categories: ['Makanan', 'Minuman', 'Music', 'Art'],
-                onTap: () {
-                  print('Navigate to detail');
-                  Navigator.pushNamed(context, '/detail-event-mitra');
-                },
-              ),
-            ],
-          ),
+        child: FutureBuilder<List<Event>>(
+          future: events,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(child: Text('No events found'));
+            } else {
+              return SingleChildScrollView(
+                child: Column(
+                  children: snapshot.data!
+                      .take(4)
+                      .map(
+                        (event) => EventTileMitra(
+                      event: event,
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          '/detail-event-mitra',
+                          arguments: event,
+                        );
+                      },
+                    ),
+                  )
+                      .toList(),
+                ),
+              );
+            }
+          },
         ),
       );
     }
