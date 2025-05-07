@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 
+import '../../API/event_api.dart';
 import '../../models/event.dart';
 import '../../models/sponsor.dart';
 import '../../pages/mitra_page/detail_event_mitra.dart';
@@ -76,7 +77,8 @@ class _EventCardBigMitraState extends State<EventCardBigMitra> {
     final event = widget.event;
 
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        await EventApi.incrementClick(event.id);
         Navigator.push(
           context,
           MaterialPageRoute(

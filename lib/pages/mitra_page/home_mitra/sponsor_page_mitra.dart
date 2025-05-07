@@ -3,7 +3,23 @@ import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/filter_sidebar.dart';
 import 'package:pad_fundation/widgets/mitra/sponsor_tile_mitra.dart';
 
-class SponsorPageMitra extends StatelessWidget {
+import '../../../API/event_api.dart';
+import '../../../models/event.dart';
+
+class SponsorPageMitra extends StatefulWidget {
+  @override
+  _SponsorPageMitraState createState() => _SponsorPageMitraState();
+}
+
+class _SponsorPageMitraState extends State<SponsorPageMitra> {
+  late Future<List<Event>> events;
+
+  @override
+  void initState() {
+    super.initState();
+    events = EventApi.fetchEvents();
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -107,63 +123,37 @@ class SponsorPageMitra extends StatelessWidget {
     Widget allSponsor() {
       return Container(
         margin: EdgeInsets.only(top: 10),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SponsorTileMitra(
-                imagePath: 'assets/img_music_fest.png',
-                status: 'OFFLINE',
-                eventName: 'Music Fest 2024',
-                date: '20 Mei 2024',
-                location: 'Jakarta, Jalan Kamboja',
-                categories: ['Musik', 'Festival', 'Hiburan', 'EDM', 'DJ'],
-                kontraprestasiAmount: '10',
-                kontraprestasiImages: [
-                  'assets/img_kontraprestasi_1.png',
-                  'assets/img_kontraprestasi_1.png',
-                ],
-              ),
-              SponsorTileMitra(
-                imagePath: 'assets/img_kochella.png',
-                status: 'OFFLINE',
-                eventName: 'KoChella 24',
-                date: '20 Mei 2024',
-                location: 'Jakarta, Jalan Kamboja',
-                categories: ['Musik', 'Festival', 'Budaya', 'Live Musik'],
-                kontraprestasiAmount: '7',
-                kontraprestasiImages: [
-                  'assets/img_kontraprestasi_1.png',
-                  'assets/img_kontraprestasi_1.png',
-                ],
-              ),
-              SponsorTileMitra(
-                imagePath: 'assets/img_food_fest.png',
-                status: 'OFFLINE',
-                eventName: 'FoodFest 2024',
-                date: '20 Mei 2024',
-                location: 'Jakarta, Jalan Kamboja',
-                categories: ['Kuliner', 'Festival','Live Musik'],
-                kontraprestasiAmount: '2',
-                kontraprestasiImages: [
-                  'assets/img_kontraprestasi_1.png',
-                  'assets/img_kontraprestasi_1.png',
-                ],
-              ),
-              SponsorTileMitra(
-                imagePath: 'assets/img_educ_fest.png',
-                status: 'ONLINE',
-                eventName: 'Educ Fest 2024',
-                date: '20 Mei 2024',
-                location: 'Jakarta, Jalan Kamboja',
-                categories: ['Pendidikan', 'Seminar', 'Formal', 'Konseling'],
-                kontraprestasiAmount: '5',
-                kontraprestasiImages: [
-                  'assets/img_kontraprestasi_1.png',
-                  'assets/img_kontraprestasi_1.png',
-                ],
-              ),
-            ],
-          ),
+        child: FutureBuilder<List<Event>>(
+          future: events,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(child: Text('No events found'));
+            } else {
+              return SingleChildScrollView(
+                child: Column(
+                  children: snapshot.data!
+                      .take(4)
+                      .map(
+                        (event) => SponsorTileMitra(
+                      event: event,
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          '/detail-event-mitra',
+                          arguments: event,
+                        );
+                      },
+                    ),
+                  )
+                      .toList(),
+                ),
+              );
+            }
+          },
         ),
       );
     }

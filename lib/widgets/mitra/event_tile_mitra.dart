@@ -5,6 +5,7 @@ import 'package:pad_fundation/models/sponsor.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 
+import '../../API/event_api.dart';
 import '../../pages/mitra_page/detail_event_mitra.dart';
 
 class EventTileMitra extends StatefulWidget {
@@ -58,7 +59,8 @@ class _EventTileMitraState extends State<EventTileMitra> {
     final event = widget.event;
 
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        await EventApi.incrementClick(event.id);
         Navigator.push(
           context,
           MaterialPageRoute(

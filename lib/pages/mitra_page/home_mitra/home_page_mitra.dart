@@ -21,6 +21,7 @@ class HomePageMitra extends StatefulWidget {
 class _HomePageMitraState extends State<HomePageMitra> {
   String selectedCategory = '';
   late Future<List<Event>> events;
+  late Future<List<Event>> popularEvents;
   Map<String, dynamic>? _userProfile;
   Map<String, dynamic>? _mitraProfile;
   String? fullName;
@@ -93,6 +94,7 @@ class _HomePageMitraState extends State<HomePageMitra> {
     _loadProfileFromApi();
     _loadMitraFromApi();
     events = EventApi.fetchEvents();
+    popularEvents = EventApi.fetchPopularEvents();
   }
 
   @override
@@ -377,7 +379,7 @@ class _HomePageMitraState extends State<HomePageMitra> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    // Navigator.pushNamed(context, '/event-page-by-category-mitra');
+                    Navigator.pushNamed(context, '/event-page-by-category-mitra');
                     },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -405,52 +407,6 @@ class _HomePageMitraState extends State<HomePageMitra> {
         ),
       );
     }
-
-    // Widget _buildCategoryItem(BuildContext context, String label, String iconPath, String category) {
-    //   return Column(
-    //     children: [
-    //       GestureDetector(
-    //         onTap: () {
-    //           Navigator.pushNamed(
-    //             context,
-    //             '/event-by-category-mitra',
-    //             arguments: {'category': category},
-    //           );
-    //         },
-    //         child: Container(
-    //           padding: EdgeInsets.all(8),
-    //           decoration: BoxDecoration(
-    //             color: backgroundColor3,
-    //             borderRadius: BorderRadius.circular(8),
-    //           ),
-    //           child: Image.asset(iconPath, width: 30),
-    //         ),
-    //       ),
-    //       SizedBox(height: 8),
-    //       Text(
-    //         label,
-    //         style: blackTextStyle.copyWith(fontSize: 12, fontWeight: regular),
-    //       ),
-    //     ],
-    //   );
-    // }
-    //
-    //
-    // Widget categories(BuildContext context) {
-    //   return Container(
-    //     margin: EdgeInsets.only(top: 18),
-    //     child: Row(
-    //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-    //       children: [
-    //         _buildCategoryItem(context, 'Festival', 'assets/icon_festival.png', 'festival'),
-    //         _buildCategoryItem(context, 'Kuliner', 'assets/icon_kuliner.png', 'kuliner'),
-    //         _buildCategoryItem(context, 'Pendidikan', 'assets/icon_pendidikan.png', 'pendidikan'),
-    //         _buildCategoryItem(context, 'Seniman', 'assets/icon_seniman.png', 'seniman'),
-    //         _buildCategoryItem(context, 'Lainnya', 'assets/icon_lainnya.png', 'lainnya'),
-    //       ],
-    //     ),
-    //   );
-    // }
 
     Widget popularEventTitle() {
       return Container(
@@ -500,24 +456,27 @@ class _HomePageMitraState extends State<HomePageMitra> {
       return Container(
         margin: EdgeInsets.only(top: 10),
         child: FutureBuilder<List<Event>>(
-          future: events,
+          future: popularEvents, // GUNAKAN popularEvents di sini
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return CircularProgressIndicator();
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Text('No events found');
+              return Text('No popular events found');
             } else {
               return SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: snapshot.data!
-                      .take(3)
                       .map((event) => EventCardMitra(
                     event: event,
                     onTap: () {
-                      Navigator.pushNamed(context, '/detail-event-mitra', arguments: event);
+                      Navigator.pushNamed(
+                        context,
+                        '/detail-event-mitra',
+                        arguments: event,
+                      );
                     },
                   ))
                       .toList(),

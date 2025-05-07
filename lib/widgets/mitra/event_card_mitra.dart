@@ -3,7 +3,9 @@ import 'package:intl/intl.dart';
 import 'package:pad_fundation/models/event.dart'; // Sesuaikan import model kamu
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
+import 'package:http/http.dart' as http;
 
+import '../../API/event_api.dart';
 import '../../models/sponsor.dart';
 import '../../pages/mitra_page/detail_event_mitra.dart';
 
@@ -76,7 +78,8 @@ class _EventCardMitraState extends State<EventCardMitra> {
 
     return GestureDetector(
       // onTap: widget.onTap ?? () => Navigator.pushNamed(context, '/detail-event-mitra'),
-      onTap: () {
+      onTap: () async {
+        await EventApi.incrementClick(event.id);
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -210,34 +213,6 @@ class _EventCardMitraState extends State<EventCardMitra> {
                       ),
                     ],
                   ),
-                  // Row(
-                  //   children: [
-                  //     Expanded(
-                  //       child: ClipRRect(
-                  //         borderRadius: BorderRadius.circular(8),
-                  //         child: LinearProgressIndicator(
-                  //           value: event.eventFund != null
-                  //               ? (event.eventFund!.targetFund > 0
-                  //               ? event.eventFund!.targetFund / 100.0
-                  //               : 0)
-                  //               : 0,
-                  //           backgroundColor: lineColor2,
-                  //           valueColor: AlwaysStoppedAnimation<Color>(
-                  //             lineColor,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     const SizedBox(width: 5),
-                  //     Text(
-                  //       '${((event.eventFund?.targetFund ?? 0) * 100).toInt()}%',
-                  //       style: blackTextStyle.copyWith(
-                  //         fontSize: 10,
-                  //         fontWeight: regular,
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
                   const SizedBox(height: 7),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal, // Menentukan arah scroll horizontal
@@ -302,7 +277,8 @@ class _EventCardMitraState extends State<EventCardMitra> {
       ),
     );
   }
-
-
 }
+
+
+
 

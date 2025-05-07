@@ -19,7 +19,7 @@ class Sponsor {
     return Sponsor(
       id: json['id'],
       eventId: json['event_id'],
-      entrepreneurId: json['enterpreneur_id'],
+      entrepreneurId: json['entrepreneur_id'],
       amount: json['amount'].toDouble(),
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),

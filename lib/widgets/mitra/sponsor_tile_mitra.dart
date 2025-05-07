@@ -1,34 +1,88 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 
-class SponsorTileMitra extends StatelessWidget {
-  final String imagePath;
-  final String status;
-  final String eventName;
-  final String date;
-  final String location;
-  final List<String> categories;
-  final String kontraprestasiAmount;
-  final List<String> kontraprestasiImages;
+import '../../API/event_api.dart';
+import '../../models/event.dart';
+import '../../models/sponsor.dart';
+import '../../pages/mitra_page/detail_event_mitra.dart';
+
+class SponsorTileMitra extends StatefulWidget {
+  final Event event;
+  final VoidCallback? onTap;
 
   const SponsorTileMitra({
     Key? key,
-    required this.imagePath,
-    required this.status,
-    required this.eventName,
-    required this.date,
-    required this.location,
-    required this.categories,
-    required this.kontraprestasiAmount,
-    required this.kontraprestasiImages,
+    required this.event,
+    this.onTap,
   }) : super(key: key);
 
   @override
+  _SponsorTileMitraState createState() => _SponsorTileMitraState();
+}
+
+class _SponsorTileMitraState extends State<SponsorTileMitra> {
+
+  double getSponsorAmountByUser(Event event, int userId) {
+    return event.sponsors
+        .where((sponsor) => sponsor.entrepreneurId == userId)
+        .fold(0, (sum, sponsor) => sum + sponsor.amount);
+  }
+
+  String getTotalAmount(List<Sponsor> sponsors) {
+    final totalAmount = sponsors.fold<int>(0, (total, sponsor) => total + sponsor.amount.toInt());
+    final formatCurrency = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0);
+    return formatCurrency.format(totalAmount);
+  }
+
+  int getTotalSponsors(List<Sponsor> sponsors) {
+    return sponsors.length;
+  }
+
+  int getDaysRemaining(String eventStartDate) {
+    DateTime startDate = DateTime.parse(eventStartDate);
+    DateTime currentDate = DateTime.now();
+    Duration difference = startDate.difference(currentDate);
+    return difference.inDays;
+  }
+
+  double getProgress(Event event) {
+    String totalAmountStr = getTotalAmount(event.sponsors).replaceAll('Rp', '').replaceAll('.', '').trim();
+    double totalAmount = double.parse(totalAmountStr);
+    double targetFund = (event.eventFund?.targetFund ?? 0).toDouble();
+
+    if (targetFund == 0) {
+      return 0;
+    }
+
+    return (totalAmount / targetFund) * 100;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final event = widget.event;
+    final placement = event.eventPlacement;
+    // final bool hasFullLocation = placement != null
+    //     && placement.address.isNotEmpty
+    //     && placement.city.isNotEmpty;
+    //
+    // final String locationText = hasFullLocation
+    //     ? '${placement.address}, ${placement.city}'
+    //     : 'TO BE ANNOUNCED';
+
+    final double sponsorAmount = getSponsorAmountByUser(event, 2);
+    final int sponsorAmountInJuta = (sponsorAmount / 1000000).round(); // untuk ditampilkan sebagai "juta"
+
     return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, '/detail-event-mitra');
+      onTap: () async {
+        await EventApi.incrementClick(event.id);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => DetailEventMitra(event: event),
+          ),
+        );
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -48,11 +102,22 @@ class SponsorTileMitra extends StatelessWidget {
                     topLeft: Radius.circular(5),
                     bottomLeft: Radius.circular(5),
                   ),
-                  child: Image.asset(
-                    imagePath,
+                  child:
+                  Image.network(
+                    event.eventPhotos.isNotEmpty
+                        ? event.eventPhotos.first.photoFile
+                        : 'https://via.placeholder.com/150',
                     width: 127,
                     height: double.infinity,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        'assets/img_kochella.png',
+                        width: 127,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                      );
+                    },
                   ),
                 ),
                 Positioned(
@@ -65,7 +130,7 @@ class SponsorTileMitra extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      status,
+                      event.statusEvent.toUpperCase(),
                       style: orangeTextStyle.copyWith(
                         fontSize: 10,
                         fontWeight: bold,
@@ -83,28 +148,32 @@ class SponsorTileMitra extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          eventName,
-                          style: grayTextStyle.copyWith(
-                            fontSize: 14,
-                            fontWeight: bold,
+                        Expanded(
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Text(
+                              event.title,
+                              style: grayTextStyle.copyWith(
+                                fontSize: 14,
+                                fontWeight: bold,
+                              ),
+                            ),
                           ),
                         ),
-                        Spacer(),
+                        const SizedBox(width: 5),
                         Image.asset('assets/icon_calendar.png', width: 11),
                         SizedBox(width: 4),
                         Text(
-                          date,
-                          style: veryLightGrayTextStyle.copyWith(
-                            fontSize: 10,
-                            fontWeight: bold,
-                          ),
+                          event.eventPlacement?.eventStartDate != null
+                              ? DateFormat('dd MMM yyyy').format(DateTime.parse(event.eventPlacement!.eventStartDate))
+                              : '-',
+                          style: veryLightGrayTextStyle.copyWith(fontSize: 10, fontWeight: bold),
                         ),
                       ],
                     ),
                     SizedBox(height: 8),
                     Text(
-                      location,
+                      'di ${placement?.eventVenue ?? 'TO BE ANNOUNCED'}',
                       style: lighGrayTextStyle.copyWith(
                         fontSize: 10,
                         fontWeight: regular,
@@ -115,13 +184,15 @@ class SponsorTileMitra extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       child: Wrap(
                         spacing: 5,
-                        children: categories
-                            .map((category) => CategoryButton(
-                          label: category,
-                          onTap: () {
-                            print(category);
-                          },
-                        ))
+                        children: event.categories
+                            .map(
+                              (category) => CategoryButton(
+                            label: category.name,
+                            onTap: () {
+                              print(category.name);
+                            },
+                          ),
+                        )
                             .toList(),
                       ),
                     ),
@@ -146,7 +217,8 @@ class SponsorTileMitra extends StatelessWidget {
                               ),
                               SizedBox(width: 5),
                               Text(
-                                '$kontraprestasiAmount juta',
+                                // 'x',
+                                '$sponsorAmountInJuta juta',
                                 style: blackTextStyle.copyWith(
                                   fontSize: 10,
                                   fontWeight: bold,

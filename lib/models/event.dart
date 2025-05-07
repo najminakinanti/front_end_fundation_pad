@@ -20,7 +20,8 @@ class Event {
   final List<Category> categories;
   final EventFund? eventFund;
   final EventPlacement? eventPlacement;
-  final List<Sponsor> sponsors; // Menambahkan sponsor di sini.
+  final List<Sponsor> sponsors;
+  final int clickCount;
 
   Event({
     required this.id,
@@ -37,6 +38,7 @@ class Event {
     this.eventFund,
     this.eventPlacement,
     required this.sponsors,
+    required this.clickCount,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
@@ -67,6 +69,7 @@ class Event {
       sponsors: (json['sponsors'] as List)
           .map((e) => Sponsor.fromJson(e))
           .toList(),
+      clickCount: json['click_count'],
     );
   }
 }

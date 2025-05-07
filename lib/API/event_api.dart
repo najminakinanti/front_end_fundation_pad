@@ -5,7 +5,8 @@ import 'package:pad_fundation/API/api_service.dart';
 
 class EventApi {
   static Future<List<Event>> fetchEvents() async {
-    final String url = '${ApiService.baseUrl}/events/'; // Gunakan baseUrl dari ApiService
+    final String url = '${ApiService
+        .baseUrl}/events/'; // Gunakan baseUrl dari ApiService
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
@@ -18,7 +19,6 @@ class EventApi {
       print('Response body: ${response.body}');
       throw Exception('Failed to load events');
     }
-
   }
 
   static Future<List<Event>> getEventsByCategory(int categoryId) async {
@@ -35,15 +35,74 @@ class EventApi {
     // Tambahkan default untuk semua key array yang di-fromJson
     final fixed = raw.map<Map<String, dynamic>>((e) {
       final m = Map<String, dynamic>.from(e as Map);
-      m['event_photos']     = m['event_photos']     ?? <dynamic>[];
-      m['event_categories'] = m['event_categories'] ?? <dynamic>[];  // <--- ini
-      m['categories']       = m['categories']       ?? <dynamic>[];
-      m['sponsors']         = m['sponsors']         ?? <dynamic>[];
+      m['event_photos'] = m['event_photos'] ?? <dynamic>[];
+      m['event_categories'] = m['event_categories'] ?? <dynamic>[]; // <--- ini
+      m['categories'] = m['categories'] ?? <dynamic>[];
+      m['sponsors'] = m['sponsors'] ?? <dynamic>[];
       return m;
     }).toList();
 
     return fixed.map((m) => Event.fromJson(m)).toList();
   }
+
+  static Future<List<Event>> fetchPopularEvents() async {
+    final response = await http.get(
+        Uri.parse('http://10.0.2.2:8000/api/events/popular'));
+
+    if (response.statusCode != 200) {
+      print('Request failed with status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      throw Exception('Failed to load events');
+    }
+
+    final raw = jsonDecode(response.body);
+    if (raw is! List) return [];
+
+    // Tambahkan default untuk semua key array yang di-fromJson
+    final fixed = raw.map<Map<String, dynamic>>((e) {
+      final m = Map<String, dynamic>.from(e as Map);
+      m['event_photos'] = m['event_photos'] ?? <dynamic>[];
+      m['event_categories'] = m['event_categories'] ?? <dynamic>[];
+      m['categories'] = m['categories'] ?? <dynamic>[];
+      m['sponsors'] = m['sponsors'] ?? <dynamic>[];
+      return m;
+    }).toList();
+
+    return fixed.map((m) => Event.fromJson(m)).toList();
+  }
+
+  static Future<void> incrementClick(int eventId) async {
+    const baseUrl = 'http://10.0.2.2:8000'; // Ganti sesuai IP backend jika di device
+    final response = await http.post(
+      Uri.parse('$baseUrl/api/events/$eventId/click'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      print('Failed to increment click count: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    } else {
+      print('Click count incremented for event $eventId');
+    }
+
+
+// static Future<List<Event>> fetchPopularEvents() async {
+    //   final response = await http.get(Uri.parse('http://10.0.2.2:8000/api/events/popular'));
+    //
+    //   if (response.statusCode == 200) {
+    //     // Response sukses
+    //     List jsonResponse = json.decode(response.body);
+    //     return jsonResponse.map((data) => Event.fromJson(data)).toList();
+    //   } else {
+    //     // Periksa status code dan body untuk debugging
+    //     print('Request failed with status: ${response.statusCode}');
+    //     print('Response body: ${response.body}');
+    //     throw Exception('Failed to load events');
+    //   }
+    // }
 
 
 // static Future<List<Event>> getEventsByCategory(int categoryId) async {
@@ -57,5 +116,5 @@ class EventApi {
 //     throw Exception('Failed to load events');
 //   }
 // }
+  }
 }
-
