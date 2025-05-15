@@ -1,19 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
+import 'package:pad_fundation/widgets/organizer/event_card_big_organizer.dart';
+import '../../API/event_api.dart';
+import '../../models/event.dart';
 import '../../widgets/filter_sidebar.dart';
 
-class EventByCategoryOrganizer extends StatelessWidget {
-  final String title;
-  final List<Widget> eventCards;
+class EventByCategoryOrganizer extends StatefulWidget {
   final Function(String)? onSearchChanged;
   final Function(BuildContext)? onFilterPressed;
 
   EventByCategoryOrganizer({
-    required this.title,
-    required this.eventCards,
     this.onSearchChanged,
     this.onFilterPressed,
   });
+
+  @override
+  _EventByCategoryOrganizerState createState() => _EventByCategoryOrganizerState();
+}
+
+class _EventByCategoryOrganizerState extends State<EventByCategoryOrganizer> {
+  late int categoryId;
+  String categoryName = '';
+
+  // Daftar kategori yang sesuai dengan categoryId
+  final Map<int, String> categoryNames = {
+    1: 'Kuliner',
+    2: 'Festival',
+    3: 'Pendidikan',
+    4: 'Seniman',
+  };
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is int) {
+      categoryId = args;
+      categoryName = categoryNames[categoryId] ?? 'Unknown';
+      print('Category ID from arguments: $categoryId');
+      print('Category Name: $categoryName');
+    } else {
+      categoryId = 0;
+      categoryName = 'Unknown';
+      print('Invalid categoryId, defaulted to 0');
+    }
+  }
+
 
   PreferredSizeWidget buildHeader(BuildContext context) {
     return PreferredSize(
@@ -64,7 +97,7 @@ class EventByCategoryOrganizer extends StatelessWidget {
                           SizedBox(width: 10),
                           Expanded(
                             child: TextField(
-                              onChanged: onSearchChanged,
+                              onChanged: widget.onSearchChanged,
                               style: veryLightGrayTextStyle.copyWith(
                                 fontSize: 16,
                                 fontWeight: medium,
@@ -86,8 +119,8 @@ class EventByCategoryOrganizer extends StatelessWidget {
                   SizedBox(width: 5),
                   TextButton(
                     onPressed: () {
-                      if (onFilterPressed != null) {
-                        onFilterPressed!(context);
+                      if (widget.onFilterPressed != null) {
+                        widget.onFilterPressed!(context);
                       }
                     },
                     style: TextButton.styleFrom(
@@ -117,14 +150,45 @@ class EventByCategoryOrganizer extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: defaultMargin),
         children: [
           Text(
-            title,
+            'Event $categoryName',
             style: blackTextStyle.copyWith(
               fontSize: 16,
               fontWeight: medium,
             ),
           ),
           SizedBox(height: 17),
-          ...eventCards,
+          Expanded(
+            child: FutureBuilder<List<Event>>(
+              future: EventApi.getEventsByCategory(categoryId),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }
+                final events = snapshot.data ?? [];
+                if (events.isEmpty) {
+                  return Center(child: Text('No events found'));
+                }
+
+                return SingleChildScrollView(
+                  child: Column(
+                    children: events.map((event) {
+                      return EventCardBigOrganizer(
+                        event: event,
+                        onTap: () => Navigator.pushNamed(
+                          context,
+                          '/detail-event-mitra',
+                          arguments: event,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );

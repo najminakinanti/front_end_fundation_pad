@@ -344,7 +344,11 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/festival-organizer');
+                    Navigator.pushNamed(
+                      context,
+                      '/event-by-category-organizer',
+                      arguments: 2,
+                    );
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -362,7 +366,7 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
                 Text(
                   'Festival',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -373,7 +377,12 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/kuliner-organizer');},
+                    Navigator.pushNamed(
+                      context,
+                      '/event-by-category-organizer',
+                      arguments: 1,
+                    );
+                  },
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -390,7 +399,7 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
                 Text(
                   'Kuliner',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -401,7 +410,12 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/pendidikan-organizer');},
+                    Navigator.pushNamed(
+                      context,
+                      '/event-by-category-organizer',
+                      arguments: 3,
+                    );
+                  },
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -418,7 +432,7 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
                 Text(
                   'Pendidikan',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -429,7 +443,12 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/seniman-organizer');},
+                    Navigator.pushNamed(
+                      context,
+                      '/event-by-category-organizer',
+                      arguments: 4,
+                    );
+                  },
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -446,7 +465,7 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
                 Text(
                   'Seniman',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -457,7 +476,8 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/event-page-by-category-organizer');},
+                    Navigator.pushNamed(context, '/event-page-by-category-organizer');
+                  },
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -474,7 +494,7 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
                 Text(
                   'Lainnya',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),

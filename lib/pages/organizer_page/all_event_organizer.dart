@@ -146,6 +146,7 @@ class _AllEventOrganizerState extends State<AllEventOrganizer> {
 
     Widget categories() {
       return Container(
+        margin: EdgeInsets.only(top: 18),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -153,7 +154,11 @@ class _AllEventOrganizerState extends State<AllEventOrganizer> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/festival-organizer');
+                    Navigator.pushNamed(
+                      context,
+                      '/event-by-category-organizer',
+                      arguments: 2,
+                    );
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -171,7 +176,7 @@ class _AllEventOrganizerState extends State<AllEventOrganizer> {
                 Text(
                   'Festival',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -182,7 +187,11 @@ class _AllEventOrganizerState extends State<AllEventOrganizer> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/kuliner-organizer');
+                    Navigator.pushNamed(
+                      context,
+                      '/event-by-category-organizer',
+                      arguments: 1,
+                    );
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -200,7 +209,7 @@ class _AllEventOrganizerState extends State<AllEventOrganizer> {
                 Text(
                   'Kuliner',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -211,7 +220,11 @@ class _AllEventOrganizerState extends State<AllEventOrganizer> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/pendidikan-organizer');
+                    Navigator.pushNamed(
+                      context,
+                      '/event-by-category-organizer',
+                      arguments: 3,
+                    );
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -229,7 +242,7 @@ class _AllEventOrganizerState extends State<AllEventOrganizer> {
                 Text(
                   'Pendidikan',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -240,7 +253,11 @@ class _AllEventOrganizerState extends State<AllEventOrganizer> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/seniman-organizer');
+                    Navigator.pushNamed(
+                      context,
+                      '/event-by-category-organizer',
+                      arguments: 4,
+                    );
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -258,7 +275,7 @@ class _AllEventOrganizerState extends State<AllEventOrganizer> {
                 Text(
                   'Seniman',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -287,7 +304,7 @@ class _AllEventOrganizerState extends State<AllEventOrganizer> {
                 Text(
                   'Lainnya',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),

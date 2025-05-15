@@ -2,9 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/organizer/event_card_organizer.dart';
 
+import '../../API/event_api.dart';
+import '../../models/event.dart';
 import '../../widgets/filter_sidebar.dart';
 
-class EventPageByCategoryOrganizer extends StatelessWidget {
+class EventPageByCategoryOrganizer extends StatefulWidget {
+  @override
+  _EventPageByCategoryOrganizerState createState() => _EventPageByCategoryOrganizerState();
+}
+
+class _EventPageByCategoryOrganizerState extends State<EventPageByCategoryOrganizer> {
+  late Future<List<Event>> popularEvents;
+
+  @override
+  void initState() {
+    super.initState();
+    popularEvents = EventApi.fetchPopularEvents();
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -117,63 +132,139 @@ class EventPageByCategoryOrganizer extends StatelessWidget {
     Widget topEvent() {
       return Container(
         margin: EdgeInsets.only(top: 10),
+        child: FutureBuilder<List<Event>>(
+          future: popularEvents,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Text('No popular events found');
+            } else {
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: snapshot.data!
+                      .take(10)
+                      .map((event) => EventCardOrganizer(
+                    event: event,
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/detail-event-organizer',
+                        arguments: event,
+                      );
+                    },
+                  ))
+                      .toList(),
+                ),
+              );
+            }
+          },
+        ),
+      );
+    }
+
+    Widget festivalEventTitle() {
+      return Container(
+        margin: EdgeInsets.only(top: 24),
+        child: Text(
+          'Event Festival',
+          style: blackTextStyle.copyWith(
+            fontSize: 16,
+            fontWeight: medium,
+          ),
+        ),
+      );
+    }
+
+    Widget festivalEvent() {
+      return Container(
+        margin: EdgeInsets.only(top: 10),
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              // EventCardOrganizer(
-              //   imagePath: 'assets/img_music_fest.png',
-              //   status: 'OFFLINE',
-              //   title: 'Music Fest 2024',
-              //   collectedAmount: 'Rp90.000.000',
-              //   progress: 0.9,
-              //   daysRemaining: 230,
-              //   donorshipCount: 100,
-              //   categories: ['Festival', 'Musik', 'EDM', 'Hiburan', 'DJ', 'Live'],
-              //   onTap: () {
-              //     Navigator.pushNamed(context, '/detail-event-organizer');
-              //   },
-              // ),
-              // EventCardOrganizer(
-              //   imagePath: 'assets/img_kulfood.png',
-              //   status: 'OFFLINE',
-              //   title: 'KulFood 2024',
-              //   collectedAmount: 'Rp900.000',
-              //   progress: 0.2,
-              //   daysRemaining: 230,
-              //   donorshipCount: 100,
-              //   categories: ['Festival', 'Kuliner', 'Kompetisi', 'Live Musik', 'Live'],
-              //   onTap: () {
-              //     Navigator.pushNamed(context, '/detail-event-organizer');
-              //   },
-              // ),
-              // EventCardOrganizer(
-              //   imagePath: 'assets/img_food_fest.png',
-              //   status: 'OFFLINE',
-              //   title: 'FoodFest 2024 ',
-              //   collectedAmount: 'Rp900.000',
-              //   progress: 0.2,
-              //   daysRemaining: 230,
-              //   donorshipCount: 100,
-              //   categories: ['Festival', 'Kuliner', 'Weekend', 'Live Music', 'Live'],
-              //   onTap: () {
-              //     Navigator.pushNamed(context, '/detail-event-organizer');
-              //   },
-              // ),
-              // EventCardOrganizer(
-              //   imagePath: 'assets/img_summer_party.png',
-              //   status: 'OFFLINE',
-              //   title: 'FoodFest 2024 ',
-              //   collectedAmount: 'Rp900.000',
-              //   progress: 0.2,
-              //   daysRemaining: 230,
-              //   donorshipCount: 100,
-              //   categories: ['Pantai', 'Pesta', 'Liburan', 'Musik', 'Dress'],
-              //   onTap: () {
-              //     Navigator.pushNamed(context, '/detail-event-organizer');
-              //   },
-              // ),
-            ],
+          child: FutureBuilder<List<Event>>(
+            future: EventApi.getEventsByCategory(2),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              }
+              final events = snapshot.data ?? [];
+              if (events.isEmpty) {
+                return Center(child: Text('No events found', style: blackTextStyle.copyWith(fontSize: 13, fontWeight: regular),));
+              }
+
+              return SingleChildScrollView(
+                child: Row(
+                  children: events.map((event) {
+                    return EventCardOrganizer(
+                      event: event,
+                      onTap: () => Navigator.pushNamed(
+                        context,
+                        '/detail-event-organizer',
+                        arguments: event,
+                      ),
+                    );
+                  }).toList(),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+    }
+
+    Widget kulinerEventTitle() {
+      return Container(
+        margin: EdgeInsets.only(top: 24),
+        child: Text(
+          'Event Kuliner',
+          style: blackTextStyle.copyWith(
+            fontSize: 16,
+            fontWeight: medium,
+          ),
+        ),
+      );
+    }
+
+    Widget kulinerEvent() {
+      return Container(
+        margin: EdgeInsets.only(top: 10),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: FutureBuilder<List<Event>>(
+            future: EventApi.getEventsByCategory(1),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              }
+              final events = snapshot.data ?? [];
+              if (events.isEmpty) {
+                return Center(child: Text('No events found', style: blackTextStyle.copyWith(fontSize: 13, fontWeight: regular),));
+              }
+
+              return SingleChildScrollView(
+                child: Row(
+                  children: events.map((event) {
+                    return EventCardOrganizer(
+                      event: event,
+                      onTap: () => Navigator.pushNamed(
+                        context,
+                        '/detail-event-organizer',
+                        arguments: event,
+                      ),
+                    );
+                  }).toList(),
+                ),
+              );
+            },
           ),
         ),
       );
@@ -197,20 +288,45 @@ class EventPageByCategoryOrganizer extends StatelessWidget {
         margin: EdgeInsets.only(top: 10),
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
+          child: FutureBuilder<List<Event>>(
+            future: EventApi.getEventsByCategory(3),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              }
+              final events = snapshot.data ?? [];
+              if (events.isEmpty) {
+                return Center(child: Text('No events found', style: blackTextStyle.copyWith(fontSize: 13, fontWeight: regular),));
+              }
 
-            ],
+              return SingleChildScrollView(
+                child: Row(
+                  children: events.map((event) {
+                    return EventCardOrganizer(
+                      event: event,
+                      onTap: () => Navigator.pushNamed(
+                        context,
+                        '/detail-event-organizer',
+                        arguments: event,
+                      ),
+                    );
+                  }).toList(),
+                ),
+              );
+            },
           ),
         ),
       );
     }
 
-    Widget kulinerEventTitle() {
+    Widget senimanEventTitle() {
       return Container(
         margin: EdgeInsets.only(top: 24),
         child: Text(
-          'Event Pendidikan',
+          'Event Seniman',
           style: blackTextStyle.copyWith(
             fontSize: 16,
             fontWeight: medium,
@@ -219,15 +335,40 @@ class EventPageByCategoryOrganizer extends StatelessWidget {
       );
     }
 
-    Widget kulinerEvent() {
+    Widget senimanEvent() {
       return Container(
         margin: EdgeInsets.only(top: 10),
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
+          child: FutureBuilder<List<Event>>(
+            future: EventApi.getEventsByCategory(4),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              }
+              final events = snapshot.data ?? [];
+              if (events.isEmpty) {
+                return Center(child: Text('No events found', style: blackTextStyle.copyWith(fontSize: 13, fontWeight: regular),));
+              }
 
-            ],
+              return SingleChildScrollView(
+                child: Row(
+                  children: events.map((event) {
+                    return EventCardOrganizer(
+                      event: event,
+                      onTap: () => Navigator.pushNamed(
+                        context,
+                        '/detail-event-organizer',
+                        arguments: event,
+                      ),
+                    );
+                  }).toList(),
+                ),
+              );
+            },
           ),
         ),
       );
@@ -241,10 +382,14 @@ class EventPageByCategoryOrganizer extends StatelessWidget {
         children: [
           topEventTitle(),
           topEvent(),
-          pendidikanEventTitle(),
-          pendidikanEvent(),
+          festivalEventTitle(),
+          festivalEvent(),
           kulinerEventTitle(),
           kulinerEvent(),
+          pendidikanEventTitle(),
+          pendidikanEvent(),
+          senimanEventTitle(),
+          senimanEvent(),
           SizedBox(height: 30),
         ],
       );

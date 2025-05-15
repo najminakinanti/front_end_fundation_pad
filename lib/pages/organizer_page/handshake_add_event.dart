@@ -77,14 +77,53 @@ class _HandshakeAddEventState extends State<HandshakeAddEvent> {
     required String? selectedIcon,
     required ValueChanged<String?> onIconChanged,
   }) {
-    List<String> icons = ['Gold', 'Silver', 'Bronze'];
+    List<String> icons = ['Platinum', 'Diamond', 'Gold', 'Silver', 'Bronze'];
 
-    return buildDropdownTextFormField(
-      labelText: 'Icon Kontraprestasi',
-      hintText: 'Pilih Icon Kontraprestasi',
-      dropdownItems: icons,
-      selectedValue: selectedIcon,
-      onChanged: onIconChanged,
+    return Container(
+      margin: EdgeInsets.only(top: 10),
+      child: DropdownButtonFormField<String>(
+        value: selectedIcon,
+        onChanged: onIconChanged,
+        decoration: InputDecoration(
+          labelText: 'Icon Kontraprestasi',
+          labelStyle: grayTextStyle.copyWith(fontSize: 14),
+          border: OutlineInputBorder(
+            borderSide: BorderSide(color: primaryColor),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: primaryColor),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: primaryColor),
+          ),
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          contentPadding: EdgeInsets.symmetric(horizontal: 12),
+        ),
+        style: blackTextStyle.copyWith(fontSize: 14),
+        hint: Text(
+          'Pilih Icon Kontraprestasi',
+          style: grayTextStyle.copyWith(fontSize: 14),
+        ),
+        items: icons.map((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Row(
+              children: [
+                Image.asset(
+                  'assets/icon_${value.toLowerCase()}.png',
+                  width: 20,
+                  height: 20,
+                ),
+                SizedBox(width: 10),
+                Text(
+                  value,
+                  style: blackTextStyle.copyWith(fontSize: 14),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 
@@ -99,13 +138,6 @@ class _HandshakeAddEventState extends State<HandshakeAddEvent> {
               kontraprestasiList[index].icon = value;
             });
           },
-        ),
-        Container(
-          margin: const EdgeInsets.only(top: 20),
-          child: buildTextFormField(
-            labelText: 'Nama Kontraprestasi',
-            hintText: 'Masukkan Nama Kontraprestasi',
-          ),
         ),
         Container(
           margin: const EdgeInsets.only(top: 20),
