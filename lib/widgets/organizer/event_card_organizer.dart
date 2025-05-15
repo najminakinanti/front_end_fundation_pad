@@ -1,28 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:pad_fundation/models/event.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 
+import '../../API/event_api.dart';
+import '../../models/sponsor.dart';
+import '../../pages/organizer_page/detail_event_organizer.dart';
+
 class EventCardOrganizer extends StatefulWidget {
-  final String imagePath;
-  final String status;
-  final String title;
-  final String collectedAmount;
-  final double progress;
-  final int daysRemaining;
-  final int donorshipCount;
-  final List<String> categories;
+  final Event event;
   final VoidCallback? onTap;
 
   const EventCardOrganizer({
     Key? key,
-    required this.imagePath,
-    required this.status,
-    required this.title,
-    required this.collectedAmount,
-    required this.progress,
-    required this.daysRemaining,
-    required this.donorshipCount,
-    required this.categories,
+    required this.event,
     this.onTap,
   }) : super(key: key);
 
@@ -33,10 +25,66 @@ class EventCardOrganizer extends StatefulWidget {
 class _EventCardOrganizerState extends State<EventCardOrganizer> {
   bool isBookmarked = false;
 
+  String getTotalAmount(List<Sponsor> sponsors) {
+    // Menjumlahkan total amount dengan tipe int
+    final totalAmount = sponsors.fold<int>(0, (total, sponsor) => total + sponsor.amount.toInt());
+
+    // Format angka ke format mata uang Indonesia (Rp)
+    final formatCurrency = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0);
+
+    return formatCurrency.format(totalAmount); // Mengembalikan dalam format "Rp X.XXX.XXX"
+  }
+
+  int getTotalSponsors(List<Sponsor> sponsors) {
+    return sponsors.length; // Menghitung jumlah sponsor
+  }
+
+  int getDaysRemaining(String eventStartDate) {
+    // Parse tanggal mulai acara dari string ke DateTime
+    DateTime startDate = DateTime.parse(eventStartDate);
+
+    // Mendapatkan tanggal hari ini
+    DateTime currentDate = DateTime.now();
+
+    // Menghitung selisih hari
+    Duration difference = startDate.difference(currentDate);
+
+    // Mengembalikan jumlah hari yang tersisa
+    return difference.inDays;
+  }
+
+  // Fungsi untuk menghitung progres
+  double getProgress(Event event) {
+    // Mendapatkan total amount dari sponsor dan mengonversinya ke int
+    String totalAmountStr = getTotalAmount(event.sponsors).replaceAll('Rp', '').replaceAll('.', '').trim();
+    double totalAmount = double.parse(totalAmountStr); // Mengubah ke double untuk perhitungan
+
+    // Mendapatkan target fund dari event fund
+    double targetFund = (event.eventFund?.targetFund ?? 0).toDouble();
+
+    // Menghindari pembagian dengan 0 jika target fund = 0
+    if (targetFund == 0) {
+      return 0; // Atau 100, tergantung logika yang diinginkan
+    }
+
+    // Menghitung progres (persentase) berdasarkan total amount dan target fund
+    return (totalAmount / targetFund) * 100;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final event = widget.event;
+
     return GestureDetector(
-      onTap: widget.onTap ?? () => Navigator.pushNamed(context, '/detail-event-organizer'),
+      onTap: () async {
+        await EventApi.incrementClick(event.id);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => DetailEventOrganizer(event: event),
+          ),
+        );
+      },
       child: Container(
         width: 225,
         margin: const EdgeInsets.only(right: 10),
@@ -51,11 +99,22 @@ class _EventCardOrganizerState extends State<EventCardOrganizer> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(5),
-                  child: Image.asset(
-                    widget.imagePath,
+                  child: Image.network(
+                    event.eventPhotos.isNotEmpty
+                        ? event.eventPhotos.first.photoFile
+                        : 'https://via.placeholder.com/150',
                     width: double.infinity,
                     height: 100,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      // Jika ada error dalam memuat gambar, tampilkan gambar profil diri
+                      return Image.asset(
+                        'assets/img_kochella.png', // Ganti dengan path gambar profil diri di assets
+                        width: double.infinity,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      );
+                    },
                   ),
                 ),
                 Positioned(
@@ -68,7 +127,7 @@ class _EventCardOrganizerState extends State<EventCardOrganizer> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      widget.status.toUpperCase(),
+                      event.statusEvent.toUpperCase(),
                       style: orangeTextStyle.copyWith(
                         fontSize: 10,
                         fontWeight: bold,
@@ -113,14 +172,14 @@ class _EventCardOrganizerState extends State<EventCardOrganizer> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.title,
+                    event.title,
                     style: grayTextStyle.copyWith(
                       fontSize: 14,
                       fontWeight: bold,
                     ),
                   ),
                   Text(
-                    'Terkumpul ${widget.collectedAmount}',
+                    'Terkumpul ${getTotalAmount(event.sponsors)}',
                     style: lighGrayTextStyle.copyWith(
                       fontSize: 10,
                       fontWeight: regular,
@@ -132,17 +191,17 @@ class _EventCardOrganizerState extends State<EventCardOrganizer> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8),
                           child: LinearProgressIndicator(
-                            value: widget.progress,
+                            value: event.eventFund != null
+                                ? (getProgress(event) / 100)
+                                : 0,
                             backgroundColor: lineColor2,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              lineColor,
-                            ),
+                            valueColor: AlwaysStoppedAnimation<Color>(lineColor),
                           ),
                         ),
                       ),
                       const SizedBox(width: 5),
                       Text(
-                        '${(widget.progress * 100).toInt()}%',
+                        '${getProgress(event).toStringAsFixed(2)}%',
                         style: blackTextStyle.copyWith(
                           fontSize: 10,
                           fontWeight: regular,
@@ -151,48 +210,54 @@ class _EventCardOrganizerState extends State<EventCardOrganizer> {
                     ],
                   ),
                   const SizedBox(height: 7),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Image.asset('assets/icon_donorship.png', width: 18),
-                          const SizedBox(width: 4),
-                          Text(
-                            '${widget.donorshipCount} Donorship',
-                            style: veryLightGrayTextStyle.copyWith(
-                              fontSize: 10,
-                              fontWeight: regular,
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal, // Menentukan arah scroll horizontal
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start, // Ubah ke start agar elemen di sebelah kiri
+                      children: [
+                        Row(
+                          children: [
+                            Image.asset('assets/icon_donorship.png', width: 18),
+                            const SizedBox(width: 4),
+                            Text(
+                              '${getTotalSponsors(event.sponsors)} Donorship', // Menampilkan jumlah sponsor
+                              style: veryLightGrayTextStyle.copyWith(
+                                fontSize: 10,
+                                fontWeight: regular,
+                              ),
+                            )
+
+                          ],
+                        ),
+                        const SizedBox(width: 10), // Menambahkan jarak minimal 10 antara elemen
+                        Row(
+                          children: [
+                            Image.asset('assets/icon_timer.png', width: 13),
+                            const SizedBox(width: 4),
+                            Text(
+                              '${getDaysRemaining(event.eventPlacement?.eventStartDate ?? '2025-06-10')} hari lagi',
+                              style: veryLightGrayTextStyle.copyWith(
+                                fontSize: 10,
+                                fontWeight: regular,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Image.asset('assets/icon_timer.png', width: 13),
-                          const SizedBox(width: 4),
-                          Text(
-                            '${widget.daysRemaining} hari lagi',
-                            style: veryLightGrayTextStyle.copyWith(
-                              fontSize: 10,
-                              fontWeight: regular,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        )
+
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 7),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Wrap(
                       spacing: 5,
-                      children: widget.categories
+                      children: event.categories
                           .map(
                             (category) => CategoryButton(
-                          label: category,
+                          label: category.name,
                           onTap: () {
-                            print(category);
+                            print(category.name);
                           },
                         ),
                       )

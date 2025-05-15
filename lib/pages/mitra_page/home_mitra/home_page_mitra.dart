@@ -4,14 +4,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/API/event_api.dart';
 import 'package:pad_fundation/models/event.dart';
-import 'package:pad_fundation/pages/mitra_page/event_by_category_mitra.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/mitra/event_card_mitra.dart';
 import 'package:pad_fundation/widgets/mitra/event_tile_mitra.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../API/profile_api.dart';
-// import '../event_by_category_page/seniman_page_mitra.dart';
 
 class HomePageMitra extends StatefulWidget {
   @override

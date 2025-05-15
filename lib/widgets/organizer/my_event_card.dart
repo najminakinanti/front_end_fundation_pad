@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pad_fundation/models/event.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 
 import '../../API/event_api.dart';
-import '../../models/event.dart';
 import '../../models/sponsor.dart';
 import '../../pages/organizer_page/detail_my_event_organizer.dart';
 
-class MyEventCardOrganizer extends StatefulWidget {
+class MyEventCard extends StatefulWidget {
   final Event event;
   final VoidCallback? onTap;
 
-  const MyEventCardOrganizer({
+  const MyEventCard({
     Key? key,
     required this.event,
     this.onTap,
   }) : super(key: key);
 
   @override
-  _MyEventCardOrganizerState createState() => _MyEventCardOrganizerState();
+  _MyEventCardState createState() => _MyEventCardState();
 }
 
-class _MyEventCardOrganizerState extends State<MyEventCardOrganizer> {
+class _MyEventCardState extends State<MyEventCard> {
+  bool isBookmarked = false;
 
   String getTotalAmount(List<Sponsor> sponsors) {
     // Menjumlahkan total amount dengan tipe int
@@ -70,7 +71,6 @@ class _MyEventCardOrganizerState extends State<MyEventCardOrganizer> {
     return (totalAmount / targetFund) * 100;
   }
 
-
   @override
   Widget build(BuildContext context) {
     final event = widget.event;
@@ -86,11 +86,11 @@ class _MyEventCardOrganizerState extends State<MyEventCardOrganizer> {
         );
       },
       child: Container(
-        width: double.infinity,
-        margin: const EdgeInsets.only(bottom: 20),
+        width: 225,
+        margin: const EdgeInsets.only(right: 10),
         decoration: BoxDecoration(
           color: backgroundColor3,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(5),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,20 +98,20 @@ class _MyEventCardOrganizerState extends State<MyEventCardOrganizer> {
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(5),
                   child: Image.network(
                     event.eventPhotos.isNotEmpty
                         ? event.eventPhotos.first.photoFile
                         : 'https://via.placeholder.com/150',
                     width: double.infinity,
-                    height: 230,
+                    height: 100,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       // Jika ada error dalam memuat gambar, tampilkan gambar profil diri
                       return Image.asset(
                         'assets/img_kochella.png', // Ganti dengan path gambar profil diri di assets
                         width: double.infinity,
-                        height: 230,
+                        height: 100,
                         fit: BoxFit.cover,
                       );
                     },
@@ -121,8 +121,7 @@ class _MyEventCardOrganizerState extends State<MyEventCardOrganizer> {
                   top: 10,
                   left: 10,
                   child: Container(
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
                       color: sageGreen3,
                       borderRadius: BorderRadius.circular(20),
@@ -130,8 +129,37 @@ class _MyEventCardOrganizerState extends State<MyEventCardOrganizer> {
                     child: Text(
                       event.statusEvent.toUpperCase(),
                       style: orangeTextStyle.copyWith(
-                        fontSize: 14,
+                        fontSize: 10,
                         fontWeight: bold,
+                      ),
+                    ),
+                  ),
+                ),
+                // Bookmark Icon
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isBookmarked = !isBookmarked;
+                      });
+                    },
+                    child: Container(
+                      width: 25,
+                      height: 25,
+                      decoration: BoxDecoration(
+                        color: backgroundColor3,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Image.asset(
+                          isBookmarked
+                              ? 'assets/icon_bookmark_on.png'
+                              : 'assets/icon_bookmark_off.png',
+                          width: 15,
+                          height: 15,
+                        ),
                       ),
                     ),
                   ),
@@ -143,28 +171,12 @@ class _MyEventCardOrganizerState extends State<MyEventCardOrganizer> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        event.title,
-                        style: grayTextStyle.copyWith(
-                          fontSize: 14,
-                          fontWeight: bold,
-                        ),
-                      ),
-                      const Spacer(),
-                      Image.asset('assets/icon_calendar.png', width: 11),
-                      const SizedBox(width: 4),
-                      Text(
-                        event.eventPlacement?.eventStartDate != null
-                            ? DateFormat('dd MMM yyyy').format(DateTime.parse(event.eventPlacement!.eventStartDate))
-                            : '-',
-                        style: veryLightGrayTextStyle.copyWith(
-                          fontSize: 10,
-                          fontWeight: regular,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    event.title,
+                    style: grayTextStyle.copyWith(
+                      fontSize: 14,
+                      fontWeight: bold,
+                    ),
                   ),
                   Text(
                     'Terkumpul ${getTotalAmount(event.sponsors)}',
@@ -180,7 +192,7 @@ class _MyEventCardOrganizerState extends State<MyEventCardOrganizer> {
                           borderRadius: BorderRadius.circular(8),
                           child: LinearProgressIndicator(
                             value: event.eventFund != null
-                                ? (getProgress(event) / 100) // Menghitung nilai progres dalam bentuk 0.0 hingga 1.0
+                                ? (getProgress(event) / 100)
                                 : 0,
                             backgroundColor: lineColor2,
                             valueColor: AlwaysStoppedAnimation<Color>(lineColor),
@@ -198,36 +210,42 @@ class _MyEventCardOrganizerState extends State<MyEventCardOrganizer> {
                     ],
                   ),
                   const SizedBox(height: 7),
-                  Row(
-                    children: [
-                      Row(
-                        children: [
-                          Image.asset('assets/icon_donorship.png', width: 18),
-                          const SizedBox(width: 4),
-                          Text(
-                            '${event.sponsors.length} Donorship',
-                            style: veryLightGrayTextStyle.copyWith(
-                              fontSize: 10,
-                              fontWeight: regular,
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal, // Menentukan arah scroll horizontal
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start, // Ubah ke start agar elemen di sebelah kiri
+                      children: [
+                        Row(
+                          children: [
+                            Image.asset('assets/icon_donorship.png', width: 18),
+                            const SizedBox(width: 4),
+                            Text(
+                              '${getTotalSponsors(event.sponsors)} Donorship', // Menampilkan jumlah sponsor
+                              style: veryLightGrayTextStyle.copyWith(
+                                fontSize: 10,
+                                fontWeight: regular,
+                              ),
+                            )
+
+                          ],
+                        ),
+                        const SizedBox(width: 10), // Menambahkan jarak minimal 10 antara elemen
+                        Row(
+                          children: [
+                            Image.asset('assets/icon_timer.png', width: 13),
+                            const SizedBox(width: 4),
+                            Text(
+                              '${getDaysRemaining(event.eventPlacement?.eventStartDate ?? '2025-06-10')} hari lagi',
+                              style: veryLightGrayTextStyle.copyWith(
+                                fontSize: 10,
+                                fontWeight: regular,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 20),
-                      Row(
-                        children: [
-                          Image.asset('assets/icon_timer.png', width: 13),
-                          const SizedBox(width: 4),
-                          Text(
-                            '${getDaysRemaining(event.eventPlacement?.eventStartDate ?? '2025-06-10')} hari lagi',
-                            style: veryLightGrayTextStyle.copyWith(
-                              fontSize: 10,
-                              fontWeight: regular,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        )
+
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 7),
                   SingleChildScrollView(

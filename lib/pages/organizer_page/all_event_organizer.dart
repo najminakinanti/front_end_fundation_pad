@@ -4,7 +4,48 @@ import 'package:pad_fundation/widgets/filter_sidebar.dart';
 import 'package:pad_fundation/widgets/organizer/event_card_organizer.dart';
 import 'package:pad_fundation/widgets/organizer/event_tile_organizer.dart';
 
-class AllEventOrganizer extends StatelessWidget {
+import '../../API/event_api.dart';
+import '../../models/event.dart';
+
+class AllEventOrganizer extends StatefulWidget {
+  @override
+  _AllEventOrganizerState createState() => _AllEventOrganizerState();
+}
+
+class _AllEventOrganizerState extends State<AllEventOrganizer> {
+  String selectedCategory = '';
+  late Future<List<Event>> events;
+  late Future<List<Event>> popularEvents;
+
+  void selectCategory(String category) {
+    setState(() {
+      selectedCategory = category;
+    });
+  }
+
+  Widget buildCategoryContent() {
+    switch (selectedCategory) {
+      case 'festival':
+        return Text('Konten Festival');
+      case 'kuliner':
+        return Text('Konten Kuliner');
+      case 'pendidikan':
+        return Text('Konten Pendidikan');
+      case 'seniman':
+        return Text('Konten Seniman');
+      case 'lainnya':
+        return Text('Konten Lainnya');
+      default:
+        return SizedBox();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    events = EventApi.fetchEvents();
+    popularEvents = EventApi.fetchPopularEvents();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -277,78 +318,36 @@ class AllEventOrganizer extends StatelessWidget {
 
     Widget topEvent() {
       return Container(
-        margin: EdgeInsets.only(top: 15),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              EventCardOrganizer(
-                imagePath: 'assets/img_music_fest.png',
-                status: 'OFFLINE',
-                title: 'Music Fest 2024',
-                collectedAmount: 'Rp90.000.000',
-                progress: 0.9,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                categories: ['Festival', 'Musik', 'EDM', 'Hiburan', 'DJ', 'Live'],
-                onTap: () {
-                  Navigator.pushNamed(context, '/detail-event-organizer');
-                },
-              ),
-              EventCardOrganizer(
-                imagePath: 'assets/img_kulfood.png',
-                status: 'OFFLINE',
-                title: 'KulFood 2024 ',
-                collectedAmount: 'Rp900.000',
-                progress: 0.2,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                categories: ['Festival', 'Kuliner', 'Kompetisi', 'Live Musik', 'Live'],
-                onTap: () {
-                  Navigator.pushNamed(context, '/detail-event-organizer');
-                },
-              ),
-              EventCardOrganizer(
-                imagePath: 'assets/img_summer_party.png',
-                status: 'OFFLINE',
-                title: 'Summer Shimer 2024',
-                collectedAmount: 'Rp900.000',
-                progress: 0.2,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                categories: ['Pantai', 'Pesta', 'Liburan', 'Musik', 'Dress'],
-                onTap: () {
-                  Navigator.pushNamed(context, '/detail-event-organizer');
-                },
-              ),
-              EventCardOrganizer(
-                imagePath: 'assets/img_food_fest.png',
-                status: 'OFFLINE',
-                title: 'FoodFest 2024',
-                collectedAmount: 'Rp900.000',
-                progress: 0.2,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                categories: ['Festival', 'Kuliner', 'Weekend', 'Live Musik', 'Live'],
-                onTap: () {
-                  Navigator.pushNamed(context, '/detail-event-organizer');
-                },
-              ),
-              EventCardOrganizer(
-                imagePath: 'assets/img_educ_fest.png',
-                status: 'ONLINE',
-                title: 'Educ Fest 2024',
-                collectedAmount: 'Rp10.000.000',
-                progress: 0.95,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                categories: ['Pendidikan', 'Seminar', 'Konsultasi', 'Formal'],
-                onTap: () {
-                  Navigator.pushNamed(context, '/detail-event-organizer');
-                },
-              ),
-            ],
-          ),
+        margin: EdgeInsets.only(top: 10),
+        child: FutureBuilder<List<Event>>(
+          future: popularEvents,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Text('No popular events found');
+            } else {
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: snapshot.data!
+                      .map((event) => EventCardOrganizer(
+                    event: event,
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/detail-event-organizer',
+                        arguments: event,
+                      );
+                    },
+                  ))
+                      .toList(),
+                ),
+              );
+            }
+          },
         ),
       );
     }
@@ -373,72 +372,38 @@ class AllEventOrganizer extends StatelessWidget {
 
     Widget allEvent() {
       return Container(
-        margin: EdgeInsets.only(top: 15),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              EventTileOrganizer(
-                imagePath: 'assets/img_bali_fest.png',
-                status: 'OFFLINE',
-                title: 'Bali Fest 2024',
-                collectedAmount: 'Rp1.000.000',
-                progress: 0.1,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                eventDate: '20 Mei 2024',
-                categories: ['Festival', 'Budaya', 'Bali', 'Seni'],
-                onTap: () {
-                  Navigator.pushNamed(context, '/detail-event-organizer');
-                  print('Navigate to detail');
-                },
-              ),
-              EventTileOrganizer(
-                imagePath: 'assets/img_summer_party.png',
-                status: 'OFFLINE',
-                title: 'Summer Party',
-                collectedAmount: 'Rp5.000.000',
-                progress: 0.2,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                eventDate: '20 Mei 2024',
-                categories: ['Pantai', 'Pesta', 'Musik', 'Liburan'],
-                onTap: () {
-                  print('Navigate to detail');
-                  Navigator.pushNamed(context, '/detail-event-organizer');
-                },
-              ),
-              EventTileOrganizer(
-                imagePath: 'assets/img_nobar_cinema.png',
-                status: 'OFFLINE',
-                title: 'Nobar Cinema',
-                collectedAmount: 'Rp1.900.000',
-                progress: 0.5,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                eventDate: '20 Mei 2024',
-                categories: ['Film', 'Spoiler', 'Diskusi', 'Nobar'],
-                onTap: () {
-                  print('Navigate to detail');
-                  Navigator.pushNamed(context, '/detail-event-organizer');
-                },
-              ),
-              EventTileOrganizer(
-                imagePath: 'assets/img_rock_fest.png',
-                status: 'OFFLINE',
-                title: 'Rock Fest',
-                collectedAmount: 'Rp5.900.000',
-                progress: 0.3,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                eventDate: '20 Mei 2024',
-                categories: ['Musik', 'Festival', 'Rock', 'Karaoke'],
-                onTap: () {
-                  print('Navigate to detail');
-                  Navigator.pushNamed(context, '/detail-event-organizer');
-                },
-              ),
-            ],
-          ),
+        margin: EdgeInsets.only(top: 10),
+        child: FutureBuilder<List<Event>>(
+          future: events,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(child: Text('No events found'));
+            } else {
+              return SingleChildScrollView(
+                child: Column(
+                  children: snapshot.data!
+                      // .take(4)
+                      .map(
+                        (event) => EventTileOrganizer(
+                      event: event,
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          '/detail-event-organizer',
+                          arguments: event,
+                        );
+                      },
+                    ),
+                  )
+                      .toList(),
+                ),
+              );
+            }
+          },
         ),
       );
     }

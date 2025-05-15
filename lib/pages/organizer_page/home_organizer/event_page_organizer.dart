@@ -3,7 +3,24 @@ import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/filter_sidebar.dart';
 import 'package:pad_fundation/widgets/organizer/my_event_card_organizer.dart';
 
-class EventPageOrganizer extends StatelessWidget {
+import '../../../API/event_api.dart';
+import '../../../models/event.dart';
+
+class EventPageOrganizer extends StatefulWidget {
+
+  @override
+  _EventPageOrganizerState createState() => _EventPageOrganizerState();
+}
+
+class _EventPageOrganizerState extends State<EventPageOrganizer> {
+  late Future<List<Event>> popularEvents;
+
+  @override
+  void initState() {
+    super.initState();
+    popularEvents = EventApi.fetchPopularEvents();
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -137,39 +154,37 @@ class EventPageOrganizer extends StatelessWidget {
     Widget allSponsor() {
       return Container(
         margin: EdgeInsets.only(top: 10),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              MyEventCardOrganizer(
-                imageUrl: 'assets/img_music_fest.png',
-                status: 'OFFLINE',
-                eventName: 'Music Fest 2024 ',
-                date: '20 Mei 2024',
-                progress: 0.7,
-                collectedAmount: 'Rp900.000',
-                donorshipCount: '100',
-                daysLeft: '230',
-                categories: ['Musik', 'Festival', 'Hiburan'],
-                onTap: () {
-                  Navigator.pushNamed(context, '/detail-my-event-organizer');
-                },
-              ),
-              MyEventCardOrganizer(
-                imageUrl: 'assets/img_kochella.png',
-                status: 'OFFLINE',
-                eventName: 'KoChella 2024',
-                date: '20 Mei 2024',
-                progress: 0.7,
-                collectedAmount: 'Rp900.000',
-                donorshipCount: '100',
-                daysLeft: '230',
-                categories: ['Musik', 'Festival', 'Budaya', 'Live', 'EDM', 'K-Pop'],
-                onTap: () {
-                  Navigator.pushNamed(context, '/detail-my-event-organizer');
-                },
-              ),
-            ],
-          ),
+        child: FutureBuilder<List<Event>>(
+          future: popularEvents,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(child: Text('No events found'));
+            } else {
+              return SingleChildScrollView(
+                child: Column(
+                  children: snapshot.data!
+                  // .take(4)
+                      .map(
+                        (event) => MyEventCardOrganizer(
+                      event: event,
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          '/detail-my-event-organizer',
+                          arguments: event,
+                        );
+                      },
+                    ),
+                  )
+                      .toList(),
+                ),
+              );
+            }
+          },
         ),
       );
     }

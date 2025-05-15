@@ -1,7 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/organizer/event_card_organizer.dart';
 import 'package:pad_fundation/widgets/organizer/event_tile_organizer.dart';
+import 'package:pad_fundation/widgets/organizer/my_event_card.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../API/event_api.dart';
+import '../../../API/profile_api.dart';
+import '../../../models/event.dart';
 
 class HomePageOrganizer extends StatefulWidget {
   final VoidCallback onNavigateToEvent;
@@ -13,6 +22,84 @@ class HomePageOrganizer extends StatefulWidget {
 
 class _HomePageOrganizerState extends State<HomePageOrganizer> {
   bool _isBalanceVisible = true;
+  String selectedCategory = '';
+  late Future<List<Event>> events;
+  late Future<List<Event>> popularEvents;
+  Map<String, dynamic>? _userProfile;
+  Map<String, dynamic>? _organizerProfile;
+  String? fullName;
+  String? photo_file;
+  File? _imageFile;
+  Uint8List? _imageBytes;
+
+  Future<void> _loadProfileFromApi() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    String? userIdString = prefs.getString('user_id');
+
+    if (token != null && userIdString != null) {
+      int userId = int.parse(userIdString);
+
+      final userData = await ProfileApi.getUserProfile(userId, token);
+      if (userData != null) {
+        setState(() {
+          _userProfile = userData;
+          fullName = userData['data']['full_name'];
+        });
+      }
+    }
+  }
+
+  Future<void> _loadOrganizerFromApi() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    String? userIdString = prefs.getString('user_id');
+
+    if (token != null && userIdString != null) {
+      int userId = int.parse(userIdString);
+
+      final organizerData = await ProfileApi.getOrganizerProfile(userId, token);
+      if (organizerData != null && mounted) {
+        setState(() {
+          _organizerProfile = organizerData;
+          photo_file = organizerData['data']['photo_file'];
+        });
+      }
+    }
+  }
+
+  void selectCategory(String category) {
+    setState(() {
+      selectedCategory = category;
+    });
+  }
+
+  Widget buildCategoryContent() {
+    switch (selectedCategory) {
+      case 'festival':
+        return Text('Konten Festival');
+      case 'kuliner':
+        return Text('Konten Kuliner');
+      case 'pendidikan':
+        return Text('Konten Pendidikan');
+      case 'seniman':
+        return Text('Konten Seniman');
+      case 'lainnya':
+        return Text('Konten Lainnya');
+      default:
+        return SizedBox();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfileFromApi();
+    _loadOrganizerFromApi();
+    events = EventApi.fetchEvents();
+    popularEvents = EventApi.fetchPopularEvents();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +110,35 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
         children: [
           Row(
             children: [
-              CircleAvatar(
-                radius: 25,
-                backgroundImage: AssetImage('assets/img_profile_org.png'),
+              _imageBytes != null
+                  ? ClipOval(
+                child: Image.memory(
+                  _imageBytes!,
+                  height: 50,
+                  width: 50,
+                  fit: BoxFit.cover,
+                ),
+              )
+                  : ClipOval(
+                child: Image.network(
+                  '${ProfileApi.photourl}${photo_file ?? ''}',
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.asset(
+                      'assets/img_profile_picture.png',
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    );
+                  },
+                ),
               ),
+              // CircleAvatar(
+              //   radius: 25,
+              //   backgroundImage: AssetImage('assets/img_profile_org.png'),
+              // ),
               SizedBox(width: 10,),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,7 +152,7 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'ORGANIZER NI BOS',
+                    fullName ?? '',
                     style: greenTextStyle.copyWith(
                       fontSize: 14,
                       fontWeight: bold,
@@ -419,51 +531,35 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
     Widget myEvent() {
       return Container(
         margin: EdgeInsets.only(top: 10),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              EventCardOrganizer(
-                imagePath: 'assets/img_music_fest.png',
-                status: 'OFFLINE',
-                title: 'Music Fest 2024',
-                collectedAmount: 'Rp90.000.000',
-                progress: 0.9,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                categories: ['Festival', 'Musik', 'EDM', 'Hiburan', 'DJ', 'Live'],
-                onTap: () {
-                  Navigator.pushNamed(context, '/detail-event-organizer');
-                },
-              ),
-              EventCardOrganizer(
-                imagePath: 'assets/img_kulfood.png',
-                status: 'OFFLINE',
-                title: 'KulFood 2024',
-                collectedAmount: 'Rp900.000',
-                progress: 0.2,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                categories: ['Festival', 'Kuliner', 'Kompetisi', 'Live Musik', 'Live'],
-                onTap: () {
-                  Navigator.pushNamed(context, '/detail-event-organizer');
-                },
-              ),
-              EventCardOrganizer(
-                imagePath: 'assets/img_educ_fest.png',
-                status: 'OFFLINE',
-                title: 'Educ Fest 2024 ',
-                collectedAmount: 'Rp10.000.000',
-                progress: 0.95,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                categories: ['Pendidikan', 'Seminar', 'Konsultasi', 'Formal'],
-                onTap: () {
-                  Navigator.pushNamed(context, '/detail-event-organizer');
-                },
-              ),
-            ],
-          ),
+        child: FutureBuilder<List<Event>>(
+          future: popularEvents, // GANTIIIIII
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Text('No popular events found');
+            } else {
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: snapshot.data!
+                      .map((event) => MyEventCard(
+                    event: event,
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/detail-my-event-organizer',
+                        arguments: event,
+                      );
+                    },
+                  ))
+                      .toList(),
+                ),
+              );
+            }
+          },
         ),
       );
     }
@@ -515,71 +611,37 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
     Widget allEvent() {
       return Container(
         margin: EdgeInsets.only(top: 10),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              EventTileOrganizer(
-                imagePath: 'assets/img_bali_fest.png',
-                status: 'OFFLINE',
-                title: 'Bali Fest 2024',
-                collectedAmount: 'Rp1.000.000',
-                progress: 0.1,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                eventDate: '20 Mei 2024',
-                categories: ['Festival', 'Budaya', 'Bali', 'Seni'],
-                onTap: () {
-                  Navigator.pushNamed(context, '/detail-event-organizer');
-                  print('Navigate to detail');
-                },
-              ),
-              EventTileOrganizer(
-                imagePath: 'assets/img_summer_party.png',
-                status: 'OFFLINE',
-                title: 'Summer Party',
-                collectedAmount: 'Rp5.000.000',
-                progress: 0.2,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                eventDate: '20 Mei 2024',
-                categories: ['Pantai', 'Pesta', 'Musik', 'Liburan'],
-                onTap: () {
-                  print('Navigate to detail');
-                  Navigator.pushNamed(context, '/detail-event-organizer');
-                },
-              ),
-              EventTileOrganizer(
-                imagePath: 'assets/img_nobar_cinema.png',
-                status: 'OFFLINE',
-                title: 'Nobar Cinema',
-                collectedAmount: 'Rp1.900.000',
-                progress: 0.5,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                eventDate: '20 Mei 2024',
-                categories: ['Film', 'Spoiler', 'Diskusi', 'Nobar'],
-                onTap: () {
-                  print('Navigate to detail');
-                  Navigator.pushNamed(context, '/detail-event-organizer');
-                },
-              ),
-              EventTileOrganizer(
-                imagePath: 'assets/img_rock_fest.png',
-                status: 'OFFLINE',
-                title: 'Rock Fest',
-                collectedAmount: 'Rp5.900.000',
-                progress: 0.3,
-                daysRemaining: 230,
-                donorshipCount: 100,
-                eventDate: '20 Mei 2024',
-                categories: ['Musik', 'Festival', 'Rock', 'Karaoke'],
-                onTap: () {
-                  print('Navigate to detail');
-                  Navigator.pushNamed(context, '/detail-event-organizer');
-                },
-              ),
-            ],
-          ),
+        child: FutureBuilder<List<Event>>(
+          future: events,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(child: Text('No events found'));
+            } else {
+              return SingleChildScrollView(
+                child: Column(
+                  children: snapshot.data!
+                      .take(4)
+                      .map(
+                        (event) => EventTileOrganizer(
+                      event: event,
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          '/detail-event-organizer',
+                          arguments: event,
+                        );
+                      },
+                    ),
+                  )
+                      .toList(),
+                ),
+              );
+            }
+          },
         ),
       );
     }

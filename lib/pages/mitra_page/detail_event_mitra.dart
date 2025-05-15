@@ -271,7 +271,6 @@ class _DetailEventState extends State<DetailEventMitra> {
         margin: EdgeInsets.only(top: 10),
         child: Text(
           event.description,
-          // 'Event Mufest merupakan event yang diadakan setiap tahun dengan bintang tamu yang sedang tren di tiap tahunnya. Di tahun ini acara dilaksankan di Hall Tech Company ',
           textAlign: TextAlign.justify,
           style: lighGrayTextStyle.copyWith(
             fontSize: 14,
