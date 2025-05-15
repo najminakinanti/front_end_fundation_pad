@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pad_fundation/theme.dart';
+
+import '../../models/kontraprestasi.dart';
 
 class HandshakeAddEvent extends StatefulWidget {
   @override
@@ -7,207 +10,198 @@ class HandshakeAddEvent extends StatefulWidget {
 }
 
 class _HandshakeAddEventState extends State<HandshakeAddEvent> {
-  String selectedIcon = 'Gold';
+  List<Kontraprestasi> kontraprestasiList = [Kontraprestasi()];
 
-  void onIconChanged(String? newIcon) {
-    setState(() {
-      selectedIcon = newIcon!;
-    });
+  Widget buildDropdownTextFormField({
+    required String labelText,
+    required String hintText,
+    required List<String> dropdownItems,
+    required String? selectedValue,
+    required ValueChanged<String?> onChanged,
+  }) {
+    return Container(
+      margin: EdgeInsets.only(top: 10),
+      child: SizedBox(
+        height: 48,
+        child: DropdownButtonFormField<String>(
+          value: selectedValue,
+          onChanged: onChanged,
+          decoration: InputDecoration(
+            labelText: labelText,
+            labelStyle: grayTextStyle.copyWith(fontSize: 14),
+            border: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            contentPadding: EdgeInsets.symmetric(horizontal: 12),
+          ),
+          style: blackTextStyle.copyWith(fontSize: 14, fontWeight: FontWeight.normal),
+          hint: Text(hintText, style: grayTextStyle.copyWith(fontSize: 14)),
+          items: dropdownItems.map((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value, style: blackTextStyle.copyWith(fontSize: 14)),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget buildTextFormField({
+    required String labelText,
+    String? hintText,
+  }) {
+    return Container(
+      margin: EdgeInsets.only(top: 10),
+      child: SizedBox(
+        height: 48,
+        child: TextFormField(
+          style: blackTextStyle.copyWith(fontSize: 14),
+          decoration: InputDecoration(
+            labelText: labelText,
+            labelStyle: grayTextStyle.copyWith(fontSize: 14),
+            hintText: hintText,
+            border: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            contentPadding: EdgeInsets.symmetric(horizontal: 12),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget iconKontraprestasi({
+    required String? selectedIcon,
+    required ValueChanged<String?> onIconChanged,
+  }) {
+    List<String> icons = ['Gold', 'Silver', 'Bronze'];
+
+    return buildDropdownTextFormField(
+      labelText: 'Icon Kontraprestasi',
+      hintText: 'Pilih Icon Kontraprestasi',
+      dropdownItems: icons,
+      selectedValue: selectedIcon,
+      onChanged: onIconChanged,
+    );
+  }
+
+  Widget buildKontraprestasiForm(int index) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        iconKontraprestasi(
+          selectedIcon: kontraprestasiList[index].icon,
+          onIconChanged: (value) {
+            setState(() {
+              kontraprestasiList[index].icon = value;
+            });
+          },
+        ),
+        Container(
+          margin: const EdgeInsets.only(top: 20),
+          child: buildTextFormField(
+            labelText: 'Nama Kontraprestasi',
+            hintText: 'Masukkan Nama Kontraprestasi',
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(top: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: SizedBox(
+                  height: 48,
+                  child: TextFormField(
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    style: blackTextStyle.copyWith(fontSize: 14),
+                    decoration: InputDecoration(
+                      labelText: 'Minimal Sponsor',
+                      labelStyle: grayTextStyle.copyWith(fontSize: 14),
+                      hintText: 'Jumlah Uang',
+                      border: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: SizedBox(
+                  height: 48,
+                  child: TextFormField(
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    style: blackTextStyle.copyWith(fontSize: 14),
+                    decoration: InputDecoration(
+                      labelText: 'Maksimal Sponsor',
+                      labelStyle: grayTextStyle.copyWith(fontSize: 14),
+                      hintText: 'Jumlah Uang',
+                      border: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Divider(thickness: 1, height: 40),
+      ],
+    );
+  }
+
+  Widget addKontraprestasiButton() {
+    return Container(
+      height: 40,
+      margin: EdgeInsets.only(bottom: 30, top: 0),
+      width: double.infinity,
+      child: TextButton(
+        onPressed: () {
+          setState(() {
+            kontraprestasiList.add(Kontraprestasi());
+          });
+        },
+        style: TextButton.styleFrom(
+          backgroundColor: creamButton,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+            side: BorderSide(color: primaryColor, width: 1),
+          ),
+        ),
+        child: Text(
+          'Tambah Kontraprestasi',
+          style: blackTextStyle.copyWith(
+            fontSize: 14,
+            fontWeight: bold,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-
-    Widget buildDropdownTextFormField({
-      required String labelText,
-      required String hintText,
-      required List<String> dropdownItems,
-      required String? selectedValue,
-      required ValueChanged<String?> onChanged,
-    }) {
-      return Container(
-        margin: EdgeInsets.only(top: 10),
-        child: SizedBox(
-          height: 48,
-          child: DropdownButtonFormField<String>(
-            value: selectedValue,
-            onChanged: onChanged,
-            decoration: InputDecoration(
-              labelText: labelText,
-              labelStyle: grayTextStyle.copyWith(fontSize: 14),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: primaryColor),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: primaryColor),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: primaryColor),
-              ),
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              contentPadding: EdgeInsets.symmetric(horizontal: 12),
-            ),
-            style: blackTextStyle.copyWith(
-              fontSize: 14,
-              fontWeight: FontWeight.normal,
-            ),
-            hint: Padding(
-              padding: EdgeInsets.only(left: 0),
-              child: Text(
-                hintText,
-                style: grayTextStyle.copyWith(fontSize: 14),
-              ),
-            ),
-            items: dropdownItems.map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(
-                  value,
-                  style: blackTextStyle.copyWith(
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      );
-    }
-
-    Widget buildTextFormField({
-      required String labelText,
-      String? hintText,
-    }) {
-      return Container(
-        margin: EdgeInsets.only(top: 10),
-        child: SizedBox(
-          height: 48,
-          child: TextFormField(
-            style: blackTextStyle.copyWith(
-              fontSize: 14,
-              fontWeight: regular,
-            ),
-            decoration: InputDecoration(
-              labelText: labelText,
-              labelStyle: grayTextStyle.copyWith(fontSize: 14),
-              hintText: hintText,
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: primaryColor),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: primaryColor),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: primaryColor),
-              ),
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              contentPadding: EdgeInsets.symmetric(
-                vertical: 12, horizontal: 12,
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
-    Widget iconKontraprestasi({
-      required String? selectedIcon,
-      required ValueChanged<String?> onIconChanged,
-    }) {
-      List<String> icons = ['Gold', 'Silver', 'Bronze'];
-
-      return buildDropdownTextFormField(
-        labelText: 'Icon Kontraprestasi',
-        hintText: 'Pilih Icon Kontraprestasi',
-        dropdownItems: icons,
-        selectedValue: selectedIcon,
-        onChanged: onIconChanged,
-      );
-    }
-
-    Widget namaKontraprestasi() {
-      return Container(
-        margin: const EdgeInsets.only(top: 20),
-        child: buildTextFormField(
-          labelText: 'Nama Kontraprestasi',
-          hintText: 'Masukkan Nama Kontraprestasi',
-        ),
-      );
-    }
-
-    Widget rangeSponsor() {
-      return Container(
-        margin: const EdgeInsets.only(top: 20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: buildTextFormField(
-                labelText: 'Minimal Sponsor',
-                hintText: 'Jumlah Uang',
-              ),
-            ),
-            SizedBox(width: 10),
-            Expanded(
-              child: buildTextFormField(
-                labelText: 'Maksimal Sponsor',
-                hintText: 'Jumlah Uang',
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    Widget detailEvent() {
-      return Container(
-        margin: const EdgeInsets.only(top: 20),
-        child: buildTextFormField(
-          labelText: 'Detail Event',
-          hintText: 'duh ini gimana ya bikin kotaknya lebih tingginya',
-        ),
-      );
-    }
-
-    Widget addKontraprestasiButton() {
-      return Container(
-        height: 40,
-        margin: EdgeInsets.only(bottom: 0, top: 30),
-        width: double.infinity,
-        child: TextButton(
-          onPressed: () {
-            print('tambah kontraprestasi');
-            // Navigator.pushNamed(context, '/add-kontraprestasi');
-          },
-          style: TextButton.styleFrom(
-            backgroundColor: creamButton,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-              side: BorderSide(color: primaryColor, width: 1),
-            ),
-          ),
-          child: Text(
-            'Tambah Kontraprestasi',
-            style: blackTextStyle.copyWith(
-              fontSize: 14,
-              fontWeight: bold,
-            ),
-          ),
-        ),
-      );
-    }
-
     return ListView(
       children: [
-        iconKontraprestasi(selectedIcon: null, onIconChanged: onIconChanged),
-        namaKontraprestasi(),
-        rangeSponsor(),
-        detailEvent(),
+        ...List.generate(kontraprestasiList.length, (index) {
+          return buildKontraprestasiForm(index);
+        }),
         addKontraprestasiButton(),
       ],
     );
   }
+
   void showConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,

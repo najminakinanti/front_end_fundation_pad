@@ -1,5 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pad_fundation/theme.dart';
+
 
 class FileAddEvent extends StatefulWidget {
   @override
@@ -9,7 +15,15 @@ class FileAddEvent extends StatefulWidget {
 class _FileAddEventState extends State<FileAddEvent> {
   String selectedStatus = 'aktif';
   String selectedCategory = 'kategorinya';
-  String selectedParticipant = 'bokap bokap';
+  final TextEditingController _imageController = TextEditingController();
+  String? photo_file;
+
+  List<File> _detailImageFiles = [];
+  List<String> _detailPhotoBase64 = [];
+  TextEditingController _detailImagesController = TextEditingController();
+
+  List<String> selectedCategories = [];
+  final TextEditingController _categoryController = TextEditingController();
 
   void onStatusChanged(String? newStatus) {
     setState(() {
@@ -21,10 +35,117 @@ class _FileAddEventState extends State<FileAddEvent> {
       selectedCategory = newCategory!;
     });
   }
-  void onParticipantChanged(String? newParticipant) {
+
+  File? _imageFile;
+  final ImagePicker _picker = ImagePicker();
+
+  void _pickImageBase64() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if(image == null) return;
+
+    Uint8List imagebyte = await image!.readAsBytes();
+    String _base64 = base64.encode(imagebyte);
+
+    print(_base64);
+
+    final imagetamppath = File(image.path);
+
     setState(() {
-      selectedParticipant = newParticipant!;
+      _imageController.text = image.name;
+      this._imageFile = imagetamppath;
+      photo_file = _base64;
     });
+
+    print(imagetamppath);
+  }
+
+  void _pickMultipleImagesBase64() async {
+    final List<XFile>? images = await _picker.pickMultiImage();
+
+    // ✅ Tambahkan print ini
+    print('Gambar dipilih: ${images?.length ?? 0}');
+
+    if (images == null || images.isEmpty) return;
+
+    List<File> tempFiles = [];
+    List<String> tempBase64 = [];
+
+    for (var image in images) {
+      Uint8List bytes = await image.readAsBytes();
+      String base64String = base64.encode(bytes);
+      tempFiles.add(File(image.path));
+      tempBase64.add(base64String);
+    }
+
+    setState(() {
+      _detailImageFiles = tempFiles;
+      _detailPhotoBase64 = tempBase64;
+      _detailImagesController.text = _detailImageFiles.length == 1
+          ? '1 gambar terpilih'
+          : '${_detailImageFiles.length} gambar terpilih';
+    });
+
+    print('Jumlah gambar detail: ${_detailImageFiles.length}');
+  }
+
+  void _showCategoryMultiSelectDialog(BuildContext context) {
+    List<String> allCategories = ['kategorinya', 'ada', 'apa', 'aja'];
+    List<String> tempSelected = List.from(selectedCategories);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            return AlertDialog(
+              title: Text('Pilih Kategori'),
+              content: SingleChildScrollView(
+                child: Column(
+                  children: allCategories.map((category) {
+                    return CheckboxListTile(
+                      title: Text(category),
+                      value: tempSelected.contains(category),
+                      onChanged: (bool? checked) {
+                        setStateDialog(() {
+                          if (checked == true) {
+                            tempSelected.add(category);
+                          } else {
+                            tempSelected.remove(category);
+                          }
+                        });
+                      },
+                    );
+                  }).toList(),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Batal'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      selectedCategories = tempSelected;
+                      _categoryController.text = selectedCategories.join(', ');
+                    });
+                    Navigator.pop(context);
+                  },
+                  child: Text('Pilih'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -135,7 +256,7 @@ class _FileAddEventState extends State<FileAddEvent> {
       required String? selectedStatus,
       required ValueChanged<String?> onStatusChanged,
     }) {
-      List<String> statuses = ['aktif', 'yakali', 'gak'];
+      List<String> statuses = ['ONLINE', 'OFFLINE'];
 
       return buildDropdownTextFormField(
         labelText: 'Status Event',
@@ -145,6 +266,44 @@ class _FileAddEventState extends State<FileAddEvent> {
         onChanged: onStatusChanged,
       );
     }
+
+    Widget kategoriEventMulti() {
+      return Container(
+        margin: const EdgeInsets.only(top: 30),
+        child: GestureDetector(
+          onTap: () {
+            _showCategoryMultiSelectDialog(context);
+          },
+          child: AbsorbPointer(
+            child: TextFormField(
+              controller: _categoryController,
+              decoration: InputDecoration(
+                labelText: 'Kategori Event',
+                hintText: 'Pilih kategori event',
+                labelStyle: grayTextStyle.copyWith(fontSize: 14),
+                hintStyle: grayTextStyle.copyWith(fontSize: 14),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: primaryColor),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: primaryColor),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: primaryColor),
+                ),
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              ),
+              style: blackTextStyle.copyWith(
+                fontSize: 14,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
 
     Widget kategoriEvent({
       required String? selectedCategory,
@@ -171,27 +330,12 @@ class _FileAddEventState extends State<FileAddEvent> {
       );
     }
 
-    Widget kategoriPartisipan({
-      required String? selectedParticipant,
-      required ValueChanged<String?> onParticipantChanged,
-    }) {
-      List<String> participant = ['bokap bokap', 'abang abang', 'nenek nenek'];
-
-      return buildDropdownTextFormField(
-        labelText: 'Kategori Partisipan',
-        hintText: 'Pilih kategori partisipan',
-        dropdownItems: participant,
-        selectedValue: selectedParticipant,
-        onChanged: onParticipantChanged,
-      );
-    }
-
-    Widget detailPartisipan() {
+    Widget kategoriPartisipan() {
       return Container(
         margin: const EdgeInsets.only(top: 20),
         child: buildTextFormField(
-          labelText: 'Detail Partisipan',
-          hintText: 'Isi detail partisipan',
+          labelText: 'Kategori Partisipan',
+          hintText: 'Isi kategori partisipan',
         ),
       );
     }
@@ -207,7 +351,6 @@ class _FileAddEventState extends State<FileAddEvent> {
     }
 
     Widget pictureInput() {
-      TextEditingController nominalController = TextEditingController();
 
       return Container(
         margin: EdgeInsets.only(top: 30),
@@ -216,7 +359,7 @@ class _FileAddEventState extends State<FileAddEvent> {
             SizedBox(
               height: 48,
               child: TextFormField(
-                controller: nominalController,
+                controller: _imageController,
                 readOnly: true,
                 decoration: InputDecoration(
                   labelText: 'Gambar Event',
@@ -238,7 +381,9 @@ class _FileAddEventState extends State<FileAddEvent> {
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
                   suffixIcon: GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      _pickImageBase64();
+                    },
                     child: Container(
                       margin: EdgeInsets.only(right: 0),
                       width: 80,
@@ -284,7 +429,7 @@ class _FileAddEventState extends State<FileAddEvent> {
             SizedBox(
               height: 48,
               child: TextFormField(
-                controller: nominalController,
+                controller: _detailImagesController,
                 readOnly: true,
                 decoration: InputDecoration(
                   labelText: 'Gambar Detail Informasi',
@@ -306,7 +451,9 @@ class _FileAddEventState extends State<FileAddEvent> {
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
                   suffixIcon: GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      _pickMultipleImagesBase64();
+                    },
                     child: Container(
                       margin: EdgeInsets.only(right: 0),
                       width: 80,
@@ -346,10 +493,10 @@ class _FileAddEventState extends State<FileAddEvent> {
       children: [
         namaEvent(),
         statusEvent(selectedStatus: null, onStatusChanged: onStatusChanged),
-        kategoriEvent(selectedCategory: null, onCategoryChanged: onCategoryChanged),
+        kategoriEventMulti(),
+        // kategoriEvent(selectedCategory: null, onCategoryChanged: onCategoryChanged),
         jumlahTarget(),
-        kategoriPartisipan(selectedParticipant: null, onParticipantChanged: onParticipantChanged),
-        detailPartisipan(),
+        kategoriPartisipan(),
         deskripsiEvent(),
         pictureInput(),
         pictureDetailInfo(),

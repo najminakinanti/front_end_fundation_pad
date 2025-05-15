@@ -1,11 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 import 'package:pad_fundation/widgets/information_detail_galery.dart';
 import 'package:pad_fundation/widgets/kontraprestasi_category.dart';
 import 'package:pad_fundation/widgets/sponsor_card.dart';
 
+import '../../models/event.dart';
+import '../../models/event_fund.dart';
+import '../../models/sponsor.dart';
+
 class DetailEvent extends StatefulWidget {
+
+  final Event event;
+  final VoidCallback? onTap;
+
+  const DetailEvent({
+    Key? key,
+    required this.event,
+    this.onTap,
+  }) : super(key: key);
+
+
   @override
   _DetailEventState createState() => _DetailEventState();
 }
@@ -13,20 +29,72 @@ class DetailEvent extends StatefulWidget {
 class _DetailEventState extends State<DetailEvent> {
   int currentBatch = 0;
 
+  String getTotalAmount(List<Sponsor> sponsors) {
+    final totalAmount = sponsors.fold<int>(0, (total, sponsor) => total + sponsor.amount.toInt());
+    final formatCurrency = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0);
+    return formatCurrency.format(totalAmount);
+  }
+
+  String getTarget(EventFund? eventFund) {
+    final formatCurrency = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0);
+    if (eventFund?.targetFund != null) {
+      return formatCurrency.format(eventFund!.targetFund);
+    } else {
+      return '???';
+    }
+  }
+
+  int getTotalSponsors(List<Sponsor> sponsors) {
+    return sponsors.length;
+  }
+
+  int getDaysRemaining(String eventStartDate) {
+    DateTime startDate = DateTime.parse(eventStartDate);
+    DateTime currentDate = DateTime.now();
+    Duration difference = startDate.difference(currentDate);
+    return difference.inDays;
+  }
+
+  double getProgress(Event event) {
+    String totalAmountStr = getTotalAmount(event.sponsors).replaceAll('Rp', '').replaceAll('.', '').trim();
+    double totalAmount = double.parse(totalAmountStr);
+    double targetFund = (event.eventFund?.targetFund ?? 0).toDouble();
+
+    if (targetFund == 0) {
+      return 0;
+    }
+
+    return (totalAmount / targetFund) * 100;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final event = widget.event;
+    final placement = event.eventPlacement;
 
     Widget header() {
       return Container(
         child: Stack(
           children: [
             ClipRRect(
-              child: Image.asset(
-                'assets/img_music_fest.png',
+              child:
+              Image.network(
+                event.eventPhotos.isNotEmpty
+                    ? event.eventPhotos.first.photoFile
+                    : 'https://via.placeholder.com/150',
                 width: double.infinity,
                 height: 300,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.asset(
+                    'assets/img_kochella.png',
+                    width: double.infinity, // Sesuaikan dengan Image.network
+                    height: 300,
+                    fit: BoxFit.cover,
+                  );
+                },
               ),
+
             ),
           ],
         ),
@@ -34,6 +102,16 @@ class _DetailEventState extends State<DetailEvent> {
     }
 
     Widget title() {
+      final bool hasFullLocation = placement != null
+          && placement.eventVenue.isNotEmpty
+          && placement.address.isNotEmpty
+          && placement.city.isNotEmpty
+          && placement.province.isNotEmpty;
+
+      final String locationText = hasFullLocation
+          ? '${placement!.eventVenue}, ${placement.address}, ${placement.city}, ${placement.province}'
+          : 'TO BE ANNOUNCED';
+
       return Container(
         margin: EdgeInsets.only(top: 20),
         child: Column(
@@ -41,38 +119,43 @@ class _DetailEventState extends State<DetailEvent> {
           children: [
             Row(
               children: [
-                Text(
-                  'Mufest 2024',
-                  style: blackTextStyle.copyWith(
-                      fontSize: 20, fontWeight: bold),
-                ),
-                Spacer(),
-                Image.asset('assets/icon_calendar.png', width: 16),
-                SizedBox(width: 5),
-                Text(
-                  '20 Mei 2024',
-                  style: greenTextStyle.copyWith(
-                    fontSize: 14,
-                    fontWeight: bold,
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Text(
+                      event.title,
+                      style: blackTextStyle.copyWith(fontSize: 20, fontWeight: bold),
+                    ),
                   ),
+                ),
+                const SizedBox(width: 20),
+                Image.asset('assets/icon_calendar.png', width: 16),
+                SizedBox(width: 4),
+                Text(
+                  event.eventPlacement?.eventStartDate != null
+                      ? DateFormat('dd MMM yyyy').format(DateTime.parse(event.eventPlacement!.eventStartDate))
+                      : '-',
+                  style: greenTextStyle.copyWith(fontSize: 14, fontWeight: bold),
                 ),
               ],
             ),
             SizedBox(height: 3),
             Text(
-              'dari Tech Musicompany',
-              style: grayTextStyle.copyWith(
-                  fontSize: 14, fontWeight: regular),
+              'dari ${event.organizer.organization.name}',
+              style: grayTextStyle.copyWith(fontSize: 14, fontWeight: regular),
             ),
             SizedBox(height: 4),
             Text(
-              'di Hall TechCompany, Kulon Progo, Daerah Istimewa Yogyakarta',
+              'di $locationText',
               style: lighGrayTextStyle.copyWith(
-                  fontSize: 10, fontWeight: regular),
+                fontSize: 10,
+                fontWeight: regular,
+              ),
             ),
+
             SizedBox(height: 10),
             Text(
-              'Rp90.000.000 terkumpul dari Rp100.000.000 ',
+              '${getTotalAmount(event.sponsors)} terkumpul dari ${getTarget(event.eventFund)}',
               style: grayTextStyle.copyWith(
                   fontSize: 12, fontWeight: regular),
             ),
@@ -82,7 +165,7 @@ class _DetailEventState extends State<DetailEvent> {
                 Image.asset('assets/icon_donorship.png', width: 20),
                 SizedBox(width: 4),
                 Text(
-                  '100 Donorship',
+                  '${getTotalSponsors(event.sponsors)} Donorship',
                   style: veryLightGrayTextStyle.copyWith(
                     fontSize: 12,
                     fontWeight: regular,
@@ -92,7 +175,9 @@ class _DetailEventState extends State<DetailEvent> {
                 Image.asset('assets/icon_timer.png', width: 16),
                 SizedBox(width: 4),
                 Text(
-                  '230 hari lagi',
+                  event.eventPlacement?.eventStartDate != null
+                      ? '${getDaysRemaining(event.eventPlacement!.eventStartDate)} hari lagi'
+                      : 'Tanggal belum ditentukan',
                   style: veryLightGrayTextStyle.copyWith(
                     fontSize: 12,
                     fontWeight: regular,
@@ -106,23 +191,17 @@ class _DetailEventState extends State<DetailEvent> {
                 Expanded(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: SizedBox(
-                      height: 8,
-                      child: LinearProgressIndicator(
-                        value: 0.9,
-                        backgroundColor: lineColor2,
-                        valueColor: AlwaysStoppedAnimation<Color>(lineColor),
-                      ),
+                    child: LinearProgressIndicator(
+                      value: getProgress(event) / 100,
+                      backgroundColor: lineColor2,
+                      valueColor: AlwaysStoppedAnimation<Color>(lineColor),
                     ),
                   ),
                 ),
                 SizedBox(width: 5),
                 Text(
-                  '90%',
-                  style: blackTextStyle.copyWith(
-                    fontSize: 10,
-                    fontWeight: bold,
-                  ),
+                  '${getProgress(event).toStringAsFixed(2)}%',
+                  style: blackTextStyle.copyWith(fontSize: 10, fontWeight: regular),
                 ),
               ],
             ),
@@ -160,7 +239,7 @@ class _DetailEventState extends State<DetailEvent> {
             Image.asset('assets/icon_audiens.png', width: 24),
             SizedBox(width: 10),
             Text(
-              '1000 mahasiswa ilmu ekonomi',
+              event.targetParticipant.toString(),
               style: lighGrayTextStyle.copyWith(
                 fontSize: 14,
                 fontWeight: regular,
@@ -188,7 +267,7 @@ class _DetailEventState extends State<DetailEvent> {
       return Container(
         margin: EdgeInsets.only(top: 10),
         child: Text(
-          'Event Mufest merupakan event yang diadakan setiap tahun dengan bintang tamu yang sedang tren di tiap tahunnya. Di tahun ini acara dilaksankan di Hall Tech Company ',
+          event.description,
           textAlign: TextAlign.justify,
           style: lighGrayTextStyle.copyWith(
             fontSize: 14,
@@ -206,41 +285,21 @@ class _DetailEventState extends State<DetailEvent> {
           child: Wrap(
             spacing: 5,
             children: [
-              CategoryButton(
-                label: 'Festival',
-                onTap: () {
-                  print('Festival');
-                },
-              ),
-              CategoryButton(
-                label: 'Musik',
-                onTap: () {
-                  print('Musik');
-                },
-              ),
-              CategoryButton(
-                label: 'EDM',
-                onTap: () {
-                  print('EDM');
-                },
-              ),
-              CategoryButton(
-                label: 'Hiburan',
-                onTap: () {
-                  print('Hiburan');
-                },
-              ),
-              CategoryButton(
-                label: 'DJ',
-                onTap: () {
-                  print('DJ');
-                },
-              ),
-              CategoryButton(
-                label: 'Live',
-                onTap: () {
-                  print('Live');
-                },
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Wrap(
+                  spacing: 5,
+                  children: event.categories
+                      .map(
+                        (category) => CategoryButton(
+                      label: category.name, // Menggunakan category.name
+                      onTap: () {
+                        print(category.name);
+                      },
+                    ),
+                  )
+                      .toList(),
+                ),
               ),
             ],
           ),

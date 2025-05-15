@@ -224,7 +224,7 @@ class _EventCardMitraState extends State<EventCardMitra> {
                             Image.asset('assets/icon_donorship.png', width: 18),
                             const SizedBox(width: 4),
                             Text(
-                              '${getTotalSponsors(event.sponsors)} Sponsors', // Menampilkan jumlah sponsor
+                              '${getTotalSponsors(event.sponsors)} Donorship', // Menampilkan jumlah sponsor
                               style: veryLightGrayTextStyle.copyWith(
                                 fontSize: 10,
                                 fontWeight: regular,

@@ -1,37 +1,73 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:pad_fundation/pages/not_logged_in/detail_event.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 
-class EventTile extends StatelessWidget {
-  final String imagePath;
-  final String status;
-  final String title;
-  final String collectedAmount;
-  final double progress;
-  final int daysRemaining;
-  final int donorshipCount;
-  final String date;
-  final List<String> categories;
+import '../../API/event_api.dart';
+import '../../models/event.dart';
+import '../../models/sponsor.dart';
+
+class EventTile extends StatefulWidget {
+  final Event event;
   final VoidCallback? onTap;
 
   const EventTile({
     Key? key,
-    required this.imagePath,
-    required this.status,
-    required this.title,
-    required this.collectedAmount,
-    required this.progress,
-    required this.daysRemaining,
-    required this.donorshipCount,
-    required this.date,
-    required this.categories,
-    required this.onTap,
+    required this.event,
+    this.onTap,
   }) : super(key: key);
 
   @override
+  _EventTileState createState() => _EventTileState();
+}
+
+class _EventTileState extends State<EventTile> {
+  bool isBookmarked = false;
+
+  String getTotalAmount(List<Sponsor> sponsors) {
+    final totalAmount = sponsors.fold<int>(0, (total, sponsor) => total + sponsor.amount.toInt());
+    final formatCurrency = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0);
+    return formatCurrency.format(totalAmount);
+  }
+
+  int getTotalSponsors(List<Sponsor> sponsors) {
+    return sponsors.length;
+  }
+
+  int getDaysRemaining(String eventStartDate) {
+    DateTime startDate = DateTime.parse(eventStartDate);
+    DateTime currentDate = DateTime.now();
+    Duration difference = startDate.difference(currentDate);
+    return difference.inDays;
+  }
+
+  double getProgress(Event event) {
+    String totalAmountStr = getTotalAmount(event.sponsors).replaceAll('Rp', '').replaceAll('.', '').trim();
+    double totalAmount = double.parse(totalAmountStr);
+    double targetFund = (event.eventFund?.targetFund ?? 0).toDouble();
+
+    if (targetFund == 0) {
+      return 0;
+    }
+
+    return (totalAmount / targetFund) * 100;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final event = widget.event;
+
     return GestureDetector(
-      onTap: onTap ?? () => Navigator.pushNamed(context, '/detail-event'),
+      onTap: () async {
+        await EventApi.incrementClick(event.id);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => DetailEvent(event: event),
+          ),
+        );
+      },
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: 135,
@@ -50,15 +86,25 @@ class EventTile extends StatelessWidget {
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(5),
-                    bottomLeft: Radius.circular(5),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    bottomLeft: Radius.circular(10),
                   ),
-                  child: Image.asset(
-                    imagePath,
+                  child: Image.network(
+                    event.eventPhotos.isNotEmpty
+                        ? event.eventPhotos.first.photoFile
+                        : 'https://via.placeholder.com/150',
                     width: 127,
                     height: double.infinity,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        'assets/img_kochella.png',
+                        width: 127,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                      );
+                    },
                   ),
                 ),
                 Positioned(
@@ -71,7 +117,7 @@ class EventTile extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      status,
+                      event.statusEvent.toUpperCase(),
                       style: orangeTextStyle.copyWith(
                         fontSize: 10,
                         fontWeight: bold,
@@ -89,28 +135,33 @@ class EventTile extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          title,
-                          style: grayTextStyle.copyWith(
-                            fontSize: 14,
-                            fontWeight: bold,
+                        // Hanya judul saja yang scrollable
+                        Expanded(
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Text(
+                              event.title,
+                              style: grayTextStyle.copyWith(
+                                fontSize: 14,
+                                fontWeight: bold,
+                              ),
+                            ),
                           ),
                         ),
-                        Spacer(),
+                        const SizedBox(width: 5),
                         Image.asset('assets/icon_calendar.png', width: 11),
                         SizedBox(width: 4),
                         Text(
-                          date,
-                          style: lighGrayTextStyle.copyWith(
-                            fontSize: 10,
-                            fontWeight: regular,
-                          ),
+                          event.eventPlacement?.eventStartDate != null
+                              ? DateFormat('dd MMM yyyy').format(DateTime.parse(event.eventPlacement!.eventStartDate))
+                              : '-',
+                          style: lighGrayTextStyle.copyWith(fontSize: 10, fontWeight: regular),
                         ),
                       ],
                     ),
                     SizedBox(height: 4),
                     Text(
-                      collectedAmount,
+                      'Terkumpul ${getTotalAmount(event.sponsors)}',
                       style: lighGrayTextStyle.copyWith(
                         fontSize: 10,
                         fontWeight: regular,
@@ -123,7 +174,7 @@ class EventTile extends StatelessWidget {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: LinearProgressIndicator(
-                              value: progress,
+                              value: getProgress(event) / 100,
                               backgroundColor: lineColor2,
                               valueColor: AlwaysStoppedAnimation<Color>(lineColor),
                             ),
@@ -131,7 +182,7 @@ class EventTile extends StatelessWidget {
                         ),
                         SizedBox(width: 5),
                         Text(
-                          '${(progress * 100).toInt()}%',
+                          '${getProgress(event).toStringAsFixed(2)}%',
                           style: blackTextStyle.copyWith(
                             fontSize: 10,
                             fontWeight: regular,
@@ -139,42 +190,69 @@ class EventTile extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Image.asset('assets/icon_donorship.png', width: 18),
-                        SizedBox(width: 4),
-                        Text(
-                          '$donorshipCount Donorship',
-                          style: veryLightGrayTextStyle.copyWith(
-                            fontSize: 10,
-                            fontWeight: regular,
+                    SizedBox(height: 8),
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final sponsorWidget = Row(
+                          children: [
+                            Image.asset('assets/icon_donorship.png', width: 18),
+                            const SizedBox(width: 4),
+                            Text(
+                              '${getTotalSponsors(event.sponsors)} Donorship',
+                              style: veryLightGrayTextStyle.copyWith(
+                                fontSize: 10,
+                                fontWeight: regular,
+                              ),
+                            ),
+                          ],
+                        );
+
+                        final timerWidget = Row(
+                          children: [
+                            Image.asset('assets/icon_timer.png', width: 13),
+                            const SizedBox(width: 4),
+                            Text(
+                              event.eventPlacement?.eventStartDate != null
+                                  ? '${getDaysRemaining(event.eventPlacement!.eventStartDate)} hari lagi'
+                                  : 'Tanggal belum ditentukan',
+                              style: veryLightGrayTextStyle.copyWith(
+                                fontSize: 10,
+                                fontWeight: regular,
+                              ),
+                            ),
+                          ],
+                        );
+
+                        return SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(minWidth: constraints.maxWidth),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                sponsorWidget,
+                                const SizedBox(width: 10),
+                                timerWidget,
+                              ],
+                            ),
                           ),
-                        ),
-                        Spacer(),
-                        Image.asset('assets/icon_timer.png', width: 13),
-                        SizedBox(width: 4),
-                        Text(
-                          '$daysRemaining hari lagi',
-                          style: veryLightGrayTextStyle.copyWith(
-                            fontSize: 10,
-                            fontWeight: regular,
-                          ),
-                        ),
-                      ],
+                        );
+                      },
                     ),
-                    SizedBox(height: 7),
+                    SizedBox(height: 8),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Wrap(
                         spacing: 5,
-                        children: categories
-                            .map((category) => CategoryButton(
-                          label: category,
-                          onTap: () {
-                            print(category);
-                          },
-                        ))
+                        children: event.categories
+                            .map(
+                              (category) => CategoryButton(
+                            label: category.name,
+                            onTap: () {
+                              print(category.name);
+                            },
+                          ),
+                        )
                             .toList(),
                       ),
                     ),

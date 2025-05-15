@@ -12,6 +12,10 @@ class EventApi {
     if (response.statusCode == 200) {
       // Response sukses
       List jsonResponse = json.decode(response.body);
+      print('Response body: ${response.body}');
+      for (var data in jsonResponse) {
+        print('Photo URL: ${data['event_photos']}');
+      }
       return jsonResponse.map((data) => Event.fromJson(data)).toList();
     } else {
       // Periksa status code dan body untuk debugging
@@ -88,33 +92,5 @@ class EventApi {
       print('Click count incremented for event $eventId');
     }
 
-
-// static Future<List<Event>> fetchPopularEvents() async {
-    //   final response = await http.get(Uri.parse('http://10.0.2.2:8000/api/events/popular'));
-    //
-    //   if (response.statusCode == 200) {
-    //     // Response sukses
-    //     List jsonResponse = json.decode(response.body);
-    //     return jsonResponse.map((data) => Event.fromJson(data)).toList();
-    //   } else {
-    //     // Periksa status code dan body untuk debugging
-    //     print('Request failed with status: ${response.statusCode}');
-    //     print('Response body: ${response.body}');
-    //     throw Exception('Failed to load events');
-    //   }
-    // }
-
-
-// static Future<List<Event>> getEventsByCategory(int categoryId) async {
-//   final String url = '${ApiService.baseUrl}/events/by-category/$categoryId'; // Gunakan baseUrl dari ApiService
-//   final response = await http.get(Uri.parse(url));
-//   print('Request URL: $url');
-//   if (response.statusCode == 200) {
-//     List jsonData = jsonDecode(response.body);
-//     return jsonData.map((e) => Event.fromJson(e)).toList();
-//   } else {
-//     throw Exception('Failed to load events');
-//   }
-// }
   }
 }

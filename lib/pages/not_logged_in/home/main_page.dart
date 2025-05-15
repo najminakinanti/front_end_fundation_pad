@@ -98,7 +98,11 @@ class _MainPageState extends State<MainPage> {
     Widget body() {
       switch (currentIndex) {
         case 0:
-          return HomePage(onNavigateToEvent: () => changeTab(1));
+          return HomePage(
+            onSeeAllPressed: () {
+              changeTab(1); // ganti ke tab Event
+            },
+          );
         case 1:
           return EventPage();
         case 2:
@@ -106,7 +110,11 @@ class _MainPageState extends State<MainPage> {
         case 3:
           return ProfilePage();
         default:
-          return HomePage(onNavigateToEvent: () => changeTab(1));
+          return HomePage(
+            onSeeAllPressed: () {
+              changeTab(1); // ganti ke tab Event
+            },
+          );
       }
     }
 

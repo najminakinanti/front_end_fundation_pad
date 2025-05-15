@@ -63,13 +63,6 @@ class _SponsorTileMitraState extends State<SponsorTileMitra> {
   Widget build(BuildContext context) {
     final event = widget.event;
     final placement = event.eventPlacement;
-    // final bool hasFullLocation = placement != null
-    //     && placement.address.isNotEmpty
-    //     && placement.city.isNotEmpty;
-    //
-    // final String locationText = hasFullLocation
-    //     ? '${placement.address}, ${placement.city}'
-    //     : 'TO BE ANNOUNCED';
 
     final double sponsorAmount = getSponsorAmountByUser(event, 2);
     final int sponsorAmountInJuta = (sponsorAmount / 1000000).round(); // untuk ditampilkan sebagai "juta"

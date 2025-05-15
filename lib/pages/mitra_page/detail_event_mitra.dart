@@ -305,42 +305,6 @@ class _DetailEventState extends State<DetailEventMitra> {
                       .toList(),
                 ),
               ),
-              // CategoryButton(
-              //   label: 'Festival',
-              //   onTap: () {
-              //     print('Festival');
-              //   },
-              // ),
-              // CategoryButton(
-              //   label: 'Musik',
-              //   onTap: () {
-              //     print('Musik');
-              //   },
-              // ),
-              // CategoryButton(
-              //   label: 'EDM',
-              //   onTap: () {
-              //     print('EDM');
-              //   },
-              // ),
-              // CategoryButton(
-              //   label: 'Hiburan',
-              //   onTap: () {
-              //     print('Hiburan');
-              //   },
-              // ),
-              // CategoryButton(
-              //   label: 'DJ',
-              //   onTap: () {
-              //     print('DJ');
-              //   },
-              // ),
-              // CategoryButton(
-              //   label: 'Live',
-              //   onTap: () {
-              //     print('Live');
-              //   },
-              // ),
             ],
           ),
         ),

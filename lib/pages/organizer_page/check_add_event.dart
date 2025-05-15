@@ -79,14 +79,13 @@ class CheckAddEvent extends StatelessWidget {
             child: Column(
               children: [
                 buildReadOnlyField(labelText: 'Nama Event', value: 'Mufest'),
-                buildReadOnlyField(labelText: 'Jenis Event', value: 'apa'),
+                // buildReadOnlyField(labelText: 'Jenis Event', value: 'apa'),
                 buildReadOnlyField(labelText: 'Status Event', value: 'aktif'),
                 buildReadOnlyField(labelText: 'Kategori Event', value: 'kategorinya'),
                 buildReadOnlyField(labelText: 'Target Partisipan', value: '100000'),
                 buildReadOnlyField(labelText: 'Kategori Partisipan', value: 'bokap bokap'),
-                buildReadOnlyField(labelText: 'Detail Partisipan', value: 'detail partisipan tu masudnya apa deh blm kepikir'),
                 buildReadOnlyField(labelText: 'Deskripsi Event', value: 'ini belum, gimana ya bikin kotaknya jadi lebar'),
-                buildReadOnlyField(labelText: 'Gambar Organizer', value: 'WhatsApp Image 2024-11-08'),
+                buildReadOnlyField(labelText: 'Gambar Event', value: 'WhatsApp Image 2024-11-08'),
               ],
             ),
 

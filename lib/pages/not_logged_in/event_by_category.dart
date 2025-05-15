@@ -1,19 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:pad_fundation/API/event_api.dart';
 import 'package:pad_fundation/theme.dart';
+import 'package:pad_fundation/widgets/guess/event_card_bookmark.dart';
+import '../../models/event.dart';
 import '../../widgets/filter_sidebar.dart';
+import '../../widgets/mitra/event_card_big_mitra.dart';
 
-class EventByCategory extends StatelessWidget {
-  final String title;
-  final List<Widget> eventCards;
+class EventByCategory extends StatefulWidget {
   final Function(String)? onSearchChanged;
   final Function(BuildContext)? onFilterPressed;
 
   EventByCategory({
-    required this.title,
-    required this.eventCards,
     this.onSearchChanged,
     this.onFilterPressed,
   });
+
+  @override
+  _EventByCategoryState createState() => _EventByCategoryState();
+}
+
+class _EventByCategoryState extends State<EventByCategory> {
+  late int categoryId;
+  String categoryName = '';
+
+  // Daftar kategori yang sesuai dengan categoryId
+  final Map<int, String> categoryNames = {
+    1: 'Kuliner',
+    2: 'Festival',
+    3: 'Pendidikan',
+    4: 'Seniman',
+    5: 'Populer',
+  };
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is int) {
+      categoryId = args;
+      categoryName = categoryNames[categoryId] ?? 'Unknown'; // Ambil nama kategori sesuai id
+      print('Category ID from arguments: $categoryId');
+      print('Category Name: $categoryName');
+    } else {
+      categoryId = 0;
+      categoryName = 'Unknown'; // Default jika tidak ada kategori
+      print('Invalid categoryId, defaulted to 0');
+    }
+  }
+
 
   PreferredSizeWidget buildHeader(BuildContext context) {
     return PreferredSize(
@@ -64,7 +99,7 @@ class EventByCategory extends StatelessWidget {
                           SizedBox(width: 10),
                           Expanded(
                             child: TextField(
-                              onChanged: onSearchChanged,
+                              onChanged: widget.onSearchChanged,
                               style: veryLightGrayTextStyle.copyWith(
                                 fontSize: 16,
                                 fontWeight: medium,
@@ -86,8 +121,8 @@ class EventByCategory extends StatelessWidget {
                   SizedBox(width: 5),
                   TextButton(
                     onPressed: () {
-                      if (onFilterPressed != null) {
-                        onFilterPressed!(context);
+                      if (widget.onFilterPressed != null) {
+                        widget.onFilterPressed!(context);
                       }
                     },
                     style: TextButton.styleFrom(
@@ -113,19 +148,55 @@ class EventByCategory extends StatelessWidget {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: buildHeader(context),
-      body: ListView(
+      body: Padding(
         padding: EdgeInsets.symmetric(horizontal: defaultMargin),
-        children: [
-          Text(
-            title,
-            style: blackTextStyle.copyWith(
-              fontSize: 16,
-              fontWeight: medium,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Event $categoryName',
+              style: blackTextStyle.copyWith(
+                fontSize: 16,
+                fontWeight: medium,
+              ),
             ),
-          ),
-          SizedBox(height: 17),
-          ...eventCards,
-        ],
+            SizedBox(height: 17),
+            Expanded(
+              child: FutureBuilder<List<Event>>(
+                future: categoryId == 5
+                    ? EventApi.fetchPopularEvents()
+                    : EventApi.getEventsByCategory(categoryId),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
+                  final events = snapshot.data ?? [];
+                  if (events.isEmpty) {
+                    return Center(child: Text('No events found'));
+                  }
+
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: events.map((event) {
+                        return EventCardBookmark(
+                          event: event,
+                          onTap: () => Navigator.pushNamed(
+                            context,
+                            '/detail-event',
+                            arguments: event,
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

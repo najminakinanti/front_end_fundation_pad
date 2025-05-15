@@ -133,7 +133,7 @@ class _EventPageByCategoryMitraState extends State<EventPageByCategoryMitra> {
       return Container(
         margin: EdgeInsets.only(top: 10),
         child: FutureBuilder<List<Event>>(
-          future: popularEvents, // GUNAKAN popularEvents di sini
+          future: popularEvents,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return CircularProgressIndicator();
@@ -146,6 +146,7 @@ class _EventPageByCategoryMitraState extends State<EventPageByCategoryMitra> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: snapshot.data!
+                      .take(10)
                       .map((event) => EventCardMitra(
                     event: event,
                     onTap: () {
