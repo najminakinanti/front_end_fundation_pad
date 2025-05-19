@@ -1,76 +1,54 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pad_fundation/theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../models/kontraprestasi.dart';
+import '../../models/kontraprestasi.dart'; // Pastikan file ini tersedia
+import '../../theme.dart'; // Pastikan file ini tersedia
 
 class HandshakeAddEvent extends StatefulWidget {
+  const HandshakeAddEvent({Key? key}) : super(key: key);
+
   @override
-  _HandshakeAddEventState createState() => _HandshakeAddEventState();
+  HandshakeAddEventState createState() => HandshakeAddEventState();
 }
 
-class _HandshakeAddEventState extends State<HandshakeAddEvent> {
+class HandshakeAddEventState extends State<HandshakeAddEvent> {
+  final Map<String, int> iconNameToId = {
+    'Platinum': 1,
+    'Diamond': 2,
+    'Gold': 3,
+    'Silver': 4,
+    'Bronze': 5,
+  };
+
   List<Kontraprestasi> kontraprestasiList = [Kontraprestasi()];
 
-  Widget buildDropdownTextFormField({
-    required String labelText,
-    required String hintText,
-    required List<String> dropdownItems,
-    required String? selectedValue,
-    required ValueChanged<String?> onChanged,
-  }) {
-    return Container(
-      margin: EdgeInsets.only(top: 10),
-      child: SizedBox(
-        height: 48,
-        child: DropdownButtonFormField<String>(
-          value: selectedValue,
-          onChanged: onChanged,
-          decoration: InputDecoration(
-            labelText: labelText,
-            labelStyle: grayTextStyle.copyWith(fontSize: 14),
-            border: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
-            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
-            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            contentPadding: EdgeInsets.symmetric(horizontal: 12),
-          ),
-          style: blackTextStyle.copyWith(fontSize: 14, fontWeight: FontWeight.normal),
-          hint: Text(hintText, style: grayTextStyle.copyWith(fontSize: 14)),
-          items: dropdownItems.map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value, style: blackTextStyle.copyWith(fontSize: 14)),
-            );
-          }).toList(),
-        ),
-      ),
-    );
+  final List<TextEditingController> minSponsorControllers = [];
+  final List<TextEditingController> maxSponsorControllers = [];
+
+  @override
+  void initState() {
+    super.initState();
+    for (var item in kontraprestasiList) {
+      minSponsorControllers.add(TextEditingController(text: item.minSponsor?.toString() ?? ''));
+      maxSponsorControllers.add(TextEditingController(text: item.maxSponsor?.toString() ?? ''));
+    }
   }
 
-  Widget buildTextFormField({
-    required String labelText,
-    String? hintText,
-  }) {
-    return Container(
-      margin: EdgeInsets.only(top: 10),
-      child: SizedBox(
-        height: 48,
-        child: TextFormField(
-          style: blackTextStyle.copyWith(fontSize: 14),
-          decoration: InputDecoration(
-            labelText: labelText,
-            labelStyle: grayTextStyle.copyWith(fontSize: 14),
-            hintText: hintText,
-            border: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
-            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
-            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            contentPadding: EdgeInsets.symmetric(horizontal: 12),
-          ),
-        ),
-      ),
-    );
+  Future<void> saveKontraprestasiToPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<Map<String, dynamic>> jsonList = kontraprestasiList.map((item) => item.toJson()).toList();
+    String jsonString = jsonEncode(jsonList);
+    await prefs.setString('kontraprestasi_list', jsonString);
+    print('Kontraprestasi disimpan ke SharedPreferences');
+  }
+
+  @override
+  void dispose() {
+    for (var c in minSponsorControllers) c.dispose();
+    for (var c in maxSponsorControllers) c.dispose();
+    super.dispose();
   }
 
   Widget iconKontraprestasi({
@@ -87,23 +65,14 @@ class _HandshakeAddEventState extends State<HandshakeAddEvent> {
         decoration: InputDecoration(
           labelText: 'Icon Kontraprestasi',
           labelStyle: grayTextStyle.copyWith(fontSize: 14),
-          border: OutlineInputBorder(
-            borderSide: BorderSide(color: primaryColor),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: primaryColor),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: primaryColor),
-          ),
+          border: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+          enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
           floatingLabelBehavior: FloatingLabelBehavior.always,
           contentPadding: EdgeInsets.symmetric(horizontal: 12),
         ),
         style: blackTextStyle.copyWith(fontSize: 14),
-        hint: Text(
-          'Pilih Icon Kontraprestasi',
-          style: grayTextStyle.copyWith(fontSize: 14),
-        ),
+        hint: Text('Pilih Icon Kontraprestasi', style: grayTextStyle.copyWith(fontSize: 14)),
         items: icons.map((String value) {
           return DropdownMenuItem<String>(
             value: value,
@@ -115,10 +84,7 @@ class _HandshakeAddEventState extends State<HandshakeAddEvent> {
                   height: 20,
                 ),
                 SizedBox(width: 10),
-                Text(
-                  value,
-                  style: blackTextStyle.copyWith(fontSize: 14),
-                ),
+                Text(value, style: blackTextStyle.copyWith(fontSize: 14)),
               ],
             ),
           );
@@ -132,10 +98,11 @@ class _HandshakeAddEventState extends State<HandshakeAddEvent> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         iconKontraprestasi(
-          selectedIcon: kontraprestasiList[index].icon,
+          selectedIcon: kontraprestasiList[index].title,
           onIconChanged: (value) {
             setState(() {
-              kontraprestasiList[index].icon = value;
+              kontraprestasiList[index].title = value;
+              kontraprestasiList[index].iconPhotoKontraprestasisId = iconNameToId[value];
             });
           },
         ),
@@ -148,6 +115,7 @@ class _HandshakeAddEventState extends State<HandshakeAddEvent> {
                 child: SizedBox(
                   height: 48,
                   child: TextFormField(
+                    controller: minSponsorControllers[index],
                     keyboardType: TextInputType.number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     style: blackTextStyle.copyWith(fontSize: 14),
@@ -161,6 +129,9 @@ class _HandshakeAddEventState extends State<HandshakeAddEvent> {
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                       contentPadding: EdgeInsets.symmetric(horizontal: 12),
                     ),
+                    onChanged: (val) {
+                      kontraprestasiList[index].minSponsor = int.tryParse(val);
+                    },
                   ),
                 ),
               ),
@@ -169,6 +140,7 @@ class _HandshakeAddEventState extends State<HandshakeAddEvent> {
                 child: SizedBox(
                   height: 48,
                   child: TextFormField(
+                    controller: maxSponsorControllers[index],
                     keyboardType: TextInputType.number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     style: blackTextStyle.copyWith(fontSize: 14),
@@ -182,6 +154,9 @@ class _HandshakeAddEventState extends State<HandshakeAddEvent> {
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                       contentPadding: EdgeInsets.symmetric(horizontal: 12),
                     ),
+                    onChanged: (val) {
+                      kontraprestasiList[index].maxSponsor = int.tryParse(val);
+                    },
                   ),
                 ),
               ),
@@ -196,41 +171,28 @@ class _HandshakeAddEventState extends State<HandshakeAddEvent> {
   Widget addKontraprestasiButton() {
     return Container(
       height: 40,
-      margin: EdgeInsets.only(bottom: 30, top: 0),
+      margin: EdgeInsets.only(bottom: 30),
       width: double.infinity,
       child: TextButton(
         onPressed: () {
           setState(() {
             kontraprestasiList.add(Kontraprestasi());
+            minSponsorControllers.add(TextEditingController());
+            maxSponsorControllers.add(TextEditingController());
           });
         },
         style: TextButton.styleFrom(
           backgroundColor: creamButton,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5),
-            side: BorderSide(color: primaryColor, width: 1),
+            side: BorderSide(color: primaryColor),
           ),
         ),
         child: Text(
           'Tambah Kontraprestasi',
-          style: blackTextStyle.copyWith(
-            fontSize: 14,
-            fontWeight: bold,
-          ),
+          style: blackTextStyle.copyWith(fontSize: 14, fontWeight: bold),
         ),
       ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        ...List.generate(kontraprestasiList.length, (index) {
-          return buildKontraprestasiForm(index);
-        }),
-        addKontraprestasiButton(),
-      ],
     );
   }
 
@@ -263,6 +225,16 @@ class _HandshakeAddEventState extends State<HandshakeAddEvent> {
           ],
         );
       },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: [
+        ...List.generate(kontraprestasiList.length, (index) => buildKontraprestasiForm(index)),
+        addKontraprestasiButton(),
+      ],
     );
   }
 }

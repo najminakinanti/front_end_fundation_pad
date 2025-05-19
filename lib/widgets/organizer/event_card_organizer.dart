@@ -127,7 +127,7 @@ class _EventCardOrganizerState extends State<EventCardOrganizer> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      event.statusEvent.toUpperCase(),
+                      event.typeEvent.toUpperCase(),
                       style: orangeTextStyle.copyWith(
                         fontSize: 10,
                         fontWeight: bold,

@@ -114,7 +114,7 @@ class _EventTileMitraState extends State<EventTileMitra> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      event.statusEvent.toUpperCase(),
+                      event.typeEvent.toUpperCase(),
                       style: orangeTextStyle.copyWith(fontSize: 10, fontWeight: bold),
                     ),
                   ),

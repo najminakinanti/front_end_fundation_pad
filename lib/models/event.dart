@@ -1,44 +1,44 @@
 import 'organizer.dart';
 import 'event_photo.dart';
-import 'event_category.dart';
 import 'category.dart';
 import 'event_fund.dart';
 import 'event_placement.dart';
-import 'sponsor.dart'; // Pastikan Anda sudah membuat model Sponsor.
+import 'sponsor.dart';
+import 'kontraprestasi.dart';
 
 class Event {
   final int id;
   final int organizersId;
   final String title;
   final String typeEvent;
-  final String statusEvent;
   final int targetParticipant;
+  final String participantName;
   final String description;
+  final int clickCount;
   final Organizer organizer;
   final List<EventPhoto> eventPhotos;
-  final List<EventCategory> eventCategories;
   final List<Category> categories;
   final EventFund? eventFund;
   final EventPlacement? eventPlacement;
+  final List<Kontraprestasi> kontraprestasis;
   final List<Sponsor> sponsors;
-  final int clickCount;
 
   Event({
     required this.id,
     required this.organizersId,
     required this.title,
     required this.typeEvent,
-    required this.statusEvent,
     required this.targetParticipant,
+    required this.participantName,
     required this.description,
+    required this.clickCount,
     required this.organizer,
     required this.eventPhotos,
-    required this.eventCategories,
     required this.categories,
     this.eventFund,
     this.eventPlacement,
+    required this.kontraprestasis,
     required this.sponsors,
-    required this.clickCount,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
@@ -47,18 +47,16 @@ class Event {
       organizersId: json['organizers_id'],
       title: json['title'],
       typeEvent: json['type_event'],
-      statusEvent: json['status_event'],
       targetParticipant: json['target_participant'],
+      participantName: json['participant_name'],
       description: json['description'],
+      clickCount: json['click_count'] ?? 0,
       organizer: Organizer.fromJson(json['organizer']),
-      eventPhotos: (json['event_photos'] as List)
-          .map((e) => EventPhoto.fromJson(e))
-          .toList(),
-      eventCategories: (json['event_categories'] as List)
-          .map((e) => EventCategory.fromJson(e))
-          .toList(),
+      eventPhotos: (json['event_photos'] as List<dynamic>?)
+          ?.map((e) => EventPhoto.fromJson(e))
+          .toList() ?? [],
       categories: (json['categories'] as List)
-          .map((e) => Category.fromJson(e))
+          .map((c) => Category.fromJson(c))
           .toList(),
       eventFund: json['event_fund'] != null
           ? EventFund.fromJson(json['event_fund'])
@@ -66,10 +64,12 @@ class Event {
       eventPlacement: json['event_placement'] != null
           ? EventPlacement.fromJson(json['event_placement'])
           : null,
-      sponsors: (json['sponsors'] as List)
-          .map((e) => Sponsor.fromJson(e))
+      kontraprestasis: (json['kontraprestasis'] as List)
+          .map((k) => Kontraprestasi.fromJson(k))
           .toList(),
-      clickCount: json['click_count'],
+      sponsors: (json['sponsors'] as List)
+          .map((s) => Sponsor.fromJson(s))
+          .toList(),
     );
   }
 }

@@ -176,7 +176,6 @@ class MyApp extends StatelessWidget {
         '/add-event': (context) => EventFormStepper(),
 
 
-
         //not logged in
         '/home': (context) {
           final int initialIndex = ModalRoute.of(context)!.settings.arguments as int? ?? 0;

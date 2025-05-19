@@ -3,16 +3,33 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pad_fundation/theme.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FileAddEvent extends StatefulWidget {
+  const FileAddEvent({Key? key}) : super(key: key);
+
   @override
-  _FileAddEventState createState() => _FileAddEventState();
+  FileAddEventState createState() => FileAddEventState();
 }
 
-class _FileAddEventState extends State<FileAddEvent> {
+class FileAddEventState extends State<FileAddEvent> {
+
+  final List<Map<String, dynamic>> categoryOptions = [
+    {'id': '1', 'name': 'Kuliner'},
+    {'id': '2', 'name': 'Festival'},
+    {'id': '3', 'name': 'Pendidikan'},
+    {'id': '4', 'name': 'Seniman'},
+  ];
+
+
+  final TextEditingController _namaEventController = TextEditingController();
+  final TextEditingController _jumlahTargetController = TextEditingController();
+  final TextEditingController _kategoriPartisipanController = TextEditingController();
+  final TextEditingController _deskripsiEventController = TextEditingController();
+
   String selectedStatus = 'aktif';
   String selectedCategory = 'kategorinya';
   final TextEditingController _imageController = TextEditingController();
@@ -89,8 +106,7 @@ class _FileAddEventState extends State<FileAddEvent> {
   }
 
   void _showCategoryMultiSelectDialog(BuildContext context) {
-    List<String> allCategories = ['kategorinya', 'ada', 'apa', 'aja'];
-    List<String> tempSelected = List.from(selectedCategories);
+    List<String> tempSelectedIds = List.from(selectedCategories); // will hold IDs
 
     showDialog(
       context: context,
@@ -101,16 +117,16 @@ class _FileAddEventState extends State<FileAddEvent> {
               title: Text('Pilih Kategori'),
               content: SingleChildScrollView(
                 child: Column(
-                  children: allCategories.map((category) {
+                  children: categoryOptions.map((category) {
                     return CheckboxListTile(
-                      title: Text(category),
-                      value: tempSelected.contains(category),
+                      title: Text(category['name']),
+                      value: tempSelectedIds.contains(category['id']),
                       onChanged: (bool? checked) {
                         setStateDialog(() {
                           if (checked == true) {
-                            tempSelected.add(category);
+                            tempSelectedIds.add(category['id']);
                           } else {
-                            tempSelected.remove(category);
+                            tempSelectedIds.remove(category['id']);
                           }
                         });
                       },
@@ -128,8 +144,13 @@ class _FileAddEventState extends State<FileAddEvent> {
                 ElevatedButton(
                   onPressed: () {
                     setState(() {
-                      selectedCategories = tempSelected;
-                      _categoryController.text = selectedCategories.join(', ');
+                      selectedCategories = tempSelectedIds;
+
+                      // Untuk tampilan, ubah ID ke nama
+                      _categoryController.text = categoryOptions
+                          .where((category) => selectedCategories.contains(category['id']))
+                          .map((e) => e['name'])
+                          .join(', ');
                     });
                     Navigator.pop(context);
                   },
@@ -143,6 +164,30 @@ class _FileAddEventState extends State<FileAddEvent> {
     );
   }
 
+  Future<void> saveEventDataToPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    await prefs.setString('nama_event', _namaEventController.text);
+    await prefs.setString('status_event', selectedStatus);
+    await prefs.setStringList('kategori_event', selectedCategories);
+    await prefs.setString('jumlah_target', _jumlahTargetController.text);
+    await prefs.setString('kategori_partisipan', _kategoriPartisipanController.text);
+    await prefs.setString('deskripsi_event', _deskripsiEventController.text);
+    await prefs.setString('gambar_event_base64', photo_file ?? '');
+    await prefs.setStringList('gambar_detail_base64', _detailPhotoBase64);
+
+    // ✅ Verifikasi: Baca ulang dan print
+    print('=== Data Disimpan di SharedPreferences ===');
+    print('Nama Event: ${prefs.getString('nama_event')}');
+    print('Status: ${prefs.getString('status_event')}');
+    print('Kategori: ${prefs.getStringList('kategori_event')}');
+    print('Jumlah Target: ${prefs.getString('jumlah_target')}');
+    print('Kategori Partisipan: ${prefs.getString('kategori_partisipan')}');
+    print('Deskripsi: ${prefs.getString('deskripsi_event')}');
+    print('Gambar Base64: ${prefs.getString('gambar_event_base64')?.substring(0, 20)}...'); // Print sebagian saja
+    print('Jumlah Detail Gambar: ${prefs.getStringList('gambar_detail_base64')?.length}');
+  }
+
   @override
   void initState() {
     super.initState();
@@ -154,12 +199,19 @@ class _FileAddEventState extends State<FileAddEvent> {
     Widget buildTextFormField({
       required String labelText,
       required String hintText,
+      TextEditingController? controller,
+      TextInputType? keyboardType,
+      List<TextInputFormatter>? inputFormatters,
+
     }) {
       return Container(
         margin: EdgeInsets.only(top: 10),
         child: SizedBox(
           height: 48,
           child: TextFormField(
+            controller: controller,
+            keyboardType: keyboardType,
+            inputFormatters: inputFormatters,
             style: blackTextStyle.copyWith(
               fontSize: 14,
               fontWeight: regular,
@@ -248,7 +300,8 @@ class _FileAddEventState extends State<FileAddEvent> {
     Widget namaEvent() {
       return buildTextFormField(
           labelText: 'Nama Event',
-          hintText: 'Masukan nama event'
+          hintText: 'Masukkan nama event',
+          controller: _namaEventController,
       );
     }
 
@@ -304,28 +357,15 @@ class _FileAddEventState extends State<FileAddEvent> {
       );
     }
 
-
-    Widget kategoriEvent({
-      required String? selectedCategory,
-      required ValueChanged<String?> onCategoryChanged,
-    }) {
-      List<String> categories = ['kategorinya', 'ada', 'apa', 'aja'];
-
-      return buildDropdownTextFormField(
-        labelText: 'Kategori Event',
-        hintText: 'Pilih kategori event',
-        dropdownItems: categories,
-        selectedValue: selectedCategory,
-        onChanged: onCategoryChanged,
-      );
-    }
-
     Widget jumlahTarget() {
       return Container(
         margin: const EdgeInsets.only(top: 20),
         child: buildTextFormField(
           labelText: 'Target Partisipan',
           hintText: 'Jumlah target',
+          controller: _jumlahTargetController,
+          keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         ),
       );
     }
@@ -336,6 +376,7 @@ class _FileAddEventState extends State<FileAddEvent> {
         child: buildTextFormField(
           labelText: 'Kategori Partisipan',
           hintText: 'Isi kategori partisipan',
+          controller: _kategoriPartisipanController,
         ),
       );
     }
@@ -346,6 +387,7 @@ class _FileAddEventState extends State<FileAddEvent> {
         child: buildTextFormField(
           labelText: 'Deskripsi Event',
           hintText: 'Isi deskripsi event',
+          controller: _deskripsiEventController,
         ),
       );
     }
@@ -494,7 +536,6 @@ class _FileAddEventState extends State<FileAddEvent> {
         namaEvent(),
         statusEvent(selectedStatus: null, onStatusChanged: onStatusChanged),
         kategoriEventMulti(),
-        // kategoriEvent(selectedCategory: null, onCategoryChanged: onCategoryChanged),
         jumlahTarget(),
         kategoriPartisipan(),
         deskripsiEvent(),

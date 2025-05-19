@@ -65,7 +65,6 @@ class AuthApi {
     }
   }
 
-
   static Future<void> loginOrganizer(String email, String password, BuildContext context) async {
     try {
       final response = await ApiService.post('login', {

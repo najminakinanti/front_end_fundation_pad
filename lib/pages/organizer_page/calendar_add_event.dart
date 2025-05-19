@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CalendarAddEvent extends StatefulWidget {
+  CalendarAddEvent({Key? key}) : super(key: key);
+
   @override
-  _CalendarAddEventState createState() => _CalendarAddEventState();
+  CalendarAddEventState createState() => CalendarAddEventState();
 }
 
-class _CalendarAddEventState extends State<CalendarAddEvent> {
+class CalendarAddEventState extends State<CalendarAddEvent> {
   String selectedProvince = 'DKI Jakarta';
   String selectedCity = 'Jakpus';
+
+  final TextEditingController _venueController = TextEditingController();
+  final TextEditingController _alamatController = TextEditingController();
+  final TextEditingController _tanggalMulaiController = TextEditingController();
+  final TextEditingController _tanggalAkhirController = TextEditingController();
+
+
+  DateTime? _tanggalMulai;
+  DateTime? _tanggalAkhir;
 
   void onProvinceChanged(String? newProvince) {
     setState(() {
@@ -21,6 +33,29 @@ class _CalendarAddEventState extends State<CalendarAddEvent> {
       selectedCity = newCity!;
     });
   }
+  Future<void> saveEventDateToPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    await prefs.setString('venue_event', _venueController.text);
+    await prefs.setString('alamat_event', _alamatController.text);
+    await prefs.setString('provinsi_event', selectedProvince);
+    await prefs.setString('kota_event', selectedCity);
+    if (_tanggalMulai != null) {
+      await prefs.setString('tanggal_mulai', _tanggalMulai.toString());
+    }
+    if (_tanggalAkhir != null) {
+      await prefs.setString('tanggal_akhir', _tanggalAkhir.toString());
+    }
+
+    // Debug print
+    print('=== Data Kalender Disimpan ===');
+    print('Venue: ${prefs.getString('venue_event')}');
+    print('Alamat: ${prefs.getString('alamat_event')}');
+    print('Provinsi: ${prefs.getString('provinsi_event')}');
+    print('Kota: ${prefs.getString('kota_event')}');
+    print('Tanggal Mulai: ${prefs.getString('tanggal_mulai')}');
+    print('Tanggal Akhir: ${prefs.getString('tanggal_akhir')}');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +64,9 @@ class _CalendarAddEventState extends State<CalendarAddEvent> {
       required String labelText,
       required String hintText,
       required BuildContext context,
+      required TextEditingController controller,
       required Function(DateTime?) onDateSelected,
     }) {
-      TextEditingController controller = TextEditingController();
       return Container(
         margin: EdgeInsets.only(top: 10),
         child: SizedBox(
@@ -80,12 +115,14 @@ class _CalendarAddEventState extends State<CalendarAddEvent> {
     Widget buildTextFormField({
       required String labelText,
       required String hintText,
+      required TextEditingController controller,
     }) {
       return Container(
         margin: EdgeInsets.only(top: 10),
         child: SizedBox(
           height: 48,
           child: TextFormField(
+            controller: controller,
             style: blackTextStyle.copyWith(
               fontSize: 14,
               fontWeight: regular,
@@ -181,9 +218,14 @@ class _CalendarAddEventState extends State<CalendarAddEvent> {
               child: buildDateFormField(
                 labelText: "Tanggal Mulai Event",
                 hintText: "Pilih tanggal",
+                controller: _tanggalMulaiController,
                 context: context,
                 onDateSelected: (date) {
-                  print("Selected date for Tanggal Mulai Event: \$date");
+                  setState(() {
+                    _tanggalMulai = date;
+                    _tanggalMulaiController.text = "${date?.toLocal()}".split(' ')[0];
+                  });
+                  print("Selected date for Tanggal Mulai Event: $date");
                 },
               ),
             ),
@@ -192,9 +234,14 @@ class _CalendarAddEventState extends State<CalendarAddEvent> {
               child: buildDateFormField(
                 labelText: "Tanggal Akhir Event",
                 hintText: "Pilih tanggal",
+                controller: _tanggalAkhirController,
                 context: context,
                 onDateSelected: (date) {
-                  print("Selected date for Tanggal Akhir Event: \$date");
+                  setState(() {
+                    _tanggalAkhir = date;
+                    _tanggalAkhirController.text = "${date?.toLocal()}".split(' ')[0];
+                  });
+                  print("Selected date for Tanggal Akhir Event: $date");
                 },
               ),
             ),
@@ -209,6 +256,7 @@ class _CalendarAddEventState extends State<CalendarAddEvent> {
         child: buildTextFormField(
           labelText: 'Venue Event',
           hintText: 'Venue Event',
+          controller: _venueController,
         ),
       );
     }
@@ -249,6 +297,7 @@ class _CalendarAddEventState extends State<CalendarAddEvent> {
         child: buildTextFormField(
           labelText: 'Alamat Event',
           hintText: 'Masukkan Alamat Event',
+          controller: _alamatController,
         ),
       );
     }

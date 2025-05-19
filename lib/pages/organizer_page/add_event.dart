@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pad_fundation/API/event_api.dart';
 import 'package:pad_fundation/pages/organizer_page/calendar_add_event.dart';
 import 'package:pad_fundation/pages/organizer_page/check_add_event.dart';
 import 'package:pad_fundation/pages/organizer_page/edit_event_organizer.dart';
@@ -15,6 +16,11 @@ class EventFormStepper extends StatefulWidget {
 }
 
 class _EventFormStepperState extends State<EventFormStepper> {
+  final GlobalKey<FileAddEventState> _fileAddEventKey = GlobalKey<FileAddEventState>();
+  final GlobalKey<CalendarAddEventState> _calendarAddEventKey = GlobalKey<CalendarAddEventState>();
+  final GlobalKey<MoneyAddEventState> _moneyAddEventKey = GlobalKey<MoneyAddEventState>();
+  final GlobalKey<HandshakeAddEventState> _handshakeAddEventKey = GlobalKey<HandshakeAddEventState>();
+
   PageController _pageController = PageController();
   int _currentPage = 0;
 
@@ -130,11 +136,11 @@ class _EventFormStepperState extends State<EventFormStepper> {
                   });
                 },
                 children: [
-                  if (_currentPage == 0) FileAddEvent(),
-                  if (_currentPage == 1) CalendarAddEvent(),
-                  if (_currentPage == 2) MoneyAddEvent(),
-                  if (_currentPage == 3) HandshakeAddEvent(),
-                  if (_currentPage == 4) CheckAddEvent(),
+                  FileAddEvent(key: _fileAddEventKey), // gunakan key di sini
+                  CalendarAddEvent(key: _calendarAddEventKey),
+                  MoneyAddEvent(key: _moneyAddEventKey),
+                  HandshakeAddEvent(key: _handshakeAddEventKey),
+                  CheckAddEvent(),
                 ],
               ),
             ),
@@ -173,7 +179,18 @@ class _EventFormStepperState extends State<EventFormStepper> {
                           ? MediaQuery.of(context).size.width - 60
                           : MediaQuery.of(context).size.width / 2 - 35,
                       child: ElevatedButton(
-                        onPressed: () => _goToPage(_currentPage + 1),
+                        onPressed: () async {
+                          if (_currentPage == 0) {
+                            await _fileAddEventKey.currentState?.saveEventDataToPrefs();
+                          } else if (_currentPage == 1) {
+                            await _calendarAddEventKey.currentState?.saveEventDateToPrefs();  // Panggil method save di CalendarAddEvent
+                          } else if (_currentPage == 2) {
+                            await _moneyAddEventKey.currentState?.saveTargetToPrefs();
+                          } else if (_currentPage == 3) {
+                            await _handshakeAddEventKey.currentState?.saveKontraprestasiToPrefs();
+                          }
+                          _goToPage(_currentPage + 1);
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: primaryColor,
                           shape: RoundedRectangleBorder(
@@ -197,8 +214,8 @@ class _EventFormStepperState extends State<EventFormStepper> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width / 2 - 35,
                       child: ElevatedButton(
-                        onPressed: () {
-                          showSaveConfirmationDialog(context);
+                        onPressed: () async {
+                          await EventApi.createEvent(context);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: primaryColor,
@@ -268,42 +285,6 @@ class _EventFormStepperState extends State<EventFormStepper> {
               },
               child: Text(
                 'YA',
-                style: navyTextStyle.copyWith(fontSize: 12, fontWeight: regular),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void showSaveConfirmationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: Container(
-            width: 250,
-            child: Text(
-              'Event berhasil ditambahkan!',
-              style: blackTextStyle.copyWith(fontSize: 12, fontWeight: regular),
-            ),
-          ),
-          contentPadding: EdgeInsets.fromLTRB(30, 40, 15, 0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  '/home-organizer',
-                  arguments: 1,
-                );
-              },
-              child: Text(
-                'OK',
                 style: navyTextStyle.copyWith(fontSize: 12, fontWeight: regular),
               ),
             ),

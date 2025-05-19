@@ -127,7 +127,7 @@ class _EventCardBookmarkState extends State<EventCardBookmark> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      event.statusEvent.toUpperCase(),
+                      event.typeEvent.toUpperCase(),
                       style: orangeTextStyle.copyWith(
                         fontSize: 14,
                         fontWeight: bold,
