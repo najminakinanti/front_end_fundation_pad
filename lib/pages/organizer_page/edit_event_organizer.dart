@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 
+import '../../models/event.dart';
+
 class EditEventOrganizer extends StatefulWidget {
+
+  final Event event;
+  final VoidCallback? onTap;
+
+  const EditEventOrganizer({
+    Key? key,
+    required this.event,
+    this.onTap,
+  }) : super(key: key);
+
+
   @override
   _EditEventOrganizerState createState() => _EditEventOrganizerState();
 }
