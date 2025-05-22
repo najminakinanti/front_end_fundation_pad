@@ -30,8 +30,8 @@ class FileAddEventState extends State<FileAddEvent> {
   final TextEditingController _kategoriPartisipanController = TextEditingController();
   final TextEditingController _deskripsiEventController = TextEditingController();
 
-  String selectedStatus = 'aktif';
-  String selectedCategory = 'kategorinya';
+  String selectedStatus = '';
+  String selectedCategory = '';
   final TextEditingController _imageController = TextEditingController();
   String? photo_file;
 
@@ -79,7 +79,6 @@ class FileAddEventState extends State<FileAddEvent> {
   void _pickMultipleImagesBase64() async {
     final List<XFile>? images = await _picker.pickMultiImage();
 
-    // ✅ Tambahkan print ini
     print('Gambar dipilih: ${images?.length ?? 0}');
 
     if (images == null || images.isEmpty) return;
@@ -104,6 +103,7 @@ class FileAddEventState extends State<FileAddEvent> {
 
     print('Jumlah gambar detail: ${_detailImageFiles.length}');
   }
+
 
   void _showCategoryMultiSelectDialog(BuildContext context) {
     List<String> tempSelectedIds = List.from(selectedCategories); // will hold IDs
@@ -184,8 +184,8 @@ class FileAddEventState extends State<FileAddEvent> {
     print('Jumlah Target: ${prefs.getString('jumlah_target')}');
     print('Kategori Partisipan: ${prefs.getString('kategori_partisipan')}');
     print('Deskripsi: ${prefs.getString('deskripsi_event')}');
-    print('Gambar Base64: ${prefs.getString('gambar_event_base64')?.substring(0, 20)}...'); // Print sebagian saja
-    print('Jumlah Detail Gambar: ${prefs.getStringList('gambar_detail_base64')?.length}');
+    print('Gambar Base64: ${prefs.getString('gambar_event_base64')?.substring(0, 20)}...');
+    print('Jumlah Detail Gambar: ${prefs.getStringList('gambar_detail_base64')?.length ?? 0}');
   }
 
   @override

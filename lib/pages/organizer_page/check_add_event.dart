@@ -1,9 +1,94 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class CheckAddEvent extends StatelessWidget {
+class CheckAddEvent extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
+  _CheckAddEventState createState() => _CheckAddEventState();
+}
+
+class _CheckAddEventState extends State<CheckAddEvent> {
+  String namaEvent = '';
+  String statusEvent = '';
+  String kategoriEvent = '';
+  String targetPartisipan = '';
+  String kategoriPartisipan = '';
+  String deskripsiEvent = '';
+  String gambarEvent = '';
+
+  String tanggalMulai = '';
+  String tanggalAkhir = '';
+  String venue = '';
+  String alamat = '';
+  String provinsi = '';
+  String kota = '';
+
+  String targetDonasi = '';
+  String tenggatDonasi = '';
+
+  List<String> kontraprestasiList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadPrefsData();
+  }
+
+  Future<void> loadPrefsData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      namaEvent = prefs.getString('nama_event') ?? '';
+      statusEvent = prefs.getString('status_event') ?? '';
+      kategoriEvent = (prefs.getStringList('kategori_event') ?? []).join(', ');
+      targetPartisipan = prefs.getString('jumlah_target') ?? '';
+      kategoriPartisipan = prefs.getString('kategori_partisipan') ?? '';
+      deskripsiEvent = prefs.getString('deskripsi_event') ?? '';
+      gambarEvent = prefs.getString('gambar_event_base64')?? '';
+
+      tanggalMulai = prefs.getString('tanggal_mulai') ?? '';
+      tanggalAkhir = prefs.getString('tanggal_akhir') ?? '';
+      venue = prefs.getString('venue_event') ?? '';
+      alamat = prefs.getString('alamat_event') ?? '';
+      provinsi = prefs.getString('provinsi_event') ?? '';
+      kota = prefs.getString('kota_event') ?? '';
+
+      targetDonasi = prefs.getString('target_donasi_sponsor') ?? '';
+      tenggatDonasi = prefs.getString('sponsor_deadline') ?? '';
+
+      final kontraprestasiJson = prefs.getString('kontraprestasi_list') ?? '[]';
+      kontraprestasiList = (jsonDecode(kontraprestasiJson) as List)
+          .map<String>((e) => e['nama']?.toString() ?? '')
+          .toList();
+
+      print('=== Data Berhasil Dimuat dari SharedPreferences ===');
+      print('Nama Event: $namaEvent');
+      print('Status Event: $statusEvent');
+      print('Kategori Event: $kategoriEvent');
+      print('Target Partisipan: $targetPartisipan');
+      print('Kategori Partisipan: $kategoriPartisipan');
+      print('Deskripsi Event: $deskripsiEvent');
+      print('Gambar Event: $gambarEvent');
+
+      print('Tanggal Mulai: $tanggalMulai');
+      print('Tanggal Akhir: $tanggalAkhir');
+      print('Venue: $venue');
+      print('Alamat: $alamat');
+      print('Provinsi: $provinsi');
+      print('Kota: $kota');
+
+      print('Target Donasi Sponsor: $targetDonasi');
+      print('Tenggat Donasi Sponsor: $tenggatDonasi');
+
+      print('Kontraprestasi:');
+      for (var i = 0; i < kontraprestasiList.length; i++) {
+        print('- Kontraprestasi ${i + 1}: ${kontraprestasiList[i]}');
+      }
+      print('===============================================');
+    });
+  }
 
     Widget buildReadOnlyField({
       required String labelText,
@@ -47,11 +132,11 @@ class CheckAddEvent extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: buildReadOnlyField(labelText: 'Tanggal Mulai Event', value: '2024-11-19'),
+              child: buildReadOnlyField(labelText: 'Tanggal Mulai Event', value: tanggalMulai),
             ),
             SizedBox(width: 10),
             Expanded(
-              child: buildReadOnlyField(labelText: 'Tanggal Akhir Event', value: '2024-11-20'),
+              child: buildReadOnlyField(labelText: 'Tanggal Akhir Event', value: tanggalAkhir),
             ),
           ],
         ),
@@ -78,14 +163,13 @@ class CheckAddEvent extends StatelessWidget {
             ),
             child: Column(
               children: [
-                buildReadOnlyField(labelText: 'Nama Event', value: 'Mufest'),
-                // buildReadOnlyField(labelText: 'Jenis Event', value: 'apa'),
-                buildReadOnlyField(labelText: 'Status Event', value: 'aktif'),
-                buildReadOnlyField(labelText: 'Kategori Event', value: 'kategorinya'),
-                buildReadOnlyField(labelText: 'Target Partisipan', value: '100000'),
-                buildReadOnlyField(labelText: 'Kategori Partisipan', value: 'bokap bokap'),
-                buildReadOnlyField(labelText: 'Deskripsi Event', value: 'ini belum, gimana ya bikin kotaknya jadi lebar'),
-                buildReadOnlyField(labelText: 'Gambar Event', value: 'WhatsApp Image 2024-11-08'),
+                buildReadOnlyField(labelText: 'Nama Event', value: namaEvent),
+                buildReadOnlyField(labelText: 'Status Event', value: statusEvent),
+                buildReadOnlyField(labelText: 'Kategori Event', value: kategoriEvent),
+                buildReadOnlyField(labelText: 'Target Partisipan', value: targetPartisipan),
+                buildReadOnlyField(labelText: 'Kategori Partisipan', value: kategoriPartisipan),
+                buildReadOnlyField(labelText: 'Deskripsi Event', value: deskripsiEvent),
+                buildReadOnlyField(labelText: 'Gambar Event', value: gambarEvent),
               ],
             ),
 
@@ -133,10 +217,10 @@ class CheckAddEvent extends StatelessWidget {
             child: Column(
               children: [
                 tanggalEvent(),
-                buildReadOnlyField(labelText: 'Venue Event', value: 'di hatimu'),
-                buildReadOnlyField(labelText: 'Provinsi', value: 'Jawa Barat'),
-                buildReadOnlyField(labelText: 'Kota', value: 'Bogor'),
-                buildReadOnlyField(labelText: 'Alamat Event', value: 'Jalan Padjajaran'),
+                buildReadOnlyField(labelText: 'Venue Event', value: venue),
+                buildReadOnlyField(labelText: 'Provinsi', value: provinsi),
+                buildReadOnlyField(labelText: 'Kota', value: kota),
+                buildReadOnlyField(labelText: 'Alamat Event', value: alamat),
               ],
             ),
 
@@ -183,8 +267,8 @@ class CheckAddEvent extends StatelessWidget {
             ),
             child: Column(
               children: [
-                buildReadOnlyField(labelText: 'Target Donasi Sponsor', value: '50.000.000'),
-                buildReadOnlyField(labelText: 'Tenggat Donasi Sponsor', value: '2024-10-19'),
+                buildReadOnlyField(labelText: 'Target Donasi Sponsor', value: targetDonasi),
+                buildReadOnlyField(labelText: 'Tenggat Donasi Sponsor', value: tenggatDonasi),
               ],
             ),
 
@@ -230,12 +314,13 @@ class CheckAddEvent extends StatelessWidget {
               ],
             ),
             child: Column(
-              children: [
-                buildReadOnlyField(labelText: 'Kontraprestasi 1', value: 'emas'),
-                buildReadOnlyField(labelText: 'Kontrapresrasi 2', value: 'perak'),
-              ],
+              children: kontraprestasiList.asMap().entries.map((e) {
+                return buildReadOnlyField(
+                  labelText: 'Kontraprestasi ${e.key + 1}',
+                  value: e.value,
+                );
+              }).toList(),
             ),
-
           ),
           Positioned(
             top: 5,
@@ -259,6 +344,8 @@ class CheckAddEvent extends StatelessWidget {
       );
     }
 
+  @override
+  Widget build(BuildContext context) {
     return ListView(
       children: [
         _buildDataEventSection(),

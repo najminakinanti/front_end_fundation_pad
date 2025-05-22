@@ -31,61 +31,6 @@ class MoneyAddEventState extends State<MoneyAddEvent> {
     print("Tenggat Donasi: ${prefs.getString('sponsor_deadline')}");
   }
 
-  // String? namaEvent;
-  // String? statusEvent;
-  // List<String>? kategoriEvent;
-  // String? jumlahTarget;
-  // String? kategoriPartisipan;
-  // String? deskripsiEvent;
-  // String? venue;
-  // String? alamat;
-  // String? provinsiEvent;
-  // String? kotaEvent;
-  // String? tanggalMulai;
-  // String? tanggalAkhir;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   loadEventData();
-  // }
-
-  // Future<void> loadEventData() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   setState(() {
-  //     namaEvent = prefs.getString('nama_event');
-  //     statusEvent = prefs.getString('status_event');
-  //     kategoriEvent = prefs.getStringList('kategori_event');
-  //     jumlahTarget = prefs.getString('jumlah_target');
-  //     kategoriPartisipan = prefs.getString('kategori_partisipan');
-  //     deskripsiEvent = prefs.getString('deskripsi_event');
-  //
-  //     venue = prefs.getString('venue_event');
-  //     alamat = prefs.getString('alamat_event');
-  //     provinsiEvent = prefs.getString('provinsi_event');
-  //     kotaEvent = prefs.getString('kota_event');
-  //     tanggalMulai = prefs.getString('tanggal_mulai');
-  //     tanggalAkhir = prefs.getString('tanggal_akhir');
-  //   });
-  //
-  //   // ✅ Print semua ke terminal
-  //   print("=== Data Event Utama ===");
-  //   print("Nama Event: $namaEvent");
-  //   print("Status: $statusEvent");
-  //   print("Kategori: $kategoriEvent");
-  //   print("Jumlah Target: $jumlahTarget");
-  //   print("Kategori Partisipan: $kategoriPartisipan");
-  //   print("Deskripsi: $deskripsiEvent");
-  //
-  //   print("=== Data Kalender ===");
-  //   print("Venue: $venue");
-  //   print("Alamat: $alamat");
-  //   print("Provinsi: $provinsiEvent");
-  //   print("Kota: $kotaEvent");
-  //   print("Tanggal Mulai: $tanggalMulai");
-  //   print("Tanggal Akhir: $tanggalAkhir");
-  // }
-
   @override
   Widget build(BuildContext context) {
 

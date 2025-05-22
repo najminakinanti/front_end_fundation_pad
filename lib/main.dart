@@ -168,7 +168,7 @@ class MyApp extends StatelessWidget {
         '/all-event-organizer': (context) => AllEventOrganizer(),
         '/daftar-sponsor-organizer': (context) => DaftarSponsorOrganizer(),
         // '/detail-my-event-organizer': (context) => DetailMyEventOrganizer(),
-        '/ubah-event-organizer': (context) => EditEventOrganizer(),
+        // '/ubah-event-organizer': (context) => EditEventOrganizer(),
         '/ubah-kontraprestasi': (context) => EditKontraprestasi(),
         '/add-kontraprestasi': (context) => AddKontraprestasi(),
         '/tambah-bukti-kontraprestasi': (context) => TambahBuktiKontraprestasi(),

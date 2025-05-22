@@ -94,9 +94,8 @@ class EventApi {
       int? target_participant = int.tryParse(targetParticipantStr ?? '');
       String? participant_name = prefs.getString('kategori_partisipan');
       String? description = prefs.getString('deskripsi_event');
-      // String? photo_file = prefs.getString('gambar_event_base64');
       String? photo_file = prefs.getString('gambar_event_base64');
-      // List<String>? eventDetailImages = prefs.getStringList('gambar_detail_base64');
+      List<String>? eventDetailImages = prefs.getStringList('gambar_detail_base64');
 
       String? event_venue = prefs.getString('venue_event');
       String? address = prefs.getString('alamat_event');
@@ -133,7 +132,7 @@ class EventApi {
       print("Participant Name: $participant_name");
       print("Description: $description");
       print("Photo File (base64): ${photo_file}...");
-      // print("Detail Images: $eventDetailImages");
+      print("Detail Images: $eventDetailImages");
 
       print("Venue: $event_venue");
       print("Address: $address");
@@ -146,6 +145,7 @@ class EventApi {
       print("Sponsor Deadline: $sponsor_deadline");
 
       print("Kontraprestasi List: $kontraprestasiList");
+      print("List Foto Detail: $eventDetailImages");
       print("========================");
 
       // if (title == null || title.isEmpty ||
@@ -201,6 +201,11 @@ class EventApi {
           "province": province,
         },
         "kontraprestasi": kontraprestasiList,
+        "event_galeris": eventDetailImages?.map((img) {
+          return {
+            "photo_file": img,
+          };
+        }).toList() ?? [],
       };
 
 
@@ -228,6 +233,52 @@ class EventApi {
       print("Error exception: $e");
       _showErrorDialog(context, "Terjadi kesalahan: $e");
     }
+  }
+
+  static Future<void> editEvent(BuildContext context, int eventId, Map<String, dynamic> updatedData) async {
+    final prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+
+    final response = await http.put(
+      Uri.parse('http://10.0.2.2:8000/api/update-events/$eventId'),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token",
+        "Accept": "application/json",
+      },
+      body: jsonEncode(updatedData),
+    );
+
+    if (response.statusCode == 200) {
+      print("Event berhasil diupdate!");
+      showSuccessDialog(context);
+    } else {
+      print("Gagal update event. Status: ${response.statusCode}");
+      _showErrorDialog(context, "Gagal update event: ${response.statusCode}");
+    }
+  }
+
+  static Future<List<Event>> getEventsforEdit(int eventId) async {
+    final url = '${ApiService.baseUrl}/events-full/$eventId';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to load events: ${response.statusCode}');
+    }
+
+    final raw = jsonDecode(response.body);
+    if (raw is! List) return [];
+
+    final fixed = raw.map<Map<String, dynamic>>((e) {
+      final m = Map<String, dynamic>.from(e as Map);
+      m['event_photos'] = m['event_photos'] ?? <dynamic>[];
+      m['event_categories'] = m['event_categories'] ?? <dynamic>[]; // <--- ini
+      m['categories'] = m['categories'] ?? <dynamic>[];
+      m['sponsors'] = m['sponsors'] ?? <dynamic>[];
+      return m;
+    }).toList();
+
+    return fixed.map((m) => Event.fromJson(m)).toList();
   }
 
   static Future<void> incrementClick(int eventId) async {

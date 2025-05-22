@@ -241,8 +241,7 @@ class _DetailEventState extends State<DetailEventMitra> {
             Image.asset('assets/icon_audiens.png', width: 24),
             SizedBox(width: 10),
             Text(
-              event.targetParticipant.toString(),
-              // '1000 mahasiswa ilmu ekonomi',
+              '${event.targetParticipant.toString()} ${event.participantName}',
               style: lighGrayTextStyle.copyWith(
                 fontSize: 14,
                 fontWeight: regular,

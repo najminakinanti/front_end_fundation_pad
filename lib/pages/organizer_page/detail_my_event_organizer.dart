@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pad_fundation/pages/organizer_page/edit_event_organizer.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 import 'package:pad_fundation/widgets/information_detail_galery.dart';
@@ -239,7 +240,7 @@ class _DetailMyEventOrganizerState extends State<DetailMyEventOrganizer> {
             Image.asset('assets/icon_audiens.png', width: 24),
             SizedBox(width: 10),
             Text(
-              event.targetParticipant.toString(),
+              '${event.targetParticipant.toString()} ${event.participantName}',
               style: lighGrayTextStyle.copyWith(
                 fontSize: 14,
                 fontWeight: regular,
@@ -588,8 +589,12 @@ class _DetailMyEventOrganizerState extends State<DetailMyEventOrganizer> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/ubah-event-organizer');
-                        print('chat');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => EditEventOrganizer(event: event),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: yellowButton,
