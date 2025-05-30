@@ -169,7 +169,7 @@ class MyApp extends StatelessWidget {
         '/daftar-sponsor-organizer': (context) => DaftarSponsorOrganizer(),
         // '/detail-my-event-organizer': (context) => DetailMyEventOrganizer(),
         // '/ubah-event-organizer': (context) => EditEventOrganizer(),
-        '/ubah-kontraprestasi': (context) => EditKontraprestasi(),
+        // '/ubah-kontraprestasi': (context) => EditKontraprestasi(),
         '/add-kontraprestasi': (context) => AddKontraprestasi(),
         '/tambah-bukti-kontraprestasi': (context) => TambahBuktiKontraprestasi(),
         '/ubah-bukti-kontraprestasi': (context) => UbahBuktiKontraprestasi(),

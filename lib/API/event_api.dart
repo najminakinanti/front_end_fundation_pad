@@ -54,6 +54,45 @@ class EventApi {
     return fixed.map((m) => Event.fromJson(m)).toList();
   }
 
+  static Future<List<Event>> getMyEvents() async {
+    final url = '${ApiService.baseUrl}/myevents';
+
+    // Ambil token dari SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) {
+      throw Exception('Token tidak ditemukan di SharedPreferences');
+    }
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to load events: ${response.statusCode}');
+    }
+
+    final raw = jsonDecode(response.body);
+    if (raw is! List) return [];
+
+    final fixed = raw.map<Map<String, dynamic>>((e) {
+      final m = Map<String, dynamic>.from(e as Map);
+      m['event_photos'] = m['event_photos'] ?? [];
+      m['event_categories'] = m['event_categories'] ?? [];
+      m['categories'] = m['categories'] ?? [];
+      m['sponsors'] = m['sponsors'] ?? [];
+      return m;
+    }).toList();
+
+    return fixed.map((m) => Event.fromJson(m)).toList();
+  }
+
   static Future<List<Event>> fetchPopularEvents() async {
     final response = await http.get(
         Uri.parse('${ApiService.baseUrl}/events/popular'));
@@ -148,28 +187,6 @@ class EventApi {
       print("List Foto Detail: $eventDetailImages");
       print("========================");
 
-      // if (title == null || title.isEmpty ||
-      //     typeEvent == null || typeEvent.isEmpty ||
-      //     eventCategories == null || eventCategories.isEmpty ||
-      //     target_participant == null ||
-      //     participant_name == null || participant_name.isEmpty ||
-      //     description == null || description.isEmpty ||
-      //     photo_file == null || photo_file.isEmpty ||
-      //     // eventDetailImages == null || eventDetailImages.isEmpty ||
-      //     event_venue == null || event_venue.isEmpty ||
-      //     address == null || address.isEmpty ||
-      //     city == null || city.isEmpty ||
-      //     province == null || province.isEmpty ||
-      //     event_start_date == null || event_start_date.isEmpty ||
-      //     event_end_date == null || event_end_date.isEmpty ||
-      //     target_fund == null ||
-      //     sponsor_deadline == null || sponsor_deadline.isEmpty ||
-      //     kontraprestasiList == null || kontraprestasiList.isEmpty) {
-      //   _showErrorDialog(
-      //       context, "Semua data wajib diisi sebelum membuat event.");
-      //   return;
-      // }
-
       final payload = {
         "event": {
           "title": title,
@@ -240,7 +257,7 @@ class EventApi {
     String? token = prefs.getString('token');
 
     final response = await http.put(
-      Uri.parse('http://10.0.2.2:8000/api/update-events/$eventId'),
+      Uri.parse('http://10.0.2.2:8000/api/events/$eventId'),
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token",
@@ -254,6 +271,7 @@ class EventApi {
       showSuccessDialog(context);
     } else {
       print("Gagal update event. Status: ${response.statusCode}");
+      print("Response body: ${response.body}");
       _showErrorDialog(context, "Gagal update event: ${response.statusCode}");
     }
   }
@@ -279,6 +297,37 @@ class EventApi {
     }).toList();
 
     return fixed.map((m) => Event.fromJson(m)).toList();
+  }
+
+  static Future<void> deleteEvent(BuildContext context, int eventId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) {
+      _showErrorDialog(context, 'Token tidak ditemukan. Harap login kembali.');
+      return;
+    }
+
+    try {
+      final response = await http.delete(
+        Uri.parse('http://10.0.2.2:8000/api/events/$eventId'),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Accept": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        print("Event berhasil dihapus.");
+      } else {
+        print("Gagal menghapus event. Status: ${response.statusCode}");
+        print("Response: ${response.body}");
+        _showErrorDialog(context, "Gagal menghapus event: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error exception: $e");
+      _showErrorDialog(context, "Terjadi kesalahan: $e");
+    }
   }
 
   static Future<void> incrementClick(int eventId) async {

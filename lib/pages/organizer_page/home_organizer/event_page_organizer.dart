@@ -14,11 +14,13 @@ class EventPageOrganizer extends StatefulWidget {
 
 class _EventPageOrganizerState extends State<EventPageOrganizer> {
   late Future<List<Event>> popularEvents;
+  late Future<List<Event>> myEvents;
 
   @override
   void initState() {
     super.initState();
     popularEvents = EventApi.fetchPopularEvents();
+    myEvents = EventApi.getMyEvents();
   }
 
   @override
@@ -155,7 +157,7 @@ class _EventPageOrganizerState extends State<EventPageOrganizer> {
       return Container(
         margin: EdgeInsets.only(top: 10),
         child: FutureBuilder<List<Event>>(
-          future: popularEvents,
+          future: myEvents,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
@@ -164,24 +166,23 @@ class _EventPageOrganizerState extends State<EventPageOrganizer> {
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return Center(child: Text('No events found'));
             } else {
-              return SingleChildScrollView(
-                child: Column(
-                  children: snapshot.data!
-                  // .take(4)
-                      .map(
-                        (event) => MyEventCardOrganizer(
-                      event: event,
-                      onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          '/detail-my-event-organizer',
-                          arguments: event,
-                        );
-                      },
-                    ),
-                  )
-                      .toList(),
-                ),
+              return ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  final event = snapshot.data![index];
+                  return MyEventCardOrganizer(
+                    event: event,
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/detail-my-event-organizer',
+                        arguments: event,
+                      );
+                    },
+                  );
+                },
               );
             }
           },
@@ -190,13 +191,16 @@ class _EventPageOrganizerState extends State<EventPageOrganizer> {
     }
 
     Widget content() {
-      return ListView(
-        children: [
-          addEventButton(),
-          eventTitle(),
-          allSponsor(),
-          SizedBox(height: 80),
-        ],
+      return SingleChildScrollView(
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              addEventButton(),
+              eventTitle(),
+              allSponsor(),
+              SizedBox(height: 80),
+            ],
+        ),
       );
     }
 

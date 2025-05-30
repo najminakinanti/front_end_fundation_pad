@@ -25,6 +25,7 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
   String selectedCategory = '';
   late Future<List<Event>> events;
   late Future<List<Event>> popularEvents;
+  late Future<List<Event>> myEvents;
   Map<String, dynamic>? _userProfile;
   Map<String, dynamic>? _organizerProfile;
   String? fullName;
@@ -98,6 +99,7 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
     _loadOrganizerFromApi();
     events = EventApi.fetchEvents();
     popularEvents = EventApi.fetchPopularEvents();
+    myEvents = EventApi.getMyEvents();
   }
 
 
@@ -552,7 +554,7 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
       return Container(
         margin: EdgeInsets.only(top: 10),
         child: FutureBuilder<List<Event>>(
-          future: popularEvents, // GANTIIIIII
+          future: myEvents, // GANTIIIIII
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return CircularProgressIndicator();

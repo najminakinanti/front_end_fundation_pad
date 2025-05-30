@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pad_fundation/API/event_api.dart';
 import 'package:pad_fundation/pages/organizer_page/edit_event_organizer.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
@@ -628,7 +629,7 @@ class _DetailMyEventOrganizerState extends State<DetailMyEventOrganizer> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        showConfirmationDialog(context);
+                        showConfirmationDialog(context, widget.event);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: darkBrown,
@@ -665,7 +666,7 @@ class _DetailMyEventOrganizerState extends State<DetailMyEventOrganizer> {
       ),
     );
   }
-  void showConfirmationDialog(BuildContext context) {
+  void showConfirmationDialog(BuildContext context, Event event) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -686,22 +687,28 @@ class _DetailMyEventOrganizerState extends State<DetailMyEventOrganizer> {
             borderRadius: BorderRadius.circular(5),
           ),
           actions: [
+            // Tombol BATAL hanya menutup dialog
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Menutup dialog
               },
               child: Text(
                 'BATAL',
                 style: navyTextStyle.copyWith(fontSize: 12, fontWeight: regular),
               ),
             ),
+            // Tombol YA menghapus event
             TextButton(
-              onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  '/home-organizer',
-                  arguments: 1,
-                );
+              onPressed: () async {
+                await EventApi.deleteEvent(context, event.id);
+                if (context.mounted) {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/home-organizer',
+                        (route) => false,
+                    arguments: 1,
+                  );
+                }
               },
               child: Text(
                 'YA',

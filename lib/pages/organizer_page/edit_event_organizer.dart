@@ -1,7 +1,16 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:pad_fundation/API/event_api.dart';
+import 'package:pad_fundation/pages/organizer_page/edit_kontraprestasi.dart';
 import 'package:pad_fundation/theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/event.dart';
+import '../../models/kontraprestasi.dart';
 
 class EditEventOrganizer extends StatefulWidget {
 
@@ -21,12 +30,43 @@ class EditEventOrganizer extends StatefulWidget {
 
 class _EditEventOrganizerState extends State<EditEventOrganizer> {
 
+  late TextEditingController _namaEventController;
+  late TextEditingController _jumlahTargetController;
+  late TextEditingController _detailParticipantController;
+  late TextEditingController _deskripsiEventController;
+  late TextEditingController _venueEventController;
+  late TextEditingController _alamatEventController;
+  late TextEditingController _targetDonasiController;
+  late TextEditingController _imageController;
+  late TextEditingController _startDateController;
+  late TextEditingController _endDateController;
+  late TextEditingController _tenggatDonasiController;
+  late TextEditingController _categoryController;
+
+  late String selectedProvince;
+  late String selectedCity;
+  late String _selectedStatus;
+  List<String> selectedCategories = [];
+  List<Map<String, dynamic>> kontraprestasiList = [];
+  String? photo_file;
   String selectedEvent = 'apa';
-  String selectedStatus = 'aktif';
   String selectedCategory = 'kategorinya';
   String selectedParticipant = 'bokap bokap';
-  String selectedProvince = 'DKI Jakarta';
-  String selectedCity = 'Jakpus';
+
+  final Map<String, int> iconNameToId = {
+    'Platinum': 1,
+    'Diamond': 2,
+    'Gold': 3,
+    'Silver': 4,
+    'Bronze': 5,
+  };
+
+  final List<Map<String, dynamic>> categoryOptions = [
+    {'id': '1', 'name': 'Kuliner'},
+    {'id': '2', 'name': 'Festival'},
+    {'id': '3', 'name': 'Pendidikan'},
+    {'id': '4', 'name': 'Seniman'},
+  ];
 
   void onEventChanged(String? newEvent) {
     setState(() {
@@ -36,13 +76,7 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
 
   void onStatusChanged(String? newStatus) {
     setState(() {
-      selectedStatus = newStatus!;
-    });
-  }
-
-  void onCategoryChanged(String? newCategory){
-    setState(() {
-      selectedCategory = newCategory!;
+      _selectedStatus = newStatus!;
     });
   }
 
@@ -52,20 +86,192 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
     });
   }
 
-  void onProvinceChanged(String? newProvince) {
-    setState(() {
-      selectedProvince = newProvince!;
-    });
+  void onProvinceChanged(String? value) {
+    if (value != null) {
+      setState(() {
+        selectedProvince = value;
+      });
+    }
   }
 
-  void onCityChanged(String? newCity) {
+  void onCityChanged(String? value) {
+    if (value != null) {
+      setState(() {
+        selectedCity = value;
+      });
+    }
+  }
+
+  File? _imageFile;
+  final ImagePicker _picker = ImagePicker();
+  void _pickImageBase64() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if(image == null) return;
+
+    Uint8List imagebyte = await image!.readAsBytes();
+    String _base64 = base64.encode(imagebyte);
+
+    print(_base64);
+
+    final imagetamppath = File(image.path);
+
     setState(() {
-      selectedCity = newCity!;
+      _imageController.text = image.name;
+      this._imageFile = imagetamppath;
+      photo_file = _base64;
     });
+
+    print(imagetamppath);
+  }
+
+  Future<void> loadKontraprestasiFromPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? jsonString = prefs.getString('kontraprestasi_list');
+    print('Loaded kontraprestasi json: $jsonString');
+    if (jsonString != null) {
+      List<dynamic> jsonList = jsonDecode(jsonString);
+
+      List<Map<String, dynamic>> loadedList = jsonList.map((e) {
+        return {
+          "id": e['id'],
+          "title": e['title'] ?? '',
+          "min_sponsor": e['min_sponsor'] ?? 0,
+          "max_sponsor": e['max_sponsor'] ?? 0,
+          "icon_photo_kontraprestasis_id": e['icon_photo_kontraprestasis_id'] ?? 1,
+        };
+      }).toList();
+
+      setState(() {
+        kontraprestasiList = [...kontraprestasiList, ...loadedList];
+      });
+
+      print('Kontraprestasi list (parsed): $kontraprestasiList');
+    }
+  }
+
+    @override
+    void initState() {
+      super.initState();
+      _namaEventController = TextEditingController(text: widget.event.title);
+      _jumlahTargetController = TextEditingController(text: widget.event.targetParticipant.toString());
+      _detailParticipantController = TextEditingController(text: widget.event.participantName);
+      _deskripsiEventController = TextEditingController(text: widget.event.description);
+      _venueEventController = TextEditingController(text: widget.event.eventPlacement?.eventVenue ?? '');
+      _alamatEventController = TextEditingController(text: widget.event.eventPlacement?.address ?? '');
+      _targetDonasiController = TextEditingController(text: widget.event.eventFund?. targetFund.toString() ?? '');
+
+      final String? initialImageName = widget.event.eventPhotos.isNotEmpty ? widget.event.eventPhotos[0].photoFile : null;
+      _imageController = TextEditingController(text: initialImageName ?? '');
+
+      _startDateController = TextEditingController(text: widget.event.eventPlacement?.eventStartDate ?? ''); // pastikan sesuai nama field model);
+      _endDateController = TextEditingController(text: widget.event.eventPlacement?.eventEndDate ?? '');
+      _tenggatDonasiController = TextEditingController(text: widget.event.eventFund?.sponsorDeadline ?? '');
+
+      _categoryController = TextEditingController(
+        text: widget.event.categories.map((c) => c.name).join(', '),
+      );
+      kontraprestasiList = (widget.event.kontraprestasis ?? []).map((k) {
+        String cleanTitle = (k.title ?? '').trim().toLowerCase();
+        final Map<String, int> iconNameToIdLowerCase = {
+          'platinum': 1,
+          'diamond': 2,
+          'gold': 3,
+          'silver': 4,
+          'bronze': 5,
+        };
+
+        return {
+          "id": k.id,
+          "title": k.title ?? '',
+          "min_sponsor": k.minSponsor ?? 0,
+          "max_sponsor": k.maxSponsor ?? 0,
+          "icon_photo_kontraprestasis_id": iconNameToIdLowerCase[cleanTitle] ?? 1,
+        };
+      }).toList();
+      _selectedStatus = widget.event.typeEvent;
+      selectedProvince = widget.event.eventPlacement?.province ?? '';
+      selectedCity = widget.event.eventPlacement?.city ?? '';
+    }
+
+  @override
+  void dispose() {
+    _namaEventController.dispose();
+    _jumlahTargetController.dispose();
+    _detailParticipantController.dispose();
+    _deskripsiEventController.dispose();
+    _venueEventController.dispose();
+    _alamatEventController.dispose();
+    _targetDonasiController.dispose();
+    _startDateController.dispose();
+    _endDateController.dispose();
+    _tenggatDonasiController.dispose();
+    super.dispose();
+  }
+
+
+  void _showCategoryMultiSelectDialog(BuildContext context) {
+    List<String> tempSelectedIds = List.from(selectedCategories); // will hold IDs
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            return AlertDialog(
+              title: Text('Pilih Kategori'),
+              content: SingleChildScrollView(
+                child: Column(
+                  children: categoryOptions.map((category) {
+                    return CheckboxListTile(
+                      title: Text(category['name']),
+                      value: tempSelectedIds.contains(category['id']),
+                      onChanged: (bool? checked) {
+                        setStateDialog(() {
+                          if (checked == true) {
+                            tempSelectedIds.add(category['id']);
+                          } else {
+                            tempSelectedIds.remove(category['id']);
+                          }
+                        });
+                      },
+                    );
+                  }).toList(),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Batal'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      selectedCategories = tempSelectedIds;
+
+                      // Untuk tampilan, ubah ID ke nama
+                      _categoryController.text = categoryOptions
+                          .where((category) => selectedCategories.contains(category['id']))
+                          .map((e) => e['name'])
+                          .join(', ');
+                    });
+                    Navigator.pop(context);
+                  },
+                  child: Text('Pilih'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final event = widget.event;
+    final placement = event.eventPlacement;
 
     PreferredSize header() {
       return PreferredSize(
@@ -107,36 +313,60 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
       );
     }
 
+    // Widget buildTextFormField({
+    //   required String labelText,
+    //   required String initialValue,
+    // }) {
+    //   return Container(
+    //     margin: EdgeInsets.only(top: 10),
+    //     child: SizedBox(
+    //       height: 48,
+    //       child: TextFormField(
+    //         controller: TextEditingController(text: initialValue),
+    //         style: blackTextStyle.copyWith(
+    //             fontSize: 14,
+    //             fontWeight: regular
+    //         ),
+    //         decoration: InputDecoration(
+    //           labelText: labelText,
+    //           labelStyle: grayTextStyle.copyWith(fontSize: 14),
+    //           border: OutlineInputBorder(
+    //             borderSide: BorderSide(color: primaryColor),
+    //           ),
+    //           enabledBorder: OutlineInputBorder(
+    //             borderSide: BorderSide(color: primaryColor),
+    //           ),
+    //           focusedBorder: OutlineInputBorder(
+    //             borderSide: BorderSide(color: primaryColor),
+    //           ),
+    //           floatingLabelBehavior: FloatingLabelBehavior.always,
+    //           contentPadding: EdgeInsets.symmetric(
+    //             vertical: 12, horizontal: 12,
+    //           ),
+    //         ),
+    //       ),
+    //     ),
+    //   );
+    // }
     Widget buildTextFormField({
       required String labelText,
-      required String initialValue,
+      required TextEditingController controller,
     }) {
       return Container(
         margin: EdgeInsets.only(top: 10),
         child: SizedBox(
           height: 48,
           child: TextFormField(
-            controller: TextEditingController(text: initialValue),
-            style: blackTextStyle.copyWith(
-                fontSize: 14,
-                fontWeight: regular
-            ),
+            controller: controller,
+            style: blackTextStyle.copyWith(fontSize: 14, fontWeight: regular),
             decoration: InputDecoration(
               labelText: labelText,
               labelStyle: grayTextStyle.copyWith(fontSize: 14),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: primaryColor),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: primaryColor),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: primaryColor),
-              ),
+              border: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
               floatingLabelBehavior: FloatingLabelBehavior.always,
-              contentPadding: EdgeInsets.symmetric(
-                vertical: 12, horizontal: 12,
-              ),
+              contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
             ),
           ),
         ),
@@ -195,12 +425,10 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
 
     Widget buildDateFormField({
       required String labelText,
-      required String initialValue,
+      required TextEditingController controller,
       required BuildContext context,
       required Function(DateTime?) onDateSelected,
     }) {
-      TextEditingController controller = TextEditingController(text: initialValue);
-
       return Container(
         margin: EdgeInsets.only(top: 10),
         child: SizedBox(
@@ -244,73 +472,56 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
       );
     }
 
-    Widget buildListTile({
+    Widget buildReadOnlyField({
       required String labelText,
-      required String title,
-      required BuildContext context, // Add context to pass to Navigator
+      required String value,
       required VoidCallback onTap,
     }) {
       return Container(
-        margin: EdgeInsets.only(top: 10),
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: primaryColor),
-                borderRadius: BorderRadius.circular(4),
+        margin: const EdgeInsets.only(top: 10, bottom: 20),
+        child: InkWell(
+          onTap: onTap,
+          child: IgnorePointer(
+            child: TextFormField(
+              initialValue: value,
+              readOnly: true,
+              style: blackTextStyle.copyWith(
+                fontSize: 14,
+                fontWeight: regular,
               ),
-              child: ListTile(
-                title: Text(
-                  title,
-                  style: grayTextStyle.copyWith(fontSize: 14),
+              decoration: InputDecoration(
+                labelText: labelText,
+                labelStyle: grayTextStyle.copyWith(fontSize: 14),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: primaryColor),
                 ),
-                trailing: Image.asset('assets/icon_panah_kanan_hitam.png'),
-                onTap: () {
-                  Navigator.pushNamed(context, '/ubah-kontraprestasi');
-                },
-                contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: primaryColor),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: primaryColor),
+                ),
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 12,
+                ),
+                suffixIcon: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: Colors.grey, // sesuaikan dengan tema
+                ),
               ),
             ),
-            Positioned(
-              left: 10,
-              top: -8,
-              child: Container(
-                color: backgroundColor3,
-                padding: EdgeInsets.symmetric(horizontal: 5),
-                child: Text(
-                  labelText,
-                  style: grayTextStyle.copyWith(fontSize: 12),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       );
     }
 
-
-
-
     Widget namaEvent() {
       return buildTextFormField(
-          labelText: 'Nama Event',
-          initialValue: 'Mufest'
-      );
-    }
-
-    Widget jenisEvent({
-      required String selectedEvent,
-      required ValueChanged<String?> onEventChanged,
-    }) {
-      List<String> events = ['apa', 'nih', 'jenisnya'];
-
-      return buildDropdownTextFormField(
-        labelText: 'Jenis Event',
-        initialValue: events[0],  // Default value
-        dropdownItems: events,
-        selectedValue: selectedEvent,
-        onChanged: onEventChanged,
+        labelText: 'Nama Event',
+        controller: _namaEventController,
       );
     }
 
@@ -318,7 +529,7 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
       required String selectedStatus,
       required ValueChanged<String?> onStatusChanged,
     }) {
-      List<String> statuses = ['aktif', 'yakali', 'gak'];
+      List<String> statuses = ['ONLINE', 'OFFLINE'];
 
       return buildDropdownTextFormField(
         labelText: 'Status Event',
@@ -329,18 +540,40 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
       );
     }
 
-    Widget kategoriEvent({
-      required String selectedCategory,
-      required ValueChanged<String?> onCategoryChanged,
-    }) {
-      List<String> categories = ['kategorinya', 'ada', 'apa', 'aja'];
-
-      return buildDropdownTextFormField(
-        labelText: 'Kategori Event',
-        initialValue: categories[0],
-        dropdownItems: categories,
-        selectedValue: selectedCategory,
-        onChanged: onCategoryChanged,
+    Widget kategoriEventMulti() {
+      return Container(
+        margin: const EdgeInsets.only(top: 30),
+        child: GestureDetector(
+          onTap: () {
+            _showCategoryMultiSelectDialog(context);
+          },
+          child: AbsorbPointer(
+            child: TextFormField(
+              controller: _categoryController,
+              decoration: InputDecoration(
+                labelText: 'Kategori Event',
+                hintText: 'Pilih kategori event',
+                labelStyle: grayTextStyle.copyWith(fontSize: 14),
+                hintStyle: grayTextStyle.copyWith(fontSize: 14),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: primaryColor),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: primaryColor),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: primaryColor),
+                ),
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              ),
+              style: blackTextStyle.copyWith(
+                fontSize: 14,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ),
+        ),
       );
     }
 
@@ -349,32 +582,17 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
         margin: const EdgeInsets.only(top: 20),
         child: buildTextFormField(
           labelText: 'Target Partisipan',
-          initialValue: '100000',
+          controller: _jumlahTargetController,
         ),
       );
     }
 
-    Widget kategoriPartisipan({
-      required String selectedParticipant,
-      required ValueChanged<String?> onParticipantChanged,
-    }) {
-      List<String> participant = ['bokap bokap', 'abang abang', 'nenek nenek'];
-
-      return buildDropdownTextFormField(
-        labelText: 'Kategori Partisipan',
-        initialValue: participant[0],
-        dropdownItems: participant,
-        selectedValue: selectedParticipant,
-        onChanged: onParticipantChanged,
-      );
-    }
-
-    Widget detailParticipant() {
+    Widget kategoriPartisipan() {
       return Container(
         margin: const EdgeInsets.only(top: 20),
         child: buildTextFormField(
-          labelText: 'Detail Partisipan',
-          initialValue: 'detail partisipan tu masudnya apa deh blm kepikir',
+          labelText: 'kategoriPartisipan',
+          controller: _detailParticipantController,
         ),
       );
     }
@@ -384,7 +602,7 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
         margin: const EdgeInsets.only(top: 20),
         child: buildTextFormField(
           labelText: 'Deskripsi Event',
-          initialValue: 'ini belum, gimana ya bikin kotaknya jadi lebar',
+          controller: _deskripsiEventController,
         ),
       );
     }
@@ -397,8 +615,8 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
             SizedBox(
               height: 60,
               child: TextFormField(
+                controller: _imageController,
                 readOnly: true,
-                initialValue: 'WhatsApp Image 2024-11-08',
                 decoration: InputDecoration(
                   labelText: 'Gambar Organizer',
                   labelStyle: grayTextStyle.copyWith(
@@ -421,7 +639,7 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
                   ),
                   suffixIcon: GestureDetector(
                     onTap: () {
-                      print('unggah foto yh maniz');
+                      _pickImageBase64();
                     },
                     child: Container(
                       width: 80,
@@ -467,7 +685,7 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
             Expanded(
               child: buildDateFormField(
                 labelText: "Tanggal Mulai Event",
-                initialValue: "2024-09-19",
+                controller: _startDateController,
                 context: context,
                 onDateSelected: (date) {
                   print("Selected date for Tanggal Mulai Event: $date");
@@ -478,7 +696,7 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
             Expanded(
               child: buildDateFormField(
                 labelText: "Tanggal Akhir Event",
-                initialValue: "2024-09-20",
+                controller: _endDateController,
                 context: context,
                 onDateSelected: (date) {
                   print("Selected date for Tanggal Akhir Event: $date");
@@ -495,7 +713,7 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
         margin: const EdgeInsets.only(top: 20),
         child: buildTextFormField(
           labelText: 'Venue Event',
-          initialValue: 'dtedi anjay',
+          controller: _venueEventController,
         ),
       );
     }
@@ -535,7 +753,7 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
         margin: const EdgeInsets.only(top: 20),
         child: buildTextFormField(
           labelText: 'Alamat Event',
-          initialValue: 'rekomen dong dimana',
+          controller: _alamatEventController,
         ),
       );
     }
@@ -543,7 +761,7 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
     Widget targetDonasi() {
       return buildTextFormField(
           labelText: 'Target Donasi Sponsor',
-          initialValue: 'yang banyak'
+          controller: _targetDonasiController,
       );
     }
 
@@ -552,7 +770,7 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
         margin: const EdgeInsets.only(top: 20),
         child: buildDateFormField(
           labelText: "Tenggat Donasi Sponsor",
-          initialValue: "2024-08-19",
+          controller: _tenggatDonasiController,
           context: context,
           onDateSelected: (date) {
             print("Selected date for Tanggal Mulai Event: $date");
@@ -561,56 +779,21 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
       );
     }
 
-    Widget kontraprestasi1() {
-      return Container(
-        child: buildListTile(
-          labelText: 'Kontraprestasi 1',
-          title: 'Emas',
-          context: context,
-          onTap: () {
-
-          },
-        ),
-      );
-    }
-
-    Widget kontraprestasi2() {
-      return Container(
-        margin: const EdgeInsets.only(top: 20),
-        child: buildListTile(
-          labelText: 'Kontraprestasi 2',
-          title: 'Perak',
-          context: context,
-          onTap: () {
-
-          },
-        ),
-      );
-    }
-
-    Widget kontraprestasi3() {
-      return Container(
-        margin: const EdgeInsets.only(top: 20),
-        child: buildListTile(
-          labelText: 'Kontraprestasi 3',
-          title: 'Perunggu',
-          context: context,
-          onTap: () {
-
-          },
-        ),
-      );
-    }
-
     Widget addKontraprestasiButton() {
       return Container(
         height: 40,
-        margin: EdgeInsets.only(bottom: 0, top: 30),
+        margin: EdgeInsets.only(bottom: 0, top: 15),
         width: double.infinity,
         child: TextButton(
-          onPressed: () {
+          onPressed: () async {
             print('tambah kontraprestasi');
-            Navigator.pushNamed(context, '/add-kontraprestasi');
+            // await Navigator.pushNamed(context, '/add-kontraprestasi');
+            // await loadKontraprestasiFromPrefs();
+            final result = await Navigator.pushNamed(context, '/add-kontraprestasi');
+            if (result == 'refresh') {
+              // Panggil fungsi reload data, misal:
+              loadKontraprestasiFromPrefs();
+            }
           },
           style: TextButton.styleFrom(
             backgroundColor: creamButton,
@@ -636,8 +819,43 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
         margin: EdgeInsets.only(left: 30, right: 30, bottom: 30, top: 0),
         width: double.infinity,
         child: TextButton(
-          onPressed: () {
-            showConfirmationDialog(context);
+          onPressed: () async {
+            // await loadKontraprestasiFromPrefs();
+            // showConfirmationDialog(context);
+            final updatedData = {
+              'event': {
+                'title': _namaEventController.text,
+                'type_event': _selectedStatus,
+                'target_participant': int.tryParse(_jumlahTargetController.text) ?? 0,
+                'participant_name': _detailParticipantController.text,
+                'description': _deskripsiEventController.text,
+              },
+              'event_photos': [
+                {'photo_file': _imageController.text},
+              ],
+              'event_categories': event.categories.map((cat) {
+                return {
+                  "event_category_names_id": cat.id,
+                };
+              }).toList(),
+              'event_placement': {
+                'event_start_date': _startDateController.text,
+                'event_end_date': _endDateController.text,
+                'event_venue': _venueEventController.text,
+                'address': _alamatEventController.text,
+                'city': selectedCity,
+                'province': selectedProvince,
+              },
+              'event_fund': {
+                'target_fund': _targetDonasiController.text,
+                'sponsor_deadline': _tenggatDonasiController.text,
+              },
+              'kontraprestasi': kontraprestasiList,
+            };
+
+            print(updatedData);
+
+            EventApi.editEvent(context, event.id, updatedData);
           },
           style: TextButton.styleFrom(
             backgroundColor: primaryColor,
@@ -677,12 +895,10 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
             child: Column(
               children: [
                 namaEvent(),
-                jenisEvent(selectedEvent: selectedEvent, onEventChanged: onEventChanged),
-                statusEvent(selectedStatus: selectedStatus, onStatusChanged: onStatusChanged),
-                kategoriEvent(selectedCategory: selectedCategory, onCategoryChanged: onCategoryChanged),
+                statusEvent(selectedStatus: _selectedStatus, onStatusChanged: onStatusChanged),
+                kategoriEventMulti(),
                 jumlahTarget(),
-                kategoriPartisipan(selectedParticipant: selectedParticipant, onParticipantChanged: onParticipantChanged),
-                detailParticipant(),
+                kategoriPartisipan(),
                 deskripsiEvent(),
                 pictureInput(),
               ],
@@ -829,14 +1045,32 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
               ],
             ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                kontraprestasi1(),
-                kontraprestasi2(),
-                kontraprestasi3(),
-                addKontraprestasiButton(),
+                ...kontraprestasiList.asMap().entries.map((e) {
+                  return buildReadOnlyField(
+                    labelText: 'Kontraprestasi ${e.key + 1}',
+                    value: e.value['title'],
+                    onTap: () async {
+
+                      print('Item diklik: ${jsonEncode(e.value)}');
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => EditKontraprestasi(
+                            kontraprestasi: Kontraprestasi.fromJson(e.value),
+                          ),
+                        ),
+                      );
+                      if (result == 'refresh') {
+                        await loadKontraprestasiFromPrefs();
+                      }
+                    },
+                  );
+                }).toList(),
+                addKontraprestasiButton(), // ✅ Letakkan di luar toList()
               ],
             ),
-
           ),
           Positioned(
             top: 5,
