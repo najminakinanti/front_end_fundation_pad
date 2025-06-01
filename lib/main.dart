@@ -58,6 +58,7 @@ import 'package:pad_fundation/pages/organizer_page/login_page_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/nominal.dart';
 import 'package:pad_fundation/pages/organizer_page/register_page_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/register_page_organizer_add.dart';
+import 'package:pad_fundation/pages/organizer_page/result_filter.dart';
 import 'package:pad_fundation/pages/organizer_page/tambah_bukti_kontraprestasi.dart';
 import 'package:pad_fundation/pages/organizer_page/ubah_data_profile_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/ubah_email_organizer.dart';
@@ -174,6 +175,8 @@ class MyApp extends StatelessWidget {
         '/tambah-bukti-kontraprestasi': (context) => TambahBuktiKontraprestasi(),
         '/ubah-bukti-kontraprestasi': (context) => UbahBuktiKontraprestasi(),
         '/add-event': (context) => EventFormStepper(),
+        '/filter-event': (context) => ResultFilter(),
+
 
 
         //not logged in

@@ -4,7 +4,7 @@ import 'package:pad_fundation/theme.dart';
 class FilterSidebar extends StatefulWidget {
   final Function(Map<String, dynamic>) onApply;
 
-  const FilterSidebar({Key? key, required this.onApply}) : super(key: key);
+  const FilterSidebar({super.key, required this.onApply});
 
   @override
   _FilterSidebarState createState() => _FilterSidebarState();
@@ -12,21 +12,18 @@ class FilterSidebar extends StatefulWidget {
 
 class _FilterSidebarState extends State<FilterSidebar> {
   final List<String> categories = [
-    'Festival',
     'Kuliner',
-    'Pameran',
-    'Musik',
+    'Festival',
     'Pendidikan',
     'Seniman',
-    'Formal',
-    'Tari',
   ];
 
   final List<String> fundRanges = [
     '<10.000.000',
-    '10.000.000',
-    '20.000.000',
-    '30.000.000',
+    '<20.000.000',
+    '<50.000.000',
+    '<100.000.000',
+    '≥100.000.000',
   ];
 
   Map<String, bool> selectedCategories = {};
@@ -65,6 +62,7 @@ class _FilterSidebarState extends State<FilterSidebar> {
               fontSize: 12,
               fontWeight: regular,
               color: selections[label]! ? navbarColor : textColor2,
+              decoration: TextDecoration.none,
             ),
           ),
         ),
@@ -91,9 +89,10 @@ class _FilterSidebarState extends State<FilterSidebar> {
           child: Text(
             label,
             style: blackTextStyle.copyWith(
-              fontSize: 10,
+              fontSize: 12,
               fontWeight: regular,
               color: selections[label]! ? navbarColor : textColor2,
+              decoration: TextDecoration.none,
             ),
           ),
         ),
@@ -125,6 +124,7 @@ class _FilterSidebarState extends State<FilterSidebar> {
                             style: blackTextStyle.copyWith(
                               fontSize: 20,
                               fontWeight: regular,
+                              decoration: TextDecoration.none,
                             ),
                           ),
                           Divider(
@@ -137,6 +137,7 @@ class _FilterSidebarState extends State<FilterSidebar> {
                             style: blackTextStyle.copyWith(
                               fontSize: 14,
                               fontWeight: bold,
+                              decoration: TextDecoration.none,
                             ),
                           ),
                           SizedBox(height: 20),
@@ -154,6 +155,7 @@ class _FilterSidebarState extends State<FilterSidebar> {
                             style: blackTextStyle.copyWith(
                               fontSize: 14,
                               fontWeight: bold,
+                              decoration: TextDecoration.none,
                             ),
                           ),
                           SizedBox(height: 20),
@@ -177,7 +179,7 @@ class _FilterSidebarState extends State<FilterSidebar> {
                     alignment: Alignment.centerRight,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pushNamed(context, '/filter-event');
                         widget.onApply({
                           'categories': selectedCategories,
                           'fundRanges': selectedFundRanges,
@@ -187,13 +189,13 @@ class _FilterSidebarState extends State<FilterSidebar> {
                         backgroundColor: primaryColor,
                         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0),
+                          borderRadius: BorderRadius.circular(2),
                         ),
                       ),
                       child: Text(
                         'Terapkan',
                         style: whiteTextStyle.copyWith(
-                          fontSize: 12,
+                          fontSize: 13,
                           fontWeight: medium,
                         ),
                       ),

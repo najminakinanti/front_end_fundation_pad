@@ -467,6 +467,7 @@ class _HomePageMitraState extends State<HomePageMitra> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: snapshot.data!
+                      .take(5)
                       .map((event) => EventCardMitra(
                     event: event,
                     onTap: () {

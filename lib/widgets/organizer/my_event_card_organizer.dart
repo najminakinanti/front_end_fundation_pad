@@ -4,6 +4,7 @@ import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 
 import '../../API/event_api.dart';
+import '../../API/profile_api.dart';
 import '../../models/event.dart';
 import '../../models/sponsor.dart';
 import '../../pages/organizer_page/detail_my_event_organizer.dart';
@@ -99,22 +100,29 @@ class _MyEventCardOrganizerState extends State<MyEventCardOrganizer> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    event.eventPhotos.isNotEmpty
-                        ? event.eventPhotos.first.photoFile
-                        : 'https://via.placeholder.com/150',
+                  child: Builder(
+                  builder: (context) {
+                    String imageUrl = event.eventPhotos.first.photoFile ?? '';
+                    if (imageUrl.startsWith('http')) {
+                    } else {
+                      imageUrl = '${ProfileApi.photourl}$imageUrl';
+                    }
+                    print('Image URL: $imageUrl');
+                  return Image.network(
+                    imageUrl,
                     width: double.infinity,
                     height: 230,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
-                      // Jika ada error dalam memuat gambar, tampilkan gambar profil diri
                       return Image.asset(
-                        'assets/img_kochella.png', // Ganti dengan path gambar profil diri di assets
+                        'assets/img_kochella.png',
                         width: double.infinity,
                         height: 230,
                         fit: BoxFit.cover,
                       );
                     },
+                  );
+                  },
                   ),
                 ),
                 Positioned(

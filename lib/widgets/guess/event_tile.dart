@@ -5,6 +5,7 @@ import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 
 import '../../API/event_api.dart';
+import '../../API/profile_api.dart';
 import '../../models/event.dart';
 import '../../models/sponsor.dart';
 
@@ -90,19 +91,27 @@ class _EventTileState extends State<EventTile> {
                     topLeft: Radius.circular(10),
                     bottomLeft: Radius.circular(10),
                   ),
-                  child: Image.network(
-                    event.eventPhotos.isNotEmpty
-                        ? event.eventPhotos.first.photoFile
-                        : 'https://via.placeholder.com/150',
-                    width: 127,
-                    height: double.infinity,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Image.asset(
-                        'assets/img_kochella.png',
+                  child: Builder(
+                    builder: (context) {
+                      String imageUrl = event.eventPhotos.first.photoFile ?? '';
+                      if (imageUrl.startsWith('http')) {
+                      } else {
+                        imageUrl = '${ProfileApi.photourl}$imageUrl';
+                      }
+                      print('Image URL: $imageUrl');
+                      return Image.network(
+                        imageUrl,
                         width: 127,
                         height: double.infinity,
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.asset(
+                            'assets/img_kochella.png',
+                            width: 127,
+                            height: double.infinity,
+                            fit: BoxFit.cover,
+                          );
+                        },
                       );
                     },
                   ),

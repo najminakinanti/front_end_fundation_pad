@@ -4,6 +4,7 @@ import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 
 import '../../API/event_api.dart';
+import '../../API/profile_api.dart';
 import '../../models/event.dart';
 import '../../models/sponsor.dart';
 import '../../pages/not_logged_in/detail_event.dart';
@@ -98,19 +99,28 @@ class _EventCardState extends State<EventCard> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(5),
-                  child: Image.network(
-                    event.eventPhotos.isNotEmpty
-                        ? event.eventPhotos.first.photoFile
-                        : 'https://via.placeholder.com/150',
-                    width: double.infinity,
-                    height: 100,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Image.asset(
-                        'assets/img_kochella.png',
+                  child:
+                  Builder(
+                    builder: (context) {
+                      String imageUrl = event.eventPhotos.first.photoFile ?? '';
+                      if (imageUrl.startsWith('http')) {
+                      } else {
+                        imageUrl = '${ProfileApi.photourl}$imageUrl';
+                      }
+                      print('Image URL: $imageUrl');
+                      return Image.network(
+                        imageUrl,
                         width: double.infinity,
                         height: 100,
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.asset(
+                            'assets/img_kochella.png',
+                            width: double.infinity,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          );
+                        },
                       );
                     },
                   ),

@@ -402,7 +402,6 @@ class _EventPageMitraState extends State<EventPageMitra> {
                 return SingleChildScrollView(
                   child: Column(
                     children: snapshot.data!
-                        .take(4)
                         .map(
                           (event) => EventTileMitra(
                         event: event,
