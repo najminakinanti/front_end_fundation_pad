@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+// import 'package:pad_fundation/pages/mitra_page/event_by_category_mitra.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/filter_sidebar.dart';
 import 'package:pad_fundation/widgets/organizer/event_card_organizer.dart';
 import 'package:pad_fundation/widgets/organizer/event_tile_organizer.dart';
+import 'package:pad_fundation/widgets/filter_modal.dart';
 
 import '../../API/event_api.dart';
+import '../../API/filter_api.dart';
 import '../../models/event.dart';
 
 class AllEventOrganizer extends StatefulWidget {
@@ -13,6 +16,7 @@ class AllEventOrganizer extends StatefulWidget {
 }
 
 class _AllEventOrganizerState extends State<AllEventOrganizer> {
+
   String selectedCategory = '';
   late Future<List<Event>> events;
   late Future<List<Event>> popularEvents;
@@ -21,6 +25,21 @@ class _AllEventOrganizerState extends State<AllEventOrganizer> {
     setState(() {
       selectedCategory = category;
     });
+  }
+
+  int mapCategoryToId(String name) {
+    switch (name) {
+      case 'Kuliner':
+        return 1;
+      case 'Festival':
+        return 2;
+      case 'Pendidikan':
+        return 3;
+      case 'Seniman':
+        return 4;
+      default:
+        return 0;
+    }
   }
 
   Widget buildCategoryContent() {
@@ -124,7 +143,13 @@ class _AllEventOrganizerState extends State<AllEventOrganizer> {
                     SizedBox(width: 5),
                     TextButton(
                       onPressed: () {
-                        showModalRightSheet(context);
+                        showModalRightSheet(context, (filters) {
+                          Navigator.pushNamed(
+                            context,
+                            '/filter-event',
+                            arguments: filters,
+                          );
+                        });
                       },
                       style: TextButton.styleFrom(
                         backgroundColor: textColor3,
@@ -426,6 +451,7 @@ class _AllEventOrganizerState extends State<AllEventOrganizer> {
     }
 
     Widget content() {
+
       return ListView(
         padding: EdgeInsets.only(
           left: defaultMargin,
@@ -446,35 +472,6 @@ class _AllEventOrganizerState extends State<AllEventOrganizer> {
       backgroundColor: backgroundColor,
       appBar: header(),
       body: content(),
-    );
-  }
-
-  void showModalRightSheet(BuildContext context) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: 'Dismiss',
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return Align(
-          alignment: Alignment.centerRight,
-          child: FilterSidebar(
-            onApply: (filters) {
-              print('Selected Filters: $filters');
-            },
-          ),
-        );
-      },
-      transitionDuration: Duration(milliseconds: 300),
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        final offsetAnimation = Tween<Offset>(
-          begin: Offset(1, 0),
-          end: Offset(0, 0),
-        ).animate(animation);
-        return SlideTransition(
-          position: offsetAnimation,
-          child: child,
-        );
-      },
     );
   }
 }

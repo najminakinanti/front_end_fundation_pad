@@ -8,19 +8,29 @@ class FilterApi {
     required List<int> categoryIds,
     required String? fundRange,
   }) async {
-    final url = Uri.parse('https://yourapi.com/api/filter-events');
+    print('✅ fetchFilteredEvents() called with:');
+    print('   categoryIds: $categoryIds');
+    print('   fundRange: $fundRange');
 
-    final response = await http.post(
-      url,
+    // Build query parameters
+    final queryParams = {
+      for (var id in categoryIds) 'category_id[]': id.toString(),
+      if (fundRange != null) 'fund_range': fundRange,
+    };
+
+    final uri = Uri.http('10.0.2.2:8000', '/api/filter-events', queryParams);
+
+    print('🌐 Requesting: $uri');
+
+    final response = await http.get(
+      uri,
       headers: {
-        'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
-      body: jsonEncode({
-        'category_id': categoryIds,
-        'fund_range': fundRange,
-      }),
     );
+
+    print('🔁 Response status: ${response.statusCode}');
+    print('📦 Response body: ${response.body}');
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
@@ -29,5 +39,4 @@ class FilterApi {
       throw Exception('Failed to fetch filtered events (${response.statusCode})');
     }
   }
-
 }

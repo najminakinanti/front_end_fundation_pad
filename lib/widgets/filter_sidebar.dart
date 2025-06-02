@@ -179,11 +179,14 @@ class _FilterSidebarState extends State<FilterSidebar> {
                     alignment: Alignment.centerRight,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/filter-event');
-                        widget.onApply({
+                        final filters = {
                           'categories': selectedCategories,
                           'fundRanges': selectedFundRanges,
-                        });
+                        };
+                        // Tutup modal dulu
+                        Navigator.of(context).pop();
+                        // Navigasi ke halaman filter-event, passing filters sebagai argument
+                        Navigator.pushNamed(context, '/filter-event', arguments: filters);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryColor,
