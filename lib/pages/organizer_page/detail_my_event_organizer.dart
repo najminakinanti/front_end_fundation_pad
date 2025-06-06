@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pad_fundation/API/event_api.dart';
+import 'package:pad_fundation/API/evidence_api.dart';
 import 'package:pad_fundation/pages/organizer_page/edit_event_organizer.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
@@ -9,8 +10,11 @@ import 'package:pad_fundation/widgets/kontraprestasi_category.dart';
 import 'package:pad_fundation/widgets/organizer/sponsor_card_org.dart';
 import 'package:pad_fundation/widgets/sponsor_card.dart';
 
+import '../../API/profile_api.dart';
 import '../../models/event.dart';
 import '../../models/event_fund.dart';
+import '../../models/kontraprestasi.dart';
+import '../../models/kontraprestasi_evidences.dart';
 import '../../models/sponsor.dart';
 
 class DetailMyEventOrganizer extends StatefulWidget {
@@ -377,93 +381,91 @@ class _DetailMyEventOrganizerState extends State<DetailMyEventOrganizer> {
       );
     }
 
-    Widget sponsor() {
+    Widget sponsor(List<Sponsor> sponsors, List<Kontraprestasi> kontraprestasis) {
+      // Kelompokkan sponsor berdasarkan level
+      Map<String, List<Sponsor>> groupedSponsors = {};
+
+      for (var kontraprestasi in kontraprestasis) {
+        final group = sponsors.where((s) {
+          return (s.amount ?? 0) >= (kontraprestasi.minSponsor ?? 0) &&
+              (s.amount ?? 0) <= (kontraprestasi.maxSponsor ?? 0);
+        }).toList();
+
+        if (group.isNotEmpty) {
+          groupedSponsors[kontraprestasi.title ?? 'Unknown'] = group;
+        }
+      }
+
       return Container(
         margin: EdgeInsets.only(top: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Gold',
-              style: blackTextStyle.copyWith(
-                fontSize: 16,
-                fontWeight: medium,
-              ),
-            ),
-            SponsorCardOrg(
-              sponsorName: "Bittersweet by Najla",
-              sponsorType: "Gold",
-              sponsorshipAmount: "Rp35.000.000",
-              sponsorLogo: 'assets/img_bittersweet.png',
-              imageList: [
-                'assets/img_kontraprestasi_1.png',
-                'assets/img_kontraprestasi_1.png',
-                'assets/img_kontraprestasi_1.png',
-                'assets/img_kontraprestasi_1.png',
-                'assets/img_kontraprestasi_1.png',
-                'assets/img_kontraprestasi_1.png',
+          children: groupedSponsors.entries.map((entry) {
+            String category = entry.key;
+            List<Sponsor> sponsorsInCategory = entry.value;
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  category,
+                  style: blackTextStyle.copyWith(
+                    fontSize: 16,
+                    fontWeight: medium,
+                  ),
+                ),
+                ...sponsorsInCategory.map((sponsor) {
+                  final mitra = sponsor.entrepreneur?.mitra;
+                  final sponsorLogo = mitra != null
+                      ? mitra.photoFile.startsWith('http')
+                      ? mitra.photoFile
+                      : '${ProfileApi.photourl}${mitra.photoFile ?? ''}'
+                      : 'assets/img_profile_picture.png';
+
+                  return FutureBuilder<List<KontraprestasiEvidence>>(
+                    future: EvidenceApi.getEvidencesBySponsorId(sponsor.id),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error loading evidences');
+                      } else {
+                        final evidences = snapshot.data ?? [];
+                        print('Jumlah evidences for ${mitra?.name}: ${evidences.length}');
+                        for (var e in evidences) {
+                          print('  - photoFile: ${e.photoFile}');
+                        }
+
+                        final imageList = evidences
+                            .where((e) => e.photoFile.isNotEmpty)
+                            .map((e) => e.photoFile.startsWith('http')
+                            ? e.photoFile
+                            : '${EvidenceApi.photourl}${e.photoFile}')
+                            .toList();
+
+                        print('imageListtttttttttttt: $imageList');
+
+                        return SponsorCardOrg(
+                          sponsorName: mitra?.name ?? 'Unknown',
+                          sponsorType: category,
+                          sponsorshipAmount:
+                          'Rp${NumberFormat("#,##0", "id_ID").format(sponsor.amount)}',
+                          sponsorLogo: sponsorLogo,
+                          imageList: imageList,
+                          iconPath: 'assets/icon_${category.toLowerCase()}.png',
+                        );
+                      }
+                    },
+                  );
+                }).toList(),
+                SizedBox(height: 10),
               ],
-              iconPath: 'assets/icon_gold.png',
-            ),
-            SponsorCardOrg(
-              sponsorName: "Bittersweet by Najla",
-              sponsorType: "Gold",
-              sponsorshipAmount: "Rp35.000.000",
-              sponsorLogo: 'assets/img_bittersweet.png',
-              imageList: [
-              ],
-              iconPath: 'assets/icon_gold.png',
-            ),
-            SponsorCardOrg(
-              sponsorName: "Bittersweet by Najla",
-              sponsorType: "Gold",
-              sponsorshipAmount: "Rp35.000.000",
-              sponsorLogo: 'assets/img_bittersweet.png',
-              imageList: [
-              ],
-              iconPath: 'assets/icon_gold.png',
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Silver',
-              style: blackTextStyle.copyWith(
-                fontSize: 16,
-                fontWeight: medium,
-              ),
-            ),
-            SponsorCardOrg(
-              sponsorName: "Bittersweet by Najla",
-              sponsorType: "Silver",
-              sponsorshipAmount: "Rp15.000.000",
-              sponsorLogo: 'assets/img_bittersweet.png',
-              imageList: [
-              ],
-              iconPath: 'assets/icon_silver.png',
-            ),
-            SponsorCardOrg(
-              sponsorName: "Bittersweet by Najla",
-              sponsorType: "Silver",
-              sponsorshipAmount: "Rp15.000.000",
-              sponsorLogo: 'assets/img_bittersweet.png',
-              imageList: [
-                'assets/img_kontraprestasi_1.png',
-                'assets/img_kontraprestasi_1.png',
-              ],
-              iconPath: 'assets/icon_silver.png',
-            ),
-            SponsorCardOrg(
-              sponsorName: "Bittersweet by Najla",
-              sponsorType: "Silver",
-              sponsorshipAmount: "Rp15.000.000",
-              sponsorLogo: 'assets/img_bittersweet.png',
-              imageList: [
-              ],
-              iconPath: 'assets/icon_silver.png',
-            ),
-          ],
+            );
+          }).toList(),
         ),
       );
     }
+
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -501,7 +503,7 @@ class _DetailMyEventOrganizerState extends State<DetailMyEventOrganizer> {
                         kontraprestasiTitle(),
                         kontraprestasi(),
                         sponsorTitle(),
-                        sponsor(),
+                        sponsor(event.sponsors, event.kontraprestasis),
                         SizedBox(height: 100),
                       ],
                     ),

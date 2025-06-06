@@ -1,4 +1,5 @@
 import 'entrepreneur.dart';
+import 'kontraprestasi_evidences.dart';
 
 class Sponsor {
   final int id;
@@ -8,6 +9,7 @@ class Sponsor {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final Entrepreneur? entrepreneur;
+  final List<KontraprestasiEvidence> evidences;
 
   Sponsor({
     required this.id,
@@ -17,7 +19,8 @@ class Sponsor {
     this.createdAt,
     this.updatedAt,
     this.entrepreneur,
-  });
+    List<KontraprestasiEvidence>? evidences,
+  }) : evidences = evidences ?? [];
 
   factory Sponsor.fromJson(Map<String, dynamic> json) {
     return Sponsor(
@@ -30,6 +33,27 @@ class Sponsor {
       entrepreneur: json['entrepreneur'] != null
           ? Entrepreneur.fromJson(json['entrepreneur'])
           : null,
+      evidences: json['evidences'] != null
+          ? (json['evidences'] as List)
+          .map((e) => KontraprestasiEvidence.fromJson(e))
+          .toList()
+          : [],
     );
+  }
+
+  @override
+  String toString() {
+    return '''
+Sponsor:
+  id: $id
+  eventId: $eventId
+  entrepreneurId: $entrepreneurId
+  amount: $amount
+  createdAt: $createdAt
+  updatedAt: $updatedAt
+  entrepreneur: ${entrepreneur != null ? entrepreneur.toString() : 'null'}
+  evidences:
+    ${evidences.isNotEmpty ? evidences.map((e) => e.toString()).join('\n    ') : 'No evidences'}
+''';
   }
 }

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pad_fundation/API/evidence_api.dart';
+import 'package:pad_fundation/theme.dart';
+
+import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 
 class SponsorCardOrg extends StatefulWidget {
@@ -35,13 +39,19 @@ class _SponsorCardOrgState extends State<SponsorCardOrg> {
 
   @override
   Widget build(BuildContext context) {
+    print('Sponsor: ${widget.sponsorName}');
+    print('Image list received:');
+    for (var img in widget.imageList) {
+      print(' - $img');
+    }
+
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
         side: BorderSide(color: primaryColor, width: 1),
       ),
       color: navbarColor,
-      elevation: 0, // Remove shadow
+      elevation: 0,
       child: Column(
         children: [
           Padding(
@@ -51,7 +61,9 @@ class _SponsorCardOrgState extends State<SponsorCardOrg> {
               children: [
                 CircleAvatar(
                   radius: 25,
-                  backgroundImage: AssetImage(widget.sponsorLogo),
+                  backgroundImage: widget.sponsorLogo.startsWith('http')
+                      ? NetworkImage(widget.sponsorLogo)
+                      : AssetImage(widget.sponsorLogo) as ImageProvider,
                 ),
                 SizedBox(width: 10),
                 Expanded(
@@ -180,17 +192,34 @@ class _SponsorCardOrgState extends State<SponsorCardOrg> {
                                   controller: _scrollController,
                                   scrollDirection: Axis.horizontal,
                                   itemCount: widget.imageList.length,
-                                  itemBuilder: (context, index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                                      child: Image.asset(
-                                        widget.imageList[index],
-                                        width: 50,
-                                        height: 50,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    );
-                                  },
+                                    itemBuilder: (context, index) {
+                                      String imagePath = widget.imageList[index];
+                                      print('imageList[$index]: $imagePath');
+
+                                      if (!imagePath.startsWith('http')) {
+                                        imagePath = '${EvidenceApi.photourl}$imagePath';
+                                      }
+                                      print('final imagePath: $imagePath');
+
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                        child: Image.network(
+                                          imagePath,
+                                          width: 50,
+                                          height: 50,
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (context, error, stackTrace) {
+                                            return Image.asset(
+                                              'assets/img_profile_picture.png',
+                                              width: 50,
+                                              height: 50,
+                                              fit: BoxFit.cover,
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    }
+
                                 ),
                               ),
                             ),
@@ -274,3 +303,4 @@ class _SponsorCardOrgState extends State<SponsorCardOrg> {
     );
   }
 }
+

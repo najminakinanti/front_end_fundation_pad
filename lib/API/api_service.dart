@@ -7,6 +7,7 @@ import 'package:pad_fundation/pages/organizer_page/home_organizer/main_page_orga
 
 class ApiService {
   static const String baseUrl = 'http://10.0.2.2:8000/api';
+  static const String photourl= 'http://10.0.2.2:8000/';
 
   static Future<http.Response> post(
       String endpoint,
