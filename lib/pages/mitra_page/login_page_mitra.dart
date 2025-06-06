@@ -27,17 +27,6 @@ class _LoginPageState extends State<LoginPageMitra> {
     });
   }
 
-  Future<void> _saveToSharedPreferences(Map<String, dynamic> user) async {
-    final prefs = await SharedPreferences.getInstance();
-
-    // Simpan account_id (kalau string)
-    prefs.setString('id', user['id']);
-
-    // Simpan nama juga kalau mau
-    prefs.setString('full_name', user['full_name']);
-  }
-
-
   Widget build(BuildContext context) {
 
     Widget header() {

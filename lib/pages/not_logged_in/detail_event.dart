@@ -341,7 +341,7 @@ class _DetailEventState extends State<DetailEvent> {
 
     Widget kontraprestasi() {
       return Container(
-        child: KontraprestasiCategory(),
+        child: KontraprestasiCategory(kontraprestasis: event.kontraprestasis),
       );
     }
 

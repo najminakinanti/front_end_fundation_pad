@@ -30,7 +30,9 @@ class SponsorCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 25,
-              backgroundImage: AssetImage(imageUrl),
+              backgroundImage: imageUrl.startsWith('http')
+                  ? NetworkImage(imageUrl)
+                  : AssetImage(imageUrl) as ImageProvider,
             ),
             SizedBox(width: 10),
             Expanded(

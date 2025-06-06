@@ -1,9 +1,223 @@
-import 'package:flutter/material.dart';
-import '../../../theme.dart';
+import 'dart:convert';
+import 'dart:io';
 
-class EditOrganizer extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../theme.dart';
+import '../../API/location_api.dart';
+import '../../API/profile_api.dart';
+
+class EditOrganizer extends StatefulWidget {
+  @override
+  _EditOrganizerState createState() => _EditOrganizerState();
+}
+
+class _EditOrganizerState extends State<EditOrganizer> {
+  final TextEditingController _imageController = TextEditingController();
+  late TextEditingController mitraNameController;
+  late TextEditingController addressController;
+  late TextEditingController descriptionController;
+  Map<String, dynamic>? _organizerProfile;
+  String? user_id;
+
+  String? mitraName, address, description, province, city, photo_file;
+  String? photo_file_base64;
+  File? _imageFile;
+  Uint8List? _imageBytes;
+  final ImagePicker _picker = ImagePicker();
+  List<String> provinces = [];
+  List<String> cities = [];
+  String? selectedProvince;
+  bool isLoadingProvinces = true;
+  String? selectedCity;
+
+  void _pickImageBase64() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image == null) return;
+
+    Uint8List imagebyte = await image.readAsBytes();
+    String _base64 = base64.encode(imagebyte);
+
+    final imagetamppath = File(image.path);
+
+    setState(() {
+      _imageController.text = image.name;
+      _imageFile = imagetamppath;
+      photo_file = ''; // kosongkan URL supaya preview dari local
+      photo_file_base64 = _base64; // kalau kamu simpan base64 juga, opsional
+    });
+
+    print('Base64 image: $_base64');
+  }
+
+  Future<void> _loadOrganizerFromApi() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    String? userIdString = prefs.getString('user_id');
+
+    if (token != null && userIdString != null) {
+      int userId = int.parse(userIdString);
+      user_id = userIdString;
+
+      final organizerData = await ProfileApi.getOrganizerProfile(userId, token);
+      if (organizerData != null  && mounted ) {
+        print('Mitra Data: $organizerData');
+
+        // Simpan data ke dalam state
+        setState(() {
+          _organizerProfile = organizerData;
+          mitraName = organizerData['data']['name'];
+          address = organizerData['data']['address'];
+          description = organizerData['data']['description'];
+          province = organizerData['data']['province'];
+          city = organizerData['data']['city'];
+          photo_file = organizerData['data']['photo_file'];
+
+          mitraNameController.text = mitraName ?? '';
+          addressController.text = address ?? '';
+          descriptionController.text = description ?? '';
+          _imageController.text = photo_file ?? '';
+        });
+        print('Photo file path: $photo_file');
+      }
+    } else {
+      print('Token atau User ID tidak ditemukan');
+    }
+  }
+
+  Future<void> _loadProvinces() async {
+    try {
+      final data = await LocationApi.fetchProvinces();
+      final loadedProvinces = data.map((item) => item['province'].toString()).toList();
+
+      setState(() {
+        provinces = loadedProvinces;
+        selectedProvince = province != null && loadedProvinces.contains(province)
+            ? province
+            : (loadedProvinces.isNotEmpty ? loadedProvinces[0] : null);
+      });
+    } catch (e) {
+      print('Gagal memuat provinsi: $e');
+    }
+  }
+
+  Future<void> _loadCities(String provinceName, [String? selectedCityFromApi]) async {
+    try {
+      final data = await LocationApi.fetchCities(provinceName);
+      final loadedCities = data.map((item) => item['district'].toString()).toList();
+
+      setState(() {
+        cities = loadedCities;
+        if (selectedCityFromApi != null && loadedCities.contains(selectedCityFromApi)) {
+          selectedCity = selectedCityFromApi;
+        } else {
+          selectedCity = null;
+        }
+      });
+      print("Cities loaded: $cities");
+    } catch (e) {
+      print('Gagal memuat kota: $e');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    mitraNameController = TextEditingController();
+    addressController = TextEditingController();
+    descriptionController = TextEditingController();
+    _loadInitialData();
+  }
+
+  Future<void> _loadInitialData() async {
+    await _loadOrganizerFromApi();
+    await _loadProvinces();
+    if (selectedProvince != null) {
+      await _loadCities(selectedProvince!, city);
+    }
+  }
+
+  Future<void> _saveProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+
+    if (token != null && user_id != null) {
+      Map<String, dynamic> dataToUpdate = {
+        "name": mitraNameController.text,
+        "description": descriptionController.text,
+        "address": addressController.text,
+        "city": selectedCity ?? "",
+        "province": selectedProvince ?? "",
+        "photo_file": photo_file_base64 != null && photo_file_base64!.isNotEmpty
+            ? photo_file_base64
+            : (photo_file ?? ""),
+      };
+
+      // Print data yang akan dikirim
+      print('Data yang dikirim ke API: $dataToUpdate');
+
+      // Panggil fungsi update mitra
+      bool success = await ProfileApi.putOrganizerProfile(int.parse(user_id!), token, dataToUpdate);
+
+      if (!mounted) return;
+
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Profil organizer berhasil diperbarui')),
+        );
+        Navigator.pushNamed(context, '/home-organizer', arguments: 3);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gagal memperbarui profil organizer')),
+        );
+      }
+    } else {
+      print("Token atau userId null");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    Widget buildPreviewImage() {
+      if (_imageFile != null) {
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: Image.file(
+            _imageFile!,
+            width: 80,
+            height: 80,
+            fit: BoxFit.cover,
+          ),
+        );
+      } else if
+      (photo_file != null && photo_file!.isNotEmpty) {
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: Image.network(
+            '${ProfileApi.photourl}${photo_file!}',
+            width: 80,
+            height: 80,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Image.asset(
+                'assets/img_chat3.png',
+                width: 80,
+                height: 80,
+              );
+            },
+          ),
+        );
+      } else {
+        return Image.asset(
+          'assets/img_profile_picture.png',
+          width: 80,
+          height: 80,
+        );
+      }
+    }
 
     Widget header() {
       return Container(
@@ -38,14 +252,10 @@ class EditOrganizer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 SizedBox(height: kToolbarHeight + 25),
-                Image.asset(
-                  'assets/img_chat4.png',
-                  width: 80,
-                  height: 80,
-                ),
+                buildPreviewImage(),
                 SizedBox(height: 10),
                 Text(
-                  'Mitra Industri',
+                  'Organizer',
                   style: lighGrayTextStyle.copyWith(
                     fontSize: 12,
                     fontWeight: FontWeight.normal,
@@ -60,8 +270,6 @@ class EditOrganizer extends StatelessWidget {
     }
 
     Widget namaInput() {
-      TextEditingController nominalController = TextEditingController(text: 'Fazaya');
-
       return Container(
         margin: EdgeInsets.only(top: 25, left: 30, right: 30),
         child: Column(
@@ -69,9 +277,9 @@ class EditOrganizer extends StatelessWidget {
             SizedBox(
               height: 48,
               child: TextFormField(
-                controller: nominalController,
+                controller: mitraNameController,
                 decoration: InputDecoration(
-                  labelText: 'Nama Organizer',
+                  labelText: 'Nama Mitra Industri',
                   labelStyle: grayTextStyle.copyWith(fontSize: 14),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
@@ -107,14 +315,6 @@ class EditOrganizer extends StatelessWidget {
     }
 
     Widget provinceInput() {
-      final List<String> provinces = [
-        'Jawa Tengah',
-        'Jawa Barat',
-        'Jakarta',
-        'Surabaya',
-      ];
-      String? selectedProvince = 'Jawa Tengah';
-
       return Container(
         margin: EdgeInsets.only(top: 18, left: 30, right: 30),
         child: Column(
@@ -122,32 +322,17 @@ class EditOrganizer extends StatelessWidget {
             SizedBox(
               height: 53,
               child: DropdownButtonFormField<String>(
+                isExpanded: true,
                 decoration: InputDecoration(
-                  labelText: 'Provinsi',
+                  labelText: 'Provinsi Mitra',
                   labelStyle: grayTextStyle.copyWith(fontSize: 14),
                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
+                  border: OutlineInputBorder(borderSide: BorderSide(color: primaryColor,),),
+                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor,),),
+                  focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor,),),
                   prefixIcon: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: Image.asset(
-                      'assets/icon_location.png',
-                      width: 15,
-                      height: 15,
-                    ),
+                    child: Image.asset('assets/icon_location.png', width: 15, height: 15,),
                   ),
                 ),
                 value: selectedProvince,
@@ -161,7 +346,13 @@ class EditOrganizer extends StatelessWidget {
                   );
                 }).toList(),
                 onChanged: (String? newValue) {
-                  selectedProvince = newValue;
+                  if (newValue != null) {
+                    setState(() {
+                      selectedProvince = newValue;
+                      selectedCity = null;
+                    });
+                    _loadCities(newValue);
+                  }
                 },
               ),
             ),
@@ -171,63 +362,44 @@ class EditOrganizer extends StatelessWidget {
     }
 
     Widget cityInput() {
-      final List<String> cities = [
-        'Semarang',
-        'Karanganyar',
-        'Sukoharjo',
-        'Salatiga',
-      ];
-      String? selectedCity = 'Semarang';
-
       return Container(
         margin: EdgeInsets.only(top: 18, left: 30, right: 30),
         child: Column(
           children: [
-            SizedBox(
-              height: 53,
-              child: DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  labelText: 'Kota',
-                  labelStyle: grayTextStyle.copyWith(fontSize: 14),
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: primaryColor,
-                    ),
-                  ),
-                  prefixIcon: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Image.asset(
-                      'assets/icon_location.png',
-                      width: 15,
-                      height: 15,
-                    ),
+            DropdownButtonFormField<String>(
+              isExpanded: true,
+              decoration: InputDecoration(
+                labelText: 'Kota Mitra',
+                labelStyle: grayTextStyle.copyWith(fontSize: 14),
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                border: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+                prefixIcon: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Image.asset(
+                    'assets/icon_location.png',
+                    width: 15,
+                    height: 15,
+                    fit: BoxFit.contain,
                   ),
                 ),
-                value: selectedCity,
-                items: cities.map((String city) {
-                  return DropdownMenuItem<String>(
-                    value: city,
-                    child: Text(
-                      city,
-                      style: grayTextStyle.copyWith(fontSize: 15),
-                    ),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  selectedCity = newValue;
-                },
               ),
+              value: selectedCity != null && cities.contains(selectedCity) ? selectedCity : null,
+              items: cities.map((String city) {
+                return DropdownMenuItem<String>(
+                  value: city,
+                  child: Text(
+                    city,
+                    style: grayTextStyle.copyWith(fontSize: 15),
+                  ),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedCity = newValue;
+                });
+              },
             ),
           ],
         ),
@@ -235,8 +407,6 @@ class EditOrganizer extends StatelessWidget {
     }
 
     Widget alamatInput() {
-      TextEditingController nominalController = TextEditingController(text: 'Jalan Mawar');
-
       return Container(
         margin: EdgeInsets.only(top: 25, left: 30, right: 30),
         child: Column(
@@ -244,7 +414,7 @@ class EditOrganizer extends StatelessWidget {
             SizedBox(
               height: 48,
               child: TextFormField(
-                controller: nominalController,
+                controller: addressController,
                 decoration: InputDecoration(
                   labelText: 'Alamat Lengkap',
                   labelStyle: grayTextStyle.copyWith(fontSize: 14),
@@ -285,8 +455,6 @@ class EditOrganizer extends StatelessWidget {
     }
 
     Widget pictureInput() {
-      TextEditingController nominalController = TextEditingController(text: 'WhatsApp Image 2024-11-08');
-
       return Container(
         margin: EdgeInsets.only(top: 25, left: 30, right: 30),
         child: Column(
@@ -294,9 +462,9 @@ class EditOrganizer extends StatelessWidget {
             SizedBox(
               height: 48,
               child: TextFormField(
-                controller: nominalController,
+                controller: _imageController,
                 decoration: InputDecoration(
-                  labelText: 'Gambar Organizer',
+                  labelText: 'Gambar Mitra Industri',
                   labelStyle: grayTextStyle.copyWith(fontSize: 14),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
@@ -314,26 +482,34 @@ class EditOrganizer extends StatelessWidget {
                     ),
                   ),
                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                  contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                  suffixIcon: Container(
-                    width: 80,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: sageGreen2,
-                      border: Border(
-                        left: BorderSide(color: primaryColor),
+                  contentPadding:
+                  EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                  suffixIcon: GestureDetector(
+                    onTap: () {
+                      _pickImageBase64();
+                    },
+                    child: Container(
+                      width: 80,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(color: primaryColor),
+                          right: BorderSide(color: primaryColor),
+                          bottom: BorderSide(color: primaryColor),
+                        ),
+                        color: sageGreen2,
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(5),
+                          bottomRight: Radius.circular(5),
+                        ),
                       ),
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(5),
-                        bottomRight: Radius.circular(5),
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Unggah',
-                        style: greenTextStyle.copyWith(
-                          fontSize: 14,
-                          fontWeight: FontWeight.normal,
+                      child: Center(
+                        child: Text(
+                          'Unggah',
+                          style: greenTextStyle.copyWith(
+                            fontSize: 14,
+                            fontWeight: regular,
+                          ),
                         ),
                       ),
                     ),
@@ -347,8 +523,6 @@ class EditOrganizer extends StatelessWidget {
     }
 
     Widget deskripsiInput() {
-      TextEditingController nominalController = TextEditingController(text: 'Membuat event seputar bidang kuliner');
-
       return Container(
         margin: EdgeInsets.only(top: 25, left: 30, right: 30),
         child: Column(
@@ -356,9 +530,9 @@ class EditOrganizer extends StatelessWidget {
             SizedBox(
               height: 48,
               child: TextFormField(
-                controller: nominalController,
+                controller: descriptionController,
                 decoration: InputDecoration(
-                  labelText: 'Deskripsi Organizer',
+                  labelText: 'Deskripsi Mitra Industri',
                   labelStyle: grayTextStyle.copyWith(fontSize: 14),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
@@ -388,11 +562,11 @@ class EditOrganizer extends StatelessWidget {
     Widget simpanButton() {
       return Container(
         height: 40,
-        margin: EdgeInsets.only(left: 30, right: 30, bottom: 30, top: 0),
+        margin: EdgeInsets.only(left: 30, right: 30, bottom: 30, top: 60),
         width: double.infinity,
         child: TextButton(
           onPressed: () {
-            Navigator.pop(context);
+            _saveProfile();
           },
           style: TextButton.styleFrom(
             backgroundColor: primaryColor,

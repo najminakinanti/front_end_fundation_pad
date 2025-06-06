@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:pad_fundation/API/auth_api.dart';
 import 'package:http/http.dart' as http;
+import 'package:pad_fundation/API/location_api.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
@@ -24,12 +25,8 @@ class _AddMitraState extends State<AddMitra> {
   String? selectedCity;
   String? photo_file;
 
-  List<String> provinces = ['Jawa Barat', 'Jawa Tengah', 'Jawa Timur'];
-  Map<String, List<String>> cities = {
-    'Jawa Barat': ['Bandung', 'Bogor', 'Bekasi'],
-    'Jawa Tengah': ['Semarang', 'Solo', 'Magelang'],
-    'Jawa Timur': ['Surabaya', 'Malang', 'Kediri'],
-  };
+  List<String> provinces = [];
+  List<String> cities = [];
 
   String? fullName, email, phone, password;
   File? _imageFile;
@@ -59,6 +56,31 @@ class _AddMitraState extends State<AddMitra> {
   void initState() {
     super.initState();
     _loadFromSharedPreferences();
+    _loadProvinces();
+  }
+
+  void _loadProvinces() async {
+    try {
+      final data = await LocationApi.fetchProvinces();
+      setState(() {
+        provinces = data.map((item) => item['province'].toString()).toList();
+      });
+      print("Provinces loaded: $provinces");
+    } catch (e) {
+      print('Gagal memuat provinsi: $e');
+    }
+  }
+
+  void _loadCities(String provinceName) async {
+    try {
+      final data = await LocationApi.fetchCities(provinceName);
+      setState(() {
+        cities = data.map((item) => item['district'].toString()).toList();
+      });
+      print("Cities loaded: $cities");
+    } catch (e) {
+      print('Gagal memuat kota: $e');
+    }
   }
 
   Future<void> _loadFromSharedPreferences() async {
@@ -259,8 +281,12 @@ class _AddMitraState extends State<AddMitra> {
           onChanged: (String? newValue) {
             setState(() {
               selectedProvince = newValue;
-              selectedCity = null; // Reset kota saat provinsi berubah
+              selectedCity = null;
+              cities = [];
             });
+            if (newValue != null) {
+              _loadCities(newValue);
+            }
           },
         ),
       );
@@ -288,19 +314,19 @@ class _AddMitraState extends State<AddMitra> {
             ),
           ),
           value: selectedCity,
-          items: selectedProvince != null
-              ? cities[selectedProvince!]!.map((String city) {
+          items: cities.map((String city) {
             return DropdownMenuItem<String>(
               value: city,
               child: Text(city, style: grayTextStyle.copyWith(fontSize: 12)),
             );
-          }).toList()
-              : [],
-          onChanged: (String? newValue) {
+          }).toList(),
+          onChanged: cities.isNotEmpty
+              ? (String? newValue) {
             setState(() {
               selectedCity = newValue;
             });
-          },
+          }
+              : null,
         ),
       );
     }

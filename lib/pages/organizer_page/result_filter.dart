@@ -139,7 +139,7 @@ class _ResultFilterState extends State<ResultFilter> {
                 onTap: () {
                   Navigator.pushNamed(
                     context,
-                    '/detail-event-organizer',
+                    '/detail-my-event-organizer',
                     arguments: event,
                   );
                 },

@@ -7,7 +7,9 @@ import 'package:pad_fundation/widgets/information_detail_galery.dart';
 import 'package:pad_fundation/widgets/kontraprestasi_category.dart';
 import 'package:pad_fundation/widgets/sponsor_card.dart';
 
+import '../../API/profile_api.dart';
 import '../../models/event_fund.dart';
+import '../../models/kontraprestasi.dart';
 import '../../models/sponsor.dart';
 
 class DetailEventMitra extends StatefulWidget {
@@ -67,6 +69,7 @@ class _DetailEventState extends State<DetailEventMitra> {
 
     return (totalAmount / targetFund) * 100;
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -343,7 +346,7 @@ class _DetailEventState extends State<DetailEventMitra> {
 
     Widget kontraprestasi() {
       return Container(
-        child: KontraprestasiCategory(),
+        child: KontraprestasiCategory(kontraprestasis: event.kontraprestasis),
       );
     }
 
@@ -377,70 +380,61 @@ class _DetailEventState extends State<DetailEventMitra> {
       );
     }
 
-    Widget sponsor() {
+    Widget sponsor(List<Sponsor> sponsors, List<Kontraprestasi> kontraprestasis) {
+      // Kelompokkan sponsor berdasarkan level (kontraprestasi)
+      Map<String, List<Sponsor>> groupedSponsors = {};
+
+      for (var kontraprestasi in kontraprestasis) {
+        final group = sponsors.where((s) {
+          return (s.amount ?? 0) >= (kontraprestasi.minSponsor ?? 0) &&
+              (s.amount ?? 0) <= (kontraprestasi.maxSponsor ?? 0);
+        }).toList();
+
+        if (group.isNotEmpty) {
+          groupedSponsors[kontraprestasi.title ?? 'Unknown'] = group;
+        }
+      }
+
       return Container(
         margin: EdgeInsets.only(top: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Gold',
-              style: blackTextStyle.copyWith(
-                fontSize: 16,
-                fontWeight: medium,
-              ),
-            ),
-            SponsorCard(
-              imageUrl: 'assets/img_bittersweet.png',
-              name: 'Bittersweet by Najla',
-              iconUrl: 'assets/icon_gold.png',
-              category: 'Gold',
-              amount: 'Rp35.000.000',
-            ),
-            SponsorCard(
-              imageUrl: 'assets/img_the_organizer.png',
-              name: 'The Organizer',
-              iconUrl: 'assets/icon_gold.png',
-              category: 'Gold',
-              amount: 'Rp34.000.000',
-            ),
-            SponsorCard(
-              imageUrl: 'assets/img_ozora.png',
-              name: 'Ozora Organizer',
-              iconUrl: 'assets/icon_gold.png',
-              category: 'Gold',
-              amount: 'Rp33.000.000',
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Silver',
-              style: blackTextStyle.copyWith(
-                fontSize: 16,
-                fontWeight: medium,
-              ),
-            ),
-            SponsorCard(
-              imageUrl: 'assets/img_raorganizer.png',
-              name: 'Raorganizer',
-              iconUrl: 'assets/icon_silver.png',
-              category: 'Silver',
-              amount: 'Rp25.000.000',
-            ),
-            SponsorCard(
-              imageUrl: 'assets/img_space.png',
-              name: 'Space Organizer',
-              iconUrl: 'assets/icon_silver.png',
-              category: 'Silver',
-              amount: 'Rp20.000.000',
-            ),
-            SponsorCard(
-              imageUrl: 'assets/img_space.png',
-              name: 'Organizer Event',
-              iconUrl: 'assets/icon_silver.png',
-              category: 'Silver',
-              amount: 'Rp15.000.000',
-            ),
-          ],
+          children: groupedSponsors.entries.map((entry) {
+            String category = entry.key;
+            List<Sponsor> sponsorsInCategory = entry.value;
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  category,
+                  style: blackTextStyle.copyWith(
+                    fontSize: 16,
+                    fontWeight: medium,
+                  ),
+                ),
+                ...sponsorsInCategory.take(2).map((sponsor) {
+                  final mitra = sponsor.entrepreneur?.mitra;
+                  final imageUrl = mitra != null
+                      ? mitra.photoFile.startsWith('http')
+                        ? mitra.photoFile
+                        : '${ProfileApi.photourl}${mitra.photoFile ?? ''}'
+                      : 'assets/img_profile_picture.png';
+
+                  print('Image URL: $imageUrl');
+
+                  return SponsorCard(
+                    imageUrl: imageUrl,
+                    name: mitra?.name ?? 'Unknown',
+                    iconUrl: 'assets/icon_${category.toLowerCase()}.png',
+                    category: category,
+                    amount: 'Rp${NumberFormat("#,##0", "id_ID").format(sponsor.amount)}',
+                  );
+                }).toList(),
+                SizedBox(height: 10),
+              ],
+            );
+          }).toList(),
         ),
       );
     }
@@ -484,7 +478,7 @@ class _DetailEventState extends State<DetailEventMitra> {
                               kontraprestasiTitle(),
                               kontraprestasi(),
                               sponsorTitle(),
-                              sponsor(),
+                              sponsor(event.sponsors, event.kontraprestasis),
                               SizedBox(height: 50),
                             ],
                           ),

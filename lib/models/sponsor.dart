@@ -1,3 +1,5 @@
+import 'entrepreneur.dart';
+
 class Sponsor {
   final int id;
   final int eventId;
@@ -5,6 +7,7 @@ class Sponsor {
   final double amount;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final Entrepreneur? entrepreneur;
 
   Sponsor({
     required this.id,
@@ -13,6 +16,7 @@ class Sponsor {
     required this.amount,
     this.createdAt,
     this.updatedAt,
+    this.entrepreneur,
   });
 
   factory Sponsor.fromJson(Map<String, dynamic> json) {
@@ -23,6 +27,9 @@ class Sponsor {
       amount: (json['amount'] as num).toDouble(),
       createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : null,
       updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at']) : null,
+      entrepreneur: json['entrepreneur'] != null
+          ? Entrepreneur.fromJson(json['entrepreneur'])
+          : null,
     );
   }
 }

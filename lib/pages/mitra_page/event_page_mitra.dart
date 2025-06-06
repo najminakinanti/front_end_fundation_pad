@@ -14,11 +14,13 @@ class EventPageMitra extends StatefulWidget {
 
 class _EventPageMitraState extends State<EventPageMitra> {
   late Future<List<Event>> events;
+  late Future<List<Event>> popularEvents;
 
   @override
   void initState() {
     super.initState();
     events = EventApi.fetchEvents();
+    popularEvents = EventApi.fetchPopularEvents();
   }
 
   @override
@@ -292,77 +294,36 @@ class _EventPageMitraState extends State<EventPageMitra> {
     Widget topEvent() {
       return Container(
         margin: EdgeInsets.only(top: 10),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              // EventCardMitra(
-              //   imagePath: 'assets/img_music_fest.png',
-              //   status: 'OFFLINE',
-              //   title: 'Music Fest 2024',
-              //   collectedAmount: 'Rp90.000.000',
-              //   progress: 0.9,
-              //   daysRemaining: 230,
-              //   donorshipCount: 100,
-              //   categories: ['Festival', 'Musik', 'EDM', 'Hiburan', 'DJ', 'Live'],
-              //   onTap: () {
-              //     Navigator.pushNamed(context, '/detail-event-mitra');
-              //   },
-              // ),
-              // EventCardMitra(
-              //   imagePath: 'assets/img_kulfood.png',
-              //   status: 'OFFLINE',
-              //   title: 'KulFood 2024 ',
-              //   collectedAmount: 'Rp900.000',
-              //   progress: 0.2,
-              //   daysRemaining: 230,
-              //   donorshipCount: 100,
-              //   categories: ['Festival', 'Kuliner', 'Kompetisi', 'Live Musik', 'Live'],
-              //   onTap: () {
-              //     Navigator.pushNamed(context, '/detail-event-mitra');
-              //   },
-              // ),
-              // EventCardMitra(
-              //   imagePath: 'assets/img_summer_party.png',
-              //   status: 'OFFLINE',
-              //   title: 'KulFood 2024',
-              //   collectedAmount: 'Rp900.000',
-              //   progress: 0.2,
-              //   daysRemaining: 230,
-              //   donorshipCount: 100,
-              //   categories: ['Pantai', 'Pesta', 'Liburan', 'Musik', 'Dress'],
-              //   onTap: () {
-              //     Navigator.pushNamed(context, '/detail-event-mitra');
-              //   },
-              // ),
-              // EventCardMitra(
-              //   imagePath: 'assets/img_food_fest.png',
-              //   status: 'OFFLINE',
-              //   title: 'FoodFest 2024',
-              //   collectedAmount: 'Rp900.000',
-              //   progress: 0.2,
-              //   daysRemaining: 230,
-              //   donorshipCount: 100,
-              //   categories: ['Festival', 'Kuliner', 'Weekend', 'Live Musik', 'Live'],
-              //   onTap: () {
-              //     Navigator.pushNamed(context, '/detail-event-mitra');
-              //   },
-              // ),
-              // EventCardMitra(
-              //   imagePath: 'assets/img_educ_fest.png',
-              //   status: 'ONLINE',
-              //   title: 'Educ Fest 2024',
-              //   collectedAmount: 'Rp10.000.000',
-              //   progress: 0.95,
-              //   daysRemaining: 230,
-              //   donorshipCount: 100,
-              //   categories: ['Pendidikan', 'Seminar', 'Konsultasi', 'Formal'],
-              //   onTap: () {
-              //     Navigator.pushNamed(context, '/detail-event-mitra');
-              //   },
-              // ),
-            ],
-          ),
+        child: FutureBuilder<List<Event>>(
+          future: popularEvents, // GUNAKAN popularEvents di sini
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Text('No popular events found');
+            } else {
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: snapshot.data!
+                      .take(5)
+                      .map((event) => EventCardMitra(
+                    event: event,
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/detail-event-mitra',
+                        arguments: event,
+                      );
+                    },
+                  ))
+                      .toList(),
+                ),
+              );
+            }
+          },
         ),
       );
     }

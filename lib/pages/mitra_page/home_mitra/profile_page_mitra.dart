@@ -16,7 +16,6 @@ class ProfilePageMitra extends StatefulWidget {
 
 class _ProfilePageMitraState extends State<ProfilePageMitra> {
 
-
   Map<String, dynamic>? _userProfile;
   Map<String, dynamic>? _mitraProfile;
 
@@ -79,67 +78,11 @@ class _ProfilePageMitraState extends State<ProfilePageMitra> {
     }
   }
 
-  // // load data dari be
-  // Future<void> _loadProfileFromApi() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final token = prefs.getString('token');
-  //
-  //   if (token == null) return;
-  //
-  //   final userResponse = await ProfileApi.getUserForm(token);
-  //
-  //   // Periksa apakah respons valid dan memiliki data
-  //   if (userResponse != null && userResponse['data'] != null) {
-  //     final userData = userResponse['data']['user'];  // Ambil data user dari response
-  //     final int? userId = userData['id'];  // Ambil userId dari API
-  //
-  //     // Panggil API untuk mengambil data profil pengguna menggunakan userId
-  //     final profileResponse = await ProfileApi.getUserProfile(userId, token);
-  //     final profileData = profileResponse?['data'];
-  //
-  //     if (profileData != null && mounted) {
-  //       print('Data user dari API: $profileData');
-  //       setState(() {
-  //         // Menyimpan data profil yang diterima dari API
-  //         fullName = profileData['full_name'];  // Menampilkan full_name
-  //         mail = profileData['email'];          // Menampilkan email
-  //         phone = profileData['phone'];         // Menampilkan phone
-  //       });
-  //     }
-  //   } else {
-  //     print('Gagal mendapatkan data user dari token');
-  //   }
-  // }
-
-  // Future<void> _loadMitraFromApi() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final token = prefs.getString('token');
-  //   final userId = prefs.getInt('user_id') ?? 36;
-  //
-  //   if (token == null) return;
-  //
-  //   final response = await ProfileApi.getMitraProfile(userId, token);
-  //   final data = response?['data'];
-  //
-  //   if (data != null && mounted) {
-  //     print('Data mitra dari API: $data');
-  //     setState(() {
-  //       mitraName = data['name'];
-  //       address = data['address'];
-  //       description = data['description'];
-  //       province = data['province'];
-  //       city = data['city'];
-  //       photo_file = data['photo_file'];
-  //     });
-  //   }
-  // }
-
   @override
   void initState() {
     super.initState();
     _loadProfileFromApi();
     _loadMitraFromApi();
-    // _loadFromSharedPreferences();
   }
 
   @override
@@ -321,7 +264,7 @@ class _ProfilePageMitraState extends State<ProfilePageMitra> {
             ),
           ),
           child: Text(
-            'GANTI PROFILE',
+            'UBAH PROFILE',
             style: whiteTextStyle.copyWith(
               fontSize: 14,
               fontWeight: medium,

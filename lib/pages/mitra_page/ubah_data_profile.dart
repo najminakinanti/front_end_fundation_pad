@@ -1,7 +1,90 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../theme.dart';
+import '../../API/profile_api.dart';
 
-class UbahDataProfile extends StatelessWidget {
+class UbahDataProfile extends StatefulWidget {
+  @override
+  _UbahDataProfileState createState() => _UbahDataProfileState();
+}
+
+class _UbahDataProfileState extends State<UbahDataProfile> {
+  Map<String, dynamic>? _userProfile;
+  String? userId;
+
+  late TextEditingController fullNameController;
+  late TextEditingController emailController;
+  late TextEditingController phoneController;
+
+  @override
+  void initState() {
+    super.initState();
+    fullNameController = TextEditingController();
+    emailController = TextEditingController();
+    phoneController = TextEditingController();
+    _loadProfileFromApi();
+  }
+
+  @override
+  void dispose() {
+    fullNameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadProfileFromApi() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    String? userIdString = prefs.getString('user_id');
+
+    if (token != null && userIdString != null) {
+      userId = userIdString;  // simpan userId untuk update nanti
+
+      final userData = await ProfileApi.getUserProfile(int.parse(userIdString), token);
+      if (userData != null) {
+        setState(() {
+          _userProfile = userData;
+          fullNameController.text = userData['data']['full_name'] ?? '';
+          emailController.text = userData['data']['email'] ?? '';
+          phoneController.text = userData['data']['phone'] ?? '';
+        });
+      }
+    }
+  }
+
+  Future<void> _saveProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+
+    if (token != null && userId != null) {
+      Map<String, dynamic> dataToUpdate = {
+        "full_name": fullNameController.text,
+        "email": emailController.text,
+        "phone": phoneController.text,
+      };
+
+      // Print data yang akan dikirim
+      print('Data yang dikirim ke API: $dataToUpdate');
+
+      bool success = await ProfileApi.putUserForm(userId!, token, dataToUpdate);
+
+      if (!mounted) return;
+
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Profile berhasil diperbarui')),
+        );
+        Navigator.pushNamed(context, '/home-mitra', arguments: 3);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gagal memperbarui profile')),
+        );
+      }
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -36,7 +119,8 @@ class UbahDataProfile extends StatelessWidget {
           actions: [
             GestureDetector(
               onTap: () {
-                Navigator.pop(context);
+                _saveProfile();
+                // Navigator.pop(context);
               },
               child: Padding(
                 padding: const EdgeInsets.only(right: 0.0),
@@ -53,8 +137,6 @@ class UbahDataProfile extends StatelessWidget {
     }
 
     Widget nama() {
-      TextEditingController nominalController = TextEditingController(text: 'Govan Dwi');
-
       return Container(
         margin: EdgeInsets.only(top: 25, left: 30, right: 30),
         child: Column(
@@ -62,8 +144,7 @@ class UbahDataProfile extends StatelessWidget {
             SizedBox(
               height: 48,
               child: TextFormField(
-                controller: nominalController,
-                readOnly: true,
+                controller: fullNameController,
                 decoration: InputDecoration(
                   labelText: 'Nama Lengkap',
                   labelStyle: grayTextStyle.copyWith(fontSize: 14),
@@ -78,19 +159,6 @@ class UbahDataProfile extends StatelessWidget {
                   ),
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                  suffixIcon: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/ubah-nama');
-                      },
-                      child: Image.asset(
-                        'assets/icon_panah_kanan_hitam.png',
-                        width: 15,
-                        height: 15,
-                      ),
-                    ),
-                  ),
                 ),
               ),
             ),
@@ -100,8 +168,6 @@ class UbahDataProfile extends StatelessWidget {
     }
 
     Widget email() {
-      TextEditingController nominalController = TextEditingController(text: 'govandwi@gmail.com');
-
       return Container(
         margin: EdgeInsets.only(top: 25, left: 30, right: 30),
         child: Column(
@@ -109,8 +175,7 @@ class UbahDataProfile extends StatelessWidget {
             SizedBox(
               height: 48,
               child: TextFormField(
-                controller: nominalController,
-                readOnly: true,
+                controller: emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
                   labelStyle: grayTextStyle.copyWith(fontSize: 14),
@@ -125,19 +190,6 @@ class UbahDataProfile extends StatelessWidget {
                   ),
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                  suffixIcon: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/ubah-email');
-                      },
-                      child: Image.asset(
-                        'assets/icon_panah_kanan_hitam.png',
-                        width: 15,
-                        height: 15,
-                      ),
-                    ),
-                  ),
                 ),
               ),
             ),
@@ -147,7 +199,6 @@ class UbahDataProfile extends StatelessWidget {
     }
 
     Widget telp() {
-      TextEditingController nominalController = TextEditingController(text: '088851453890');
 
       return Container(
         margin: EdgeInsets.only(top: 25, left: 30, right: 30),
@@ -156,8 +207,7 @@ class UbahDataProfile extends StatelessWidget {
             SizedBox(
               height: 48,
               child: TextFormField(
-                controller: nominalController,
-                readOnly: true,
+                controller: phoneController,
                 decoration: InputDecoration(
                   labelText: 'Nomor Telephone',
                   labelStyle: grayTextStyle.copyWith(fontSize: 14),
@@ -172,19 +222,6 @@ class UbahDataProfile extends StatelessWidget {
                   ),
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                  suffixIcon: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/ubah-nomor');
-                      },
-                      child: Image.asset(
-                        'assets/icon_panah_kanan_hitam.png',
-                        width: 15,
-                        height: 15,
-                      ),
-                    ),
-                  ),
                 ),
               ),
             ),
@@ -192,6 +229,7 @@ class UbahDataProfile extends StatelessWidget {
         ),
       );
     }
+
 
     return Scaffold(
       backgroundColor: backgroundColor,

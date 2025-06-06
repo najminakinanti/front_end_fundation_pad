@@ -96,4 +96,82 @@ class ProfileApi {
       return null;
     }
   }
+
+  static Future<bool> putUserForm(String userid, String token, Map<String, dynamic> data) async {
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/user-form/$userid'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(data),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        // 200 OK atau 204 No Content berarti sukses update
+        return true;
+      } else {
+        print('Gagal update user-form: ${response.statusCode} - ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('Error saat update user-form: $e');
+      return false;
+    }
+  }
+
+  // update data mitra
+  static Future<bool> putMitraProfile(int userId, String token, Map<String, dynamic> data) async {
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/mitra-enrollment/$userId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(data),
+      );
+
+      if (response.statusCode == 200) {
+        print('Berhasil update data mitra');
+        return true;
+      } else {
+        print('Gagal update data mitra: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('Error saat update mitra: $e');
+      return false;
+    }
+  }
+
+  // update data organizer
+  static Future<bool> putOrganizerProfile(int userId, String token, Map<String, dynamic> data) async {
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/organization-enrollment/$userId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(data),
+      );
+
+      if (response.statusCode == 200) {
+        print('✅ Berhasil update data organizer');
+        return true;
+      } else {
+        print('❌ Gagal update data organizer: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('🚨 Error saat update organizer: $e');
+      return false;
+    }
+  }
+
 }

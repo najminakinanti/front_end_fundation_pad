@@ -220,16 +220,36 @@ class AuthApi {
       print("📥 Response API (register-entrepreneur): ${userResponse.statusCode}");
       print("🔍 Response body: ${userResponse.body}");
 
+
       if (userResponse.statusCode == 201) {
         final userData = jsonDecode(userResponse.body);
-        int? userId = userData['data']['user']['id']; // Ambil user_id
-        String? token = userData['data']['token']; // Ambil token untuk request berikutnya
 
-        if (userId == null) {
-          _showErrorDialog(context, "Gagal mendapatkan User ID atau Token.");
+        var userId = userData['data']['user_data']['user_id'];
+        String? token = userData['data']['token'];
+        String? role = userData['data']['user']['role'];
+
+        if (userId == null || token == null || role == null) {
+          _showErrorDialog(context, "Gagal mendapatkan User ID, Token, atau Role.");
           return;
         }
-        print("User ID: $userId");
+
+        String userIdString = userId.toString();
+
+        print('Token yang diterima: $token');
+        print('Role yang diterima: $role');
+        print('Id yang diterima: $userIdString');
+
+        await _saveUserSession(token, role, userIdString);
+
+        // Cek apakah SharedPreferences sudah menyimpan dengan benar
+        final prefs = await SharedPreferences.getInstance();
+        String? savedToken = prefs.getString('token');
+        String? savedRole = prefs.getString('role');
+        String? savedId = prefs.getString('user_id');
+        print('Token di SharedPreferences: $savedToken');
+        print('id di SharedPreferences: $savedId');
+        print('Role di SharedPreferences: $savedRole');
+
         print("Mengirim request ke API: mitra-form/$userId...");
 
         final mitraResponse = await ApiService.postFormData(
@@ -290,7 +310,7 @@ class AuthApi {
   static Future<void> registerOrganizer(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
 
-    // Ambil data yang telah disimpan dari kedua form
+    // Ambil data dari form
     String? fullName = prefs.getString('full_name');
     String? email = prefs.getString('email');
     String? phone = prefs.getString('phone');
@@ -306,13 +326,12 @@ class AuthApi {
     print('Email: $email');
     print('Phone: $phone');
     print('Password: $password');
-    print('Mitra Name: $name');
+    print('Organizer Name: $name');
     print('Address: $address');
     print('Description: $description');
     print('Province: $province');
     print('City: $city');
     print('Image (base64): $photo_file');
-
 
     if (fullName == null || email == null || phone == null || password == null || name == null || address == null || description == null) {
       _showErrorDialog(context, "Data tidak lengkap. Silakan isi semua form.");
@@ -320,9 +339,7 @@ class AuthApi {
     }
 
     try {
-      print("📤 Mengirim request ke API: register-entrepreneur...");
-      print("➡ Data: {full_name: $fullName, email: $email, phone: $phone, password: $password}");
-
+      print("📤 Mengirim request ke API: register-organizer...");
       final userResponse = await ApiService.post(
         'register-organizer',
         {
@@ -344,41 +361,53 @@ class AuthApi {
         final userData = jsonDecode(userResponse.body);
         int? userId = userData['data']['user']['id'];
         String? token = userData['data']['token'];
+        String? role = userData['data']['user']['role'];
 
-        if (userId == null) {
-          _showErrorDialog(context, "Gagal mendapatkan User ID atau Token.");
+        if (userId == null || token == null || role == null) {
+          _showErrorDialog(context, "Gagal mendapatkan User ID, Token, atau Role.");
           return;
         }
-        print("User ID: $userId");
-        print("Mengirim request ke API: organizer-form/$userId...");
 
-        final mitraResponse = await ApiService.postFormData(
-            'organizer-form/$userId',
-            {
-              "name": name,
-              "address": address,
-              "description": description,
-              "province": province!,
-              "city": city!,
-              "photo_file": photo_file!,
-            },
-            headers: {
-              "Accept": "application/json",
-            }
-          // token: token, // Kirim token sebagai Authorization header
+        String userIdString = userId.toString();
 
+        // ✅ Simpan sesi login
+        await _saveUserSession(token, role, userIdString);
+
+        // Verifikasi penyimpanan
+        String? savedToken = prefs.getString('token');
+        String? savedRole = prefs.getString('role');
+        String? savedId = prefs.getString('user_id');
+        print('Token di SharedPreferences: $savedToken');
+        print('ID di SharedPreferences: $savedId');
+        print('Role di SharedPreferences: $savedRole');
+
+        print("📤 Mengirim request ke API: organizer-form/$userId...");
+        final organizerResponse = await ApiService.postFormData(
+          'organizer-form/$userId',
+          {
+            "name": name,
+            "address": address,
+            "description": description,
+            "province": province!,
+            "city": city!,
+            "photo_file": photo_file!,
+          },
+          headers: {
+            "Accept": "application/json",
+          },
         );
-        print("Response API (organizer-form/$userId): ${mitraResponse.statusCode}");
-        print("Response body: ${mitraResponse.body}");
 
-        if (mitraResponse.statusCode == 200) {
-          print("Registrasi Organizer sukses!");
+        print("📥 Response API (organizer-form/$userId): ${organizerResponse.statusCode}");
+        print("🔍 Response body: ${organizerResponse.body}");
+
+        if (organizerResponse.statusCode == 200) {
+          print("✅ Registrasi Organizer sukses!");
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => MainPageOrganizer()),
           );
         } else {
-          var errorData = jsonDecode(mitraResponse.body);
+          var errorData = jsonDecode(organizerResponse.body);
           _showErrorDialog(context, errorData['message'] ?? "Registrasi Organizer gagal!");
         }
       } else {
@@ -386,7 +415,7 @@ class AuthApi {
         _showErrorDialog(context, errorData['message'] ?? "Registrasi User gagal!");
       }
     } catch (e) {
-      print("Error saat registrasi: $e");
+      print("❌ Error saat registrasi: $e");
       _showErrorDialog(context, "Terjadi kesalahan. Silakan coba lagi.");
     }
   }

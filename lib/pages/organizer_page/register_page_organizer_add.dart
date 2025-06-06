@@ -9,6 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+import '../../API/location_api.dart';
+
 class AddOrganizer extends StatefulWidget {
   @override
   _AddOrganizerState createState() => _AddOrganizerState();
@@ -23,12 +25,8 @@ class _AddOrganizerState extends State<AddOrganizer> {
   String? selectedCity;
   String? photo_file;
 
-  List<String> provinces = ['Jawa Barat', 'Jawa Tengah', 'Jawa Timur'];
-  Map<String, List<String>> cities = {
-    'Jawa Barat': ['Bandung', 'Bogor', 'Bekasi'],
-    'Jawa Tengah': ['Semarang', 'Solo', 'Magelang'],
-    'Jawa Timur': ['Surabaya', 'Malang', 'Kediri'],
-  };
+  List<String> provinces = [];
+  List<String> cities = [];
 
   String? fullName, email, phone, password;
   File? _imageFile;
@@ -58,6 +56,31 @@ class _AddOrganizerState extends State<AddOrganizer> {
   void initState() {
     super.initState();
     _loadFromSharedPreferences();
+    _loadProvinces();
+  }
+
+  void _loadProvinces() async {
+    try {
+      final data = await LocationApi.fetchProvinces();
+      setState(() {
+        provinces = data.map((item) => item['province'].toString()).toList();
+      });
+      print("Provinces loaded: $provinces");
+    } catch (e) {
+      print('Gagal memuat provinsi: $e');
+    }
+  }
+
+  void _loadCities(String provinceName) async {
+    try {
+      final data = await LocationApi.fetchCities(provinceName);
+      setState(() {
+        cities = data.map((item) => item['district'].toString()).toList();
+      });
+      print("Cities loaded: $cities");
+    } catch (e) {
+      print('Gagal memuat kota: $e');
+    }
   }
 
   Future<void> _loadFromSharedPreferences() async {
@@ -258,8 +281,12 @@ class _AddOrganizerState extends State<AddOrganizer> {
           onChanged: (String? newValue) {
             setState(() {
               selectedProvince = newValue;
-              selectedCity = null; // Reset kota saat provinsi berubah
+              selectedCity = null;
+              cities = [];
             });
+            if (newValue != null) {
+              _loadCities(newValue);
+            }
           },
         ),
       );
@@ -287,19 +314,19 @@ class _AddOrganizerState extends State<AddOrganizer> {
             ),
           ),
           value: selectedCity,
-          items: selectedProvince != null
-              ? cities[selectedProvince!]!.map((String city) {
+          items: cities.map((String city) {
             return DropdownMenuItem<String>(
               value: city,
               child: Text(city, style: grayTextStyle.copyWith(fontSize: 12)),
             );
-          }).toList()
-              : [],
-          onChanged: (String? newValue) {
+          }).toList(),
+          onChanged: cities.isNotEmpty
+              ? (String? newValue) {
             setState(() {
               selectedCity = newValue;
             });
-          },
+          }
+              : null,
         ),
       );
     }

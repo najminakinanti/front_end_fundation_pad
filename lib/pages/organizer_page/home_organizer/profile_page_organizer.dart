@@ -15,82 +15,73 @@ class ProfilePageOrganizer extends StatefulWidget {
 
 class _ProfilePageOrganizerState extends State<ProfilePageOrganizer> {
 
+  Map<String, dynamic>? _userProfile;
+  Map<String, dynamic>? _organizerProfile;
+
   String? fullName, mail, phone;
   String? organizerName, address, description, province, city, photo_file;
   File? _imageFile;
   Uint8List? _imageBytes;
 
+  Future<void> _loadProfileFromApi() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    String? userIdString = prefs.getString('user_id');
+
+    if (token != null && userIdString != null) {
+      int userId = int.parse(userIdString);
+
+      final userData = await ProfileApi.getUserProfile(userId, token);
+      if (userData != null) {
+        print('User Data: $userData');
+
+        setState(() {
+          _userProfile = userData;
+          fullName = userData['data']['full_name'];
+          mail = userData['data']['email'];
+          phone = userData['data']['phone'];
+          userId = userData['data']['id']; // simpan sebagai String jika perlu
+        });
+      }
+    } else {
+      print('Token atau User ID tidak ditemukan');
+    }
+  }
+
+  Future<void> _loadOrganizerFromApi() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    String? userIdString = prefs.getString('user_id');
+
+    if (token != null && userIdString != null) {
+      int userId = int.parse(userIdString);
+
+      final organizerData = await ProfileApi.getOrganizerProfile(userId, token);
+      if (organizerData != null  && mounted ) {
+        print('Mitra Data: $organizerData');
+
+        // Simpan data ke dalam state
+        setState(() {
+          _organizerProfile = organizerData;
+          organizerName = organizerData['data']['name'];
+          address = organizerData['data']['address'];
+          description = organizerData['data']['description'];
+          province = organizerData['data']['province'];
+          city = organizerData['data']['city'];
+          photo_file = organizerData['data']['photo_file'];
+        });
+        print('Photo file path: $photo_file');
+      }
+    } else {
+      print('Token atau User ID tidak ditemukan');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    // _loadProfileFromApi();
-    // _loadOrganizerFromApi();
-    // _loadFromSharedPreferences();
-  }
-
-  // load data dari be
-  // Future<void> _loadProfileFromApi() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final token = prefs.getString('token');
-  //   final userId = prefs.getInt('userId') ?? 36;
-  //
-  //   if (token == null) return;
-  //
-  //   final response = await ProfileApi.getUserForm(userId, token);
-  //   final data = response?['data'];
-  //
-  //   if (data != null && mounted) {
-  //     print('Data user dari API: $data');
-  //     setState(() {
-  //       fullName = data['full_name'];
-  //       mail = data['email'];
-  //       phone = data['phone'];
-  //     });
-  //   }
-  // }
-
-  // Future<void> _loadOrganizerFromApi() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final token = prefs.getString('token');
-  //   final userId = prefs.getInt('user_id') ?? 37;
-  //
-  //   if (token == null) return;
-  //
-  //   final response = await ProfileApi.getOrganizerProfile(userId, token);
-  //   final data = response?['data'];
-  //
-  //   if (data != null && mounted) {
-  //     print('Data organizer dari API: $data');
-  //     setState(() {
-  //       organizerName = data['name'];
-  //       address = data['address'];
-  //       description = data['description'];
-  //       province = data['province'];
-  //       city = data['city'];
-  //       photo_file = data['photo_file'];
-  //     });
-  //   }
-  // }
-
-  // Load data from SharedPreferences
-  Future<void> _loadFromSharedPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      fullName = prefs.getString('full_name');
-      mail = prefs.getString('email');
-      phone = prefs.getString('phone');
-      organizerName = prefs.getString('name');
-      address = prefs.getString('address');
-      description = prefs.getString('description');
-      province = prefs.getString('province');
-      city = prefs.getString('city');
-      photo_file = prefs.getString('photo_file');
-      print('photo_file dari SharedPreferences: $photo_file');
-
-      if (photo_file != null && photo_file!.isNotEmpty) {
-        _imageBytes = base64Decode(photo_file!);
-      }
-    });
+    _loadProfileFromApi();
+    _loadOrganizerFromApi();
   }
 
   @override
@@ -144,10 +135,18 @@ class _ProfilePageOrganizerState extends State<ProfilePageOrganizer> {
                   )
                       : ClipOval(
                     child: Image.network(
-                      '${ProfileApi.photourl}$photo_file',
+                      '${ProfileApi.photourl}${photo_file ?? ''}',
                       width: 80,
                       height: 80,
                       fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          'assets/img_profile_picture.png',
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.cover,
+                        );
+                      },
                     ),
                   ),
                   SizedBox(height: 10),
@@ -286,7 +285,7 @@ class _ProfilePageOrganizerState extends State<ProfilePageOrganizer> {
             ),
           ),
           child: Text(
-            'GANTI PROFILE',
+            'UBAH PROFILE',
             style: whiteTextStyle.copyWith(
               fontSize: 14,
               fontWeight: medium,

@@ -554,14 +554,14 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
       return Container(
         margin: EdgeInsets.only(top: 10),
         child: FutureBuilder<List<Event>>(
-          future: myEvents, // GANTIIIIII
+          future: myEvents,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return CircularProgressIndicator();
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Text('No popular events found');
+              return Text('No events found');
             } else {
               return SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
