@@ -446,6 +446,7 @@ class _DetailMyEventOrganizerState extends State<DetailMyEventOrganizer> {
                         print('imageListtttttttttttt: $imageList');
 
                         return SponsorCardOrg(
+                          sponsorId: sponsor.id,
                           sponsorName: mitra?.name ?? 'Unknown',
                           sponsorType: category,
                           sponsorshipAmount:

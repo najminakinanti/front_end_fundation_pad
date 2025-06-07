@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:pad_fundation/API/evidence_api.dart';
 import 'package:pad_fundation/theme.dart';
 
-import 'package:flutter/material.dart';
-import 'package:pad_fundation/theme.dart';
+import '../../models/kontraprestasi_evidences.dart';
+import '../../pages/organizer_page/tambah_bukti_kontraprestasi.dart';
 
 class SponsorCardOrg extends StatefulWidget {
+  final int sponsorId;
   final String sponsorLogo;
   final String sponsorName;
   final String sponsorType;
@@ -14,6 +15,7 @@ class SponsorCardOrg extends StatefulWidget {
   final String iconPath;
 
   const SponsorCardOrg({
+    required this.sponsorId,
     required this.sponsorLogo,
     required this.sponsorName,
     required this.sponsorType,
@@ -28,8 +30,19 @@ class SponsorCardOrg extends StatefulWidget {
 }
 
 class _SponsorCardOrgState extends State<SponsorCardOrg> {
+  late Future<List<KontraprestasiEvidence>> _evidencesFuture;
   final ScrollController _scrollController = ScrollController();
   bool isExpanded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadEvidences();
+  }
+
+  void _loadEvidences() {
+    _evidencesFuture = EvidenceApi.getEvidencesBySponsorId(widget.sponsorId);
+  }
 
   @override
   void dispose() {
@@ -39,12 +52,6 @@ class _SponsorCardOrgState extends State<SponsorCardOrg> {
 
   @override
   Widget build(BuildContext context) {
-    print('Sponsor: ${widget.sponsorName}');
-    print('Image list received:');
-    for (var img in widget.imageList) {
-      print(' - $img');
-    }
-
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
@@ -120,159 +127,176 @@ class _SponsorCardOrgState extends State<SponsorCardOrg> {
                       });
                     },
                   ),
-                  if (widget.imageList.isEmpty)
-                    Column(
-                      children: [
-                        Center(
-                          child: Text(
-                            "Foto Bukti belum ditambahkan",
-                            style: blackTextStyle.copyWith(
-                              fontSize: 10,
-                              fontWeight: bold,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 30),
-                        Container(
-                          alignment: Alignment.centerRight,
-                          padding: EdgeInsets.only(right: 12),
-                          child: TextButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/tambah-bukti-kontraprestasi');
-                            },
-                            style: TextButton.styleFrom(
-                              backgroundColor: primaryColor,
-                              padding: EdgeInsets.symmetric(vertical: 0, horizontal: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
+                  FutureBuilder<List<KontraprestasiEvidence>>(
+                    future: _evidencesFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Text("Terjadi kesalahan");
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return Column(
+                          children: [
+                            Center(
+                              child: Text(
+                                "Foto Bukti belum ditambahkan",
+                                style: blackTextStyle.copyWith(
+                                  fontSize: 10,
+                                  fontWeight: bold,
+                                ),
                               ),
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  "Tambah Bukti Kontraprestasi",
-                                  style: whiteTextStyle.copyWith(
-                                    fontSize: 10,
-                                    fontWeight: bold,
+                            SizedBox(height: 30),
+                            Container(
+                              alignment: Alignment.centerRight,
+                              padding: EdgeInsets.only(right: 12),
+                              child: TextButton(
+                                onPressed: () async {
+                                  final args = {'sponsorId': widget.sponsorId};
+                                  final result = await Navigator.pushNamed(
+                                    context,
+                                    '/tambah-bukti-kontraprestasi',
+                                    arguments: args,
+                                  );
+
+                                  if (result == 'refresh') {
+                                    _loadEvidences();
+                                    setState(() {});
+                                  }
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: primaryColor,
+                                  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
-                                SizedBox(width: 8),
-                                Image.asset(
-                                  'assets/icon_up_right_arrow.png',
-                                  width: 16,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  else
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.arrow_circle_left_outlined),
-                              onPressed: () {
-                                if (_scrollController.hasClients) {
-                                  _scrollController.animateTo(
-                                    _scrollController.offset - 100,
-                                    duration: Duration(milliseconds: 300),
-                                    curve: Curves.easeInOut,
-                                  );
-                                }
-                              },
-                            ),
-                            Expanded(
-                              child: SizedBox(
-                                height: 50,
-                                child: ListView.builder(
-                                  controller: _scrollController,
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: widget.imageList.length,
-                                    itemBuilder: (context, index) {
-                                      String imagePath = widget.imageList[index];
-                                      print('imageList[$index]: $imagePath');
-
-                                      if (!imagePath.startsWith('http')) {
-                                        imagePath = '${EvidenceApi.photourl}$imagePath';
-                                      }
-                                      print('final imagePath: $imagePath');
-
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                                        child: Image.network(
-                                          imagePath,
-                                          width: 50,
-                                          height: 50,
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) {
-                                            return Image.asset(
-                                              'assets/img_profile_picture.png',
-                                              width: 50,
-                                              height: 50,
-                                              fit: BoxFit.cover,
-                                            );
-                                          },
-                                        ),
-                                      );
-                                    }
-
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      "Tambah Bukti Kontraprestasi",
+                                      style: whiteTextStyle.copyWith(
+                                        fontSize: 10,
+                                        fontWeight: bold,
+                                      ),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Image.asset(
+                                      'assets/icon_up_right_arrow.png',
+                                      width: 16,
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.arrow_circle_right_outlined),
-                              onPressed: () {
-                                if (_scrollController.hasClients) {
-                                  _scrollController.animateTo(
-                                    _scrollController.offset + 100,
-                                    duration: Duration(milliseconds: 300),
-                                    curve: Curves.easeInOut,
-                                  );
-                                }
-                              },
                             ),
                           ],
-                        ),
-                        SizedBox(height: 10),
-                        Container(
-                          alignment: Alignment.centerRight,
-                          padding: EdgeInsets.only(right: 12),
-                          child: TextButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/ubah-bukti-kontraprestasi');
-                            },
-                            style: TextButton.styleFrom(
-                              backgroundColor: yellowButton,
-                              padding: EdgeInsets.symmetric(vertical: 0, horizontal: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
+                        );
+                      } else {
+                        final evidences = snapshot.data!;
+                        return Column(
+                          children: [
+                            Row(
                               children: [
-                                Text(
-                                  "Ubah Bukti Kontraprestasi",
-                                  style: whiteTextStyle.copyWith(
-                                    fontSize: 10,
-                                    fontWeight: bold,
+                                IconButton(
+                                  icon: Icon(Icons.arrow_circle_left_outlined),
+                                  onPressed: () {
+                                    if (_scrollController.hasClients) {
+                                      _scrollController.animateTo(
+                                        _scrollController.offset - 100,
+                                        duration: Duration(milliseconds: 300),
+                                        curve: Curves.easeInOut,
+                                      );
+                                    }
+                                  },
+                                ),
+                                Expanded(
+                                  child: SizedBox(
+                                    height: 50,
+                                    child: ListView.builder(
+                                      controller: _scrollController,
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: evidences.length,
+                                      itemBuilder: (context, index) {
+                                        String imagePath = evidences[index].photoFile;
+                                        if (!imagePath.startsWith('http')) {
+                                          imagePath = '${EvidenceApi.photourl}$imagePath';
+                                        }
+
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                          child: Image.network(
+                                            imagePath,
+                                            width: 50,
+                                            height: 50,
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (context, error, stackTrace) {
+                                              return Image.asset(
+                                                'assets/img_profile_picture.png',
+                                                width: 50,
+                                                height: 50,
+                                                fit: BoxFit.cover,
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
-                                SizedBox(width: 8),
-                                Image.asset(
-                                  'assets/icon_edit.png',
-                                  width: 16,
+                                IconButton(
+                                  icon: Icon(Icons.arrow_circle_right_outlined),
+                                  onPressed: () {
+                                    if (_scrollController.hasClients) {
+                                      _scrollController.animateTo(
+                                        _scrollController.offset + 100,
+                                        duration: Duration(milliseconds: 300),
+                                        curve: Curves.easeInOut,
+                                      );
+                                    }
+                                  },
                                 ),
                               ],
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
+                            SizedBox(height: 10),
+                            Container(
+                              alignment: Alignment.centerRight,
+                              padding: EdgeInsets.only(right: 12),
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/ubah-bukti-kontraprestasi');
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: yellowButton,
+                                  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      "Ubah Bukti Kontraprestasi",
+                                      style: whiteTextStyle.copyWith(
+                                        fontSize: 10,
+                                        fontWeight: bold,
+                                      ),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Image.asset(
+                                      'assets/icon_edit.png',
+                                      width: 16,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                    },
+                  ),
                   SizedBox(height: 10),
                 ],
               ),
@@ -303,4 +327,3 @@ class _SponsorCardOrgState extends State<SponsorCardOrg> {
     );
   }
 }
-

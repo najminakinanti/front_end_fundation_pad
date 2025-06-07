@@ -19,7 +19,7 @@ class KontraprestasiEvidence {
     print('Parsing evidence: ${json['photo_file']}');
     return KontraprestasiEvidence(
       id: json['id'],
-      sponsorsId: json['sponsors_id'],
+      sponsorsId: int.tryParse(json['sponsors_id'].toString()) ?? 0,
       photoFile: json['photo_file'],
       description: json['description'],
       createdAt: DateTime.parse(json['created_at']),
