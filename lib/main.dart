@@ -173,7 +173,7 @@ class MyApp extends StatelessWidget {
         // '/ubah-kontraprestasi': (context) => EditKontraprestasi(),
         '/add-kontraprestasi': (context) => AddKontraprestasi(),
         '/tambah-bukti-kontraprestasi': (context) => TambahBuktiKontraprestasi(),
-        '/ubah-bukti-kontraprestasi': (context) => UbahBuktiKontraprestasi(),
+        // '/ubah-bukti-kontraprestasi': (context) => UbahBuktiKontraprestasi(),
         '/add-event': (context) => EventFormStepper(),
         '/filter-event': (context) => ResultFilter(),
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/API/evidence_api.dart';
+import 'package:pad_fundation/pages/organizer_page/ubah_bukti_kontraprestasi.dart';
 import 'package:pad_fundation/theme.dart';
 
 import '../../models/kontraprestasi_evidences.dart';
@@ -264,8 +265,24 @@ class _SponsorCardOrgState extends State<SponsorCardOrg> {
                               padding: EdgeInsets.only(right: 12),
                               child: TextButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, '/ubah-bukti-kontraprestasi');
+                                  final evidences = snapshot.data ?? [];
+                                  final buktiList = evidences.map((e) => BuktiKontraprestasi.fromKontraprestasiEvidence(e)).toList();
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => UbahBuktiKontraprestasi(
+                                        sponsorId: widget.sponsorId,
+                                        initialBuktiList: buktiList,
+                                      ),
+                                    ),
+                                  ).then((value) {
+                                    setState(() {
+                                      _loadEvidences();
+                                    });
+                                  });
                                 },
+
                                 style: TextButton.styleFrom(
                                   backgroundColor: yellowButton,
                                   padding: EdgeInsets.symmetric(vertical: 0, horizontal: 12),

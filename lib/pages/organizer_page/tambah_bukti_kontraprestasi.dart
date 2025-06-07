@@ -443,8 +443,24 @@ class _TambahBuktiKontraprestasiState extends State<TambahBuktiKontraprestasi> {
 }
 
 class BuktiKontraprestasi {
+  int? id;
   TextEditingController fotoController = TextEditingController();
   TextEditingController deskripsiController = TextEditingController();
   String? photoBase64;
+
+  BuktiKontraprestasi({this.id, String? photoName, String? description, this.photoBase64}) {
+    if (photoName != null) fotoController.text = photoName;
+    if (description != null) deskripsiController.text = description;
+  }
+
+  factory BuktiKontraprestasi.fromKontraprestasiEvidence(KontraprestasiEvidence e) {
+    return BuktiKontraprestasi(
+      id: e.id,
+      photoName: e.photoFile,
+      description: e.description, // kalau ada di KontraprestasiEvidence
+      // photoBase64 biasanya null kalau dari API, diisi nanti kalau user upload foto baru
+    );
+  }
 }
+
 

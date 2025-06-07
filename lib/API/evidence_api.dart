@@ -87,4 +87,34 @@ class EvidenceApi {
       throw Exception('Failed to add evidences. Status code: ${response.statusCode}');
     }
   }
+
+  static Future<void> upsertEvidences(int sponsorId, List<Map<String, dynamic>> evidences) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) {
+      throw Exception('Token tidak ditemukan. Harap login kembali.');
+    }
+
+    final url = Uri.parse('${ApiService.baseUrl}/evidences/upsert/$sponsorId');
+    print('Mengirim POST request ke: $url');
+    print('Payload: ${json.encode({'evidences': evidences})}');
+
+    final response = await http.post(
+      url,
+      headers: {
+        "Authorization": "Bearer $token",
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+      },
+      body: json.encode({'evidences': evidences}),
+    );
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode != 200) {
+      throw Exception('Gagal mengirim data. Kode status: ${response.statusCode}');
+    }
+  }
 }
