@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../models/kontraprestasi.dart';
+
 class CheckAddEvent extends StatefulWidget {
   @override
   _CheckAddEventState createState() => _CheckAddEventState();
@@ -46,22 +48,22 @@ class _CheckAddEventState extends State<CheckAddEvent> {
       targetPartisipan = prefs.getString('jumlah_target') ?? '';
       kategoriPartisipan = prefs.getString('kategori_partisipan') ?? '';
       deskripsiEvent = prefs.getString('deskripsi_event') ?? '';
-      gambarEvent = prefs.getString('gambar_event_base64')?? '';
+      gambarEvent = prefs.getString('gambar_event_base64') ?? '';
 
       tanggalMulai = prefs.getString('tanggal_mulai') ?? '';
       tanggalAkhir = prefs.getString('tanggal_akhir') ?? '';
       venue = prefs.getString('venue_event') ?? '';
       alamat = prefs.getString('alamat_event') ?? '';
-      provinsi = prefs.getString('provinsi_event') ?? '';
-      kota = prefs.getString('kota_event') ?? '';
+      provinsi = prefs.getString('province') ?? '';
+      kota = prefs.getString('city') ?? '';
 
       targetDonasi = prefs.getString('target_donasi_sponsor') ?? '';
       tenggatDonasi = prefs.getString('sponsor_deadline') ?? '';
 
       final kontraprestasiJson = prefs.getString('kontraprestasi_list') ?? '[]';
-      kontraprestasiList = (jsonDecode(kontraprestasiJson) as List)
-          .map<String>((e) => e['nama']?.toString() ?? '')
-          .toList();
+
+      List<dynamic> jsonList = jsonDecode(kontraprestasiJson);
+      kontraprestasiList = jsonList.map<String>((e) => e['title']?.toString() ?? '').toList();
 
       print('=== Data Berhasil Dimuat dari SharedPreferences ===');
       print('Nama Event: $namaEvent');
@@ -90,7 +92,7 @@ class _CheckAddEventState extends State<CheckAddEvent> {
     });
   }
 
-    Widget buildReadOnlyField({
+  Widget buildReadOnlyField({
       required String labelText,
       required String value,
     }) {

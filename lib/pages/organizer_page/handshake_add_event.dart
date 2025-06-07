@@ -26,6 +26,8 @@ class HandshakeAddEventState extends State<HandshakeAddEvent> {
 
   final List<TextEditingController> minSponsorControllers = [];
   final List<TextEditingController> maxSponsorControllers = [];
+  final List<TextEditingController> feedbackControllers = [];
+  final TextEditingController feedbackController = TextEditingController();
 
   @override
   void initState() {
@@ -33,21 +35,44 @@ class HandshakeAddEventState extends State<HandshakeAddEvent> {
     for (var item in kontraprestasiList) {
       minSponsorControllers.add(TextEditingController(text: item.minSponsor?.toString() ?? ''));
       maxSponsorControllers.add(TextEditingController(text: item.maxSponsor?.toString() ?? ''));
+      feedbackControllers.add(TextEditingController(text: item.feedback ?? ''));
     }
   }
 
   Future<void> saveKontraprestasiToPrefs() async {
     final prefs = await SharedPreferences.getInstance();
+
+    // Update feedback di objek sebelum disimpan
+    for (int i = 0; i < kontraprestasiList.length; i++) {
+      kontraprestasiList[i].feedback = feedbackControllers[i].text;
+    }
+
+    // Encode list ke JSON dan simpan
     List<Map<String, dynamic>> jsonList = kontraprestasiList.map((item) => item.toJson()).toList();
     String jsonString = jsonEncode(jsonList);
     await prefs.setString('kontraprestasi_list', jsonString);
-    print('Kontraprestasi disimpan ke SharedPreferences');
+
+    // Debug print semua yang tersimpan
+    print('✅ Kontraprestasi dan feedback disimpan ke SharedPreferences\n');
+
+    print('🔸 JSON Kontraprestasi List:');
+    print(jsonString);
+
+    print('\n🔸 Feedback Global:');
+    print(feedbackController.text);
+
+    // Jika ingin lihat semua keys:
+    print('\n📦 Semua isi SharedPreferences:');
+    prefs.getKeys().forEach((key) {
+      print('$key: ${prefs.get(key)}');
+    });
   }
 
   @override
   void dispose() {
     for (var c in minSponsorControllers) c.dispose();
     for (var c in maxSponsorControllers) c.dispose();
+    feedbackController.dispose();
     super.dispose();
   }
 
@@ -89,6 +114,51 @@ class HandshakeAddEventState extends State<HandshakeAddEvent> {
             ),
           );
         }).toList(),
+      ),
+    );
+  }
+
+  Widget buildTextFormField({
+    required String labelText,
+    required TextEditingController controller,
+    int maxLines = 1,
+    TextInputType? keyboardType,
+    String? hintText,
+  }) {
+    return Container(
+      margin: EdgeInsets.only(top: 10),
+      child: SizedBox(
+        height: maxLines == 1 ? 48 : null,
+        child: TextFormField(
+          controller: controller,
+          maxLines: maxLines,
+          keyboardType: keyboardType,
+          style: blackTextStyle.copyWith(fontSize: 14, fontWeight: regular),
+          decoration: InputDecoration(
+            labelText: labelText,
+            hintText: hintText, // ← Tambahkan ini
+            hintStyle: grayTextStyle.copyWith(fontSize: 14), // opsional
+            labelStyle: grayTextStyle.copyWith(fontSize: 14),
+            border: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+          ),
+        ),
+      ),
+    );
+  }
+
+
+  Widget feedback(int index) {
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      child: buildTextFormField(
+        labelText: 'Feedback Kontraprestasi',
+        controller: feedbackControllers[index],
+        hintText: 'Masukkan feedback terkait kontraprestasi',
+        maxLines: 4,
       ),
     );
   }
@@ -163,6 +233,7 @@ class HandshakeAddEventState extends State<HandshakeAddEvent> {
             ],
           ),
         ),
+        feedback(index),
         Divider(thickness: 1, height: 40),
       ],
     );
@@ -179,6 +250,7 @@ class HandshakeAddEventState extends State<HandshakeAddEvent> {
             kontraprestasiList.add(Kontraprestasi());
             minSponsorControllers.add(TextEditingController());
             maxSponsorControllers.add(TextEditingController());
+            feedbackControllers.add(TextEditingController());
           });
         },
         style: TextButton.styleFrom(

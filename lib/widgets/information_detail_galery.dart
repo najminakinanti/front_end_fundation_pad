@@ -1,25 +1,53 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:pad_fundation/API/event_api.dart';
 import 'package:pad_fundation/theme.dart';
 
 class InformationDetailWidget extends StatefulWidget {
+  final String eventId; // parameter eventId untuk fetch gambar
+
+  InformationDetailWidget({required this.eventId});
+
   @override
   _InformationDetailWidgetState createState() => _InformationDetailWidgetState();
 }
 
 class _InformationDetailWidgetState extends State<InformationDetailWidget> {
   final int imagesPerBatch = 4;
-  final List<String> images = [
-    'assets/img_detail_info_1.png',
-    'assets/img_detail_info_2.png',
-    'assets/img_detail_info_3.png',
-    'assets/img_detail_info_4.png',
-    'assets/img_detail_info_1.png',
-  ];
+
+  List<String> images = []; // kosong, tanpa default placeholder
 
   int currentBatch = 0;
 
   final double imageHeight = 350;
   final double arrowHeight = 24;
+
+  @override
+  void initState() {
+    super.initState();
+    print('Fetching images for eventId: ${widget.eventId}');
+    fetchImages(widget.eventId);
+  }
+
+  Future<void> fetchImages(String eventId) async {
+    try {
+      final eventApi = EventApi();
+      List<String> fetchedImages = await eventApi.fetchEventGallery(eventId);
+
+      print('Fetched images from API: $fetchedImages');  // <-- print isi list
+
+      if (mounted) {
+        setState(() {
+          images = fetchedImages;
+          currentBatch = 0;
+        });
+      }
+    } catch (e) {
+      print('Error fetching images: $e');
+    }
+  }
+
 
   void _showLargeImage(BuildContext context, List<String> imagePaths, int initialIndex) {
     int currentIndex = initialIndex;
@@ -55,7 +83,13 @@ class _InformationDetailWidgetState extends State<InformationDetailWidget> {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
-                      child: Image.asset(
+                      child: imagePaths[currentIndex].startsWith('http')
+                          ? Image.network(
+                        imagePaths[currentIndex],
+                        height: imageHeight,
+                        fit: BoxFit.contain,
+                      )
+                          : Image.asset(
                         imagePaths[currentIndex],
                         height: imageHeight,
                         fit: BoxFit.contain,
@@ -81,7 +115,6 @@ class _InformationDetailWidgetState extends State<InformationDetailWidget> {
                   ),
                 ),
               ),
-              // Left arrow
               Positioned(
                 top: (imageHeight / 2) - (arrowHeight / 2) + 55,
                 left: 20,
@@ -99,7 +132,6 @@ class _InformationDetailWidgetState extends State<InformationDetailWidget> {
                   ),
                 ),
               ),
-              // Right arrow
               Positioned(
                 top: (imageHeight / 2) - (arrowHeight / 2) + 55,
                 right: 20,
@@ -137,7 +169,14 @@ class _InformationDetailWidgetState extends State<InformationDetailWidget> {
         .sublist(startIndex, endIndex)
         .map((imagePath) => GestureDetector(
       onTap: () => _showLargeImage(context, images, images.indexOf(imagePath)),
-      child: Image.asset(
+      child: imagePath.startsWith('http')
+          ? Image.network(
+        imagePath,
+        width: 60,
+        height: 60,
+        fit: BoxFit.cover,
+      )
+          : Image.asset(
         imagePath,
         width: 60,
         height: 60,
@@ -146,7 +185,6 @@ class _InformationDetailWidgetState extends State<InformationDetailWidget> {
     ))
         .toList();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -168,12 +206,22 @@ class _InformationDetailWidgetState extends State<InformationDetailWidget> {
                 });
               }
             },
-            child: Image.asset('assets/icon_double_panah_kiri.png', width: 20,),
+            child: Image.asset(
+              'assets/icon_double_panah_kiri.png',
+              width: 20,
+            ),
           ),
           Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: _getCurrentBatchImages(),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: _getCurrentBatchImages()
+                    .map((widget) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: widget,
+                ))
+                    .toList(),
+              ),
             ),
           ),
           GestureDetector(
@@ -184,7 +232,10 @@ class _InformationDetailWidgetState extends State<InformationDetailWidget> {
                 });
               }
             },
-            child: Image.asset('assets/icon_double_panah_kanan.png', width: 20,)
+            child: Image.asset(
+              'assets/icon_double_panah_kanan.png',
+              width: 20,
+            ),
           ),
         ],
       ),

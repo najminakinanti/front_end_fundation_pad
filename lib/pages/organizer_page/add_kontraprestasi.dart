@@ -296,9 +296,9 @@ class _AddKontraprestasiState extends State<AddKontraprestasi> {
             fontWeight: regular,
           ),
           decoration: InputDecoration(
-            labelText: 'Detail Event',
+            labelText: 'Feedback Kontraprestasi',
             labelStyle: grayTextStyle.copyWith(fontSize: 14),
-            hintText: 'Tuliskan detail mengenai event di sini',
+            hintText: 'Masukkan feedback terkait kontraprestasi',
             border: OutlineInputBorder(
               borderSide: BorderSide(color: primaryColor),
             ),

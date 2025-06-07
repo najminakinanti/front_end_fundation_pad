@@ -328,7 +328,7 @@ class _DetailMyEventOrganizerState extends State<DetailMyEventOrganizer> {
 
     Widget informationDetail() {
       return Container(
-        child: InformationDetailWidget(),
+        child: InformationDetailWidget(eventId: event.id.toString()),
       );
     }
 
@@ -364,18 +364,18 @@ class _DetailMyEventOrganizerState extends State<DetailMyEventOrganizer> {
                 fontWeight: bold,
               ),
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/daftar-sponsor-organizer');
-              },
-              child: Text(
-                'Selengkapnya',
-                style: grayTextStyle.copyWith(
-                  fontSize: 10,
-                  fontWeight: regular,
-                ),
-              ),
-            ),
+            // TextButton(
+            //   onPressed: () {
+            //     Navigator.pushNamed(context, '/daftar-sponsor-organizer');
+            //   },
+            //   child: Text(
+            //     'Selengkapnya',
+            //     style: grayTextStyle.copyWith(
+            //       fontSize: 10,
+            //       fontWeight: regular,
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       );

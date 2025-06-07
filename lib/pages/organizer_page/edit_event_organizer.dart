@@ -9,6 +9,7 @@ import 'package:pad_fundation/pages/organizer_page/edit_kontraprestasi.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../API/location_api.dart';
 import '../../models/event.dart';
 import '../../models/kontraprestasi.dart';
 
@@ -43,11 +44,14 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
   late TextEditingController _tenggatDonasiController;
   late TextEditingController _categoryController;
 
-  late String selectedProvince;
-  late String selectedCity;
+  String? selectedProvince;
+  String? selectedCity;
+  List<String> provinces = [];
+  List<String> cities = [];
+
   late String _selectedStatus;
   List<String> selectedCategories = [];
-  List<Map<String, dynamic>> kontraprestasiList = [];
+  List<Kontraprestasi> kontraprestasiList = [];
   String? photo_file;
   String selectedEvent = 'apa';
   String selectedCategory = 'kategorinya';
@@ -86,21 +90,46 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
     });
   }
 
-  void onProvinceChanged(String? value) {
-    if (value != null) {
-      setState(() {
-        selectedProvince = value;
-      });
+  void onProvinceChanged(String? newValue) {
+    setState(() {
+      selectedProvince = newValue;
+      selectedCity = null;
+      cities = [];
+    });
+
+    if (newValue != null) {
+      _loadCities(newValue);
     }
   }
 
-  void onCityChanged(String? value) {
-    if (value != null) {
+  void onCityChanged(String? newValue) {
+    setState(() {
+      selectedCity = newValue;
+    });
+  }
+
+  void _loadProvinces() async {
+    try {
+      final data = await LocationApi.fetchProvinces();
       setState(() {
-        selectedCity = value;
+        provinces = data.map((item) => item['province'].toString()).toList();
       });
+    } catch (e) {
+      print('Gagal memuat provinsi: $e');
     }
   }
+
+  void _loadCities(String provinceName) async {
+    try {
+      final data = await LocationApi.fetchCities(provinceName);
+      setState(() {
+        cities = data.map((item) => item['district'].toString()).toList();
+      });
+    } catch (e) {
+      print('Gagal memuat kota: $e');
+    }
+  }
+
 
   File? _imageFile;
   final ImagePicker _picker = ImagePicker();
@@ -126,32 +155,33 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
 
   Future<void> loadKontraprestasiFromPrefs() async {
     final prefs = await SharedPreferences.getInstance();
-    String? jsonString = prefs.getString('kontraprestasi_list');
-    print('Loaded kontraprestasi json: $jsonString');
-    if (jsonString != null) {
-      List<dynamic> jsonList = jsonDecode(jsonString);
+    String? kontraprestasiJson = prefs.getString('kontraprestasi_list');
 
-      List<Map<String, dynamic>> loadedList = jsonList.map((e) {
-        return {
-          "id": e['id'],
-          "title": e['title'] ?? '',
-          "min_sponsor": e['min_sponsor'] ?? 0,
-          "max_sponsor": e['max_sponsor'] ?? 0,
-          "icon_photo_kontraprestasis_id": e['icon_photo_kontraprestasis_id'] ?? 1,
-        };
-      }).toList();
-
-      setState(() {
-        kontraprestasiList = [...kontraprestasiList, ...loadedList];
-      });
-
-      print('Kontraprestasi list (parsed): $kontraprestasiList');
+    if (kontraprestasiJson != null) {
+      List<dynamic> list = jsonDecode(kontraprestasiJson);
+      kontraprestasiList = list.map((e) => Kontraprestasi.fromJson(e)).toList();
+      setState(() {});
     }
   }
 
-    @override
+  final Map<String, int> iconNameToIdLowerCase = {
+    'platinum': 1,
+    'diamond': 2,
+    'gold': 3,
+    'silver': 4,
+    'bronze': 5,
+  };
+
+
+  @override
     void initState() {
       super.initState();
+      _loadProvinces();
+      selectedProvince = widget.event.eventPlacement?.province;
+      selectedCity = widget.event.eventPlacement?.city;
+      if (selectedProvince != null) {
+        _loadCities(selectedProvince!);
+      }
       _namaEventController = TextEditingController(text: widget.event.title);
       _jumlahTargetController = TextEditingController(text: widget.event.targetParticipant.toString());
       _detailParticipantController = TextEditingController(text: widget.event.participantName);
@@ -171,23 +201,19 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
         text: widget.event.categories.map((c) => c.name).join(', '),
       );
       kontraprestasiList = (widget.event.kontraprestasis ?? []).map((k) {
-        String cleanTitle = (k.title ?? '').trim().toLowerCase();
-        final Map<String, int> iconNameToIdLowerCase = {
-          'platinum': 1,
-          'diamond': 2,
-          'gold': 3,
-          'silver': 4,
-          'bronze': 5,
-        };
+        // misal kamu tambahkan properti baru ini secara manual di model:
+        int iconId = iconNameToIdLowerCase[(k.title ?? '').trim().toLowerCase()] ?? 1;
 
-        return {
-          "id": k.id,
-          "title": k.title ?? '',
-          "min_sponsor": k.minSponsor ?? 0,
-          "max_sponsor": k.maxSponsor ?? 0,
-          "icon_photo_kontraprestasis_id": iconNameToIdLowerCase[cleanTitle] ?? 1,
-        };
+        return Kontraprestasi(
+          id: k.id,
+          title: k.title,
+          minSponsor: k.minSponsor,
+          maxSponsor: k.maxSponsor,
+          feedback: k.feedback,
+          iconPhotoKontraprestasisId: iconId,
+        );
       }).toList();
+
       _selectedStatus = widget.event.typeEvent;
       selectedProvince = widget.event.eventPlacement?.province ?? '';
       selectedCity = widget.event.eventPlacement?.city ?? '';
@@ -402,10 +428,7 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
               floatingLabelBehavior: FloatingLabelBehavior.always,
               contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
             ),
-            style: blackTextStyle.copyWith(
-              fontSize: 14,
-              fontWeight: regular
-            ),
+            style: blackTextStyle.copyWith(fontSize: 14, fontWeight: regular),
             items: dropdownItems.map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -719,32 +742,48 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
     }
 
     Widget selectProvince({
-      required String selectedProvince,
+      required String? selectedProvince,
       required ValueChanged<String?> onProvinceChanged,
     }) {
-      List<String> provinces = ['DKI Jakarta', 'Jawa Barat', 'Jawa Tengah'];
-
-      return buildDropdownTextFormField(
-        labelText: 'Provinsi',
-        initialValue: provinces[0],
-        dropdownItems: provinces,
-        selectedValue: selectedProvince,
-        onChanged: onProvinceChanged,
+      return DropdownButtonFormField<String>(
+        decoration: InputDecoration(
+          labelText: 'Provinsi',
+          border: OutlineInputBorder(),
+        ),
+        value: selectedProvince,
+        style: blackTextStyle.copyWith(fontSize: 14, fontWeight: regular),
+        items: provinces.map((province) {
+          return DropdownMenuItem<String>(
+            value: province,
+            child: Text(province,
+              style: blackTextStyle.copyWith(fontSize: 14, fontWeight: regular),),
+          );
+        }).toList(),
+        onChanged: (value) {
+          onProvinceChanged(value);
+          _loadCities(value!);
+        },
       );
     }
 
     Widget selectCity({
-      required String selectedCity,
+      required String? selectedCity,
       required ValueChanged<String?> onCityChanged,
     }) {
-      List<String> cities = ['Jakpus', 'Jaksel', 'Jakut'];
-
-      return buildDropdownTextFormField(
-        labelText: 'Kota',
-        initialValue: cities[0],
-        dropdownItems: cities,
-        selectedValue: selectedCity,
-        onChanged: onCityChanged,
+      return DropdownButtonFormField<String>(
+        decoration: InputDecoration(
+          labelText: 'Kota/Kabupaten',
+          border: OutlineInputBorder(),
+        ),
+        value: selectedCity,
+        style: blackTextStyle.copyWith(fontSize: 14, fontWeight: regular),
+        items: cities.map((city) {
+          return DropdownMenuItem<String>(
+            value: city,
+            child: Text(city, style: blackTextStyle.copyWith(fontSize: 14, fontWeight: regular),),
+          );
+        }).toList(),
+        onChanged: cities.isNotEmpty ? onCityChanged : null,
       );
     }
 
@@ -820,8 +859,6 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
         width: double.infinity,
         child: TextButton(
           onPressed: () async {
-            // await loadKontraprestasiFromPrefs();
-            // showConfirmationDialog(context);
             final updatedData = {
               'event': {
                 'title': _namaEventController.text,
@@ -850,12 +887,36 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
                 'target_fund': _targetDonasiController.text,
                 'sponsor_deadline': _tenggatDonasiController.text,
               },
-              'kontraprestasi': kontraprestasiList,
             };
 
-            print(updatedData);
+            try {
+              await EventApi.editEvent(context, event.id, updatedData);
 
-            EventApi.editEvent(context, event.id, updatedData);
+              final kontraprestasiPayload = {
+                "kontraprestasis": kontraprestasiList.map((item) {
+                  final map = {
+                    "title": item.title,
+                    "min_sponsor": item.minSponsor,
+                    "max_sponsor": item.maxSponsor,
+                    "icon_photo_kontraprestasis_id": item.iconPhotoKontraprestasisId,
+                    "feedback": item.feedback ?? '',
+                  };
+                  if (item.id != null) {
+                    map["id"] = item.id;
+                  }
+                  return map;
+                }).toList(),
+              };
+
+              await EventApi.upsertKontraprestasi(event.id, kontraprestasiPayload);
+
+              // Kamu bisa juga show success dialog di sini jika mau
+              print("Semua data berhasil disimpan.");
+
+            } catch (e) {
+              print('Gagal menyimpan data: $e');
+              // _showErrorDialog(context, 'Gagal menyimpan data: $e');
+            }
           },
           style: TextButton.styleFrom(
             backgroundColor: primaryColor,
@@ -873,6 +934,7 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
         ),
       );
     }
+
 
     Widget _buildDataEventSection() {
       return Stack(
@@ -949,7 +1011,9 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
               children: [
                 tanggalEvent(),
                 venueEvent(),
+                SizedBox(height: 25),
                 selectProvince(selectedProvince: selectedProvince, onProvinceChanged: onProvinceChanged),
+                SizedBox(height: 25),
                 selectCity(selectedCity: selectedCity, onCityChanged: onCityChanged),
                 alamatEvent(),
               ],
@@ -1048,17 +1112,16 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ...kontraprestasiList.asMap().entries.map((e) {
+                  final kontraprestasi = e.value;
                   return buildReadOnlyField(
                     labelText: 'Kontraprestasi ${e.key + 1}',
-                    value: e.value['title'],
+                    value: kontraprestasi.title ?? '',
                     onTap: () async {
-
-                      print('Item diklik: ${jsonEncode(e.value)}');
                       final result = await Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (_) => EditKontraprestasi(
-                            kontraprestasi: Kontraprestasi.fromJson(e.value),
+                            kontraprestasi: kontraprestasi,
                           ),
                         ),
                       );
@@ -1068,9 +1131,11 @@ class _EditEventOrganizerState extends State<EditEventOrganizer> {
                     },
                   );
                 }).toList(),
-                addKontraprestasiButton(), // ✅ Letakkan di luar toList()
+                addKontraprestasiButton(),
               ],
             ),
+
+
           ),
           Positioned(
             top: 5,

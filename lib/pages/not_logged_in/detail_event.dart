@@ -321,9 +321,9 @@ class _DetailEventState extends State<DetailEvent> {
     }
 
     Widget informationDetail() {
-     return Container(
-       child: InformationDetailWidget(),
-     );
+      return Container(
+        child: InformationDetailWidget(eventId: event.id.toString()),
+      );
     }
 
     Widget kontraprestasiTitle() {

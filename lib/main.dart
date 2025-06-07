@@ -118,7 +118,7 @@ class MyApp extends StatelessWidget {
         // '/detail-event-mitra': (context) => DetailEventMitra(event: event),
         '/detail-chat-mitra': (context) => DetailChatMitra(),
         '/detail-chat-event-mitra': (context) => DetailChatEventMitra(),
-        '/daftar-sponsor-mitra': (context) => DaftarSponsorMitra(),
+        // '/daftar-sponsor-mitra': (context) => DaftarSponsorMitra(),
         '/kirim-sponsor-mitra': (context) => KirimSponsorMitra(),
         '/ubah-data-profile': (context) => UbahDataProfile(),
         '/profile-page-mitra': (context) => ProfilePageMitra(),

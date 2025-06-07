@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../API/location_api.dart';
+
 class CalendarAddEvent extends StatefulWidget {
   CalendarAddEvent({Key? key}) : super(key: key);
 
@@ -10,8 +12,10 @@ class CalendarAddEvent extends StatefulWidget {
 }
 
 class CalendarAddEventState extends State<CalendarAddEvent> {
-  String selectedProvince = 'DKI Jakarta';
-  String selectedCity = 'Jakpus';
+  String? selectedProvince;
+  String? selectedCity;
+  List<String> provinces = [];
+  List<String> cities = [];
 
   final TextEditingController _venueController = TextEditingController();
   final TextEditingController _alamatController = TextEditingController();
@@ -22,24 +26,37 @@ class CalendarAddEventState extends State<CalendarAddEvent> {
   DateTime? _tanggalMulai;
   DateTime? _tanggalAkhir;
 
-  void onProvinceChanged(String? newProvince) {
-    setState(() {
-      selectedProvince = newProvince!;
-    });
+  void _loadProvinces() async {
+    try {
+      final data = await LocationApi.fetchProvinces(); // ← pastikan kamu punya class LocationApi
+      setState(() {
+        provinces = data.map((item) => item['province'].toString()).toList();
+      });
+      print("Provinces loaded: $provinces");
+    } catch (e) {
+      print('Gagal memuat provinsi: $e');
+    }
   }
 
-  void onCityChanged(String? newCity) {
-    setState(() {
-      selectedCity = newCity!;
-    });
+  void _loadCities(String provinceName) async {
+    try {
+      final data = await LocationApi.fetchCities(provinceName);
+      setState(() {
+        cities = data.map((item) => item['district'].toString()).toList();
+      });
+      print("Cities loaded: $cities");
+    } catch (e) {
+      print('Gagal memuat kota: $e');
+    }
   }
+
   Future<void> saveEventDateToPrefs() async {
     final prefs = await SharedPreferences.getInstance();
 
     await prefs.setString('venue_event', _venueController.text);
     await prefs.setString('alamat_event', _alamatController.text);
-    await prefs.setString('provinsi_event', selectedProvince);
-    await prefs.setString('kota_event', selectedCity);
+    await prefs.setString('province', selectedProvince ?? '');
+    await prefs.setString('city', selectedCity ?? '');
     if (_tanggalMulai != null) {
       await prefs.setString('tanggal_mulai', _tanggalMulai.toString());
     }
@@ -51,10 +68,16 @@ class CalendarAddEventState extends State<CalendarAddEvent> {
     print('=== Data Kalender Disimpan ===');
     print('Venue: ${prefs.getString('venue_event')}');
     print('Alamat: ${prefs.getString('alamat_event')}');
-    print('Provinsi: ${prefs.getString('provinsi_event')}');
-    print('Kota: ${prefs.getString('kota_event')}');
+    print('Provinsi: ${prefs.getString('province')}');
+    print('Kota: ${prefs.getString('city')}');
     print('Tanggal Mulai: ${prefs.getString('tanggal_mulai')}');
     print('Tanggal Akhir: ${prefs.getString('tanggal_akhir')}');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProvinces();
   }
 
   @override
@@ -261,33 +284,66 @@ class CalendarAddEventState extends State<CalendarAddEvent> {
       );
     }
 
-    Widget selectProvince({
-      required String? selectedProvince,
-      required ValueChanged<String?> onProvinceChanged,
-    }) {
-      List<String> provinces = ['DKI Jakarta', 'Jawa Barat', 'Jawa Tengah'];
-
-      return buildDropdownTextFormField(
-        labelText: 'Provinsi',
-        hintText: 'Pilih Provinsi',
-        dropdownItems: provinces,
-        selectedValue: selectedProvince,
-        onChanged: onProvinceChanged,
+    Widget provinceInput() {
+      return Container(
+        margin: EdgeInsets.only(top: 18),
+        child: DropdownButtonFormField<String>(
+          decoration: InputDecoration(
+            labelText: 'Provinsi',
+            labelStyle: grayTextStyle.copyWith(fontSize: 16),
+            border: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+            // prefixIcon dihapus
+          ),
+          value: selectedProvince,
+          items: provinces.map((String province) {
+            return DropdownMenuItem<String>(
+              value: province,
+              child: Text(province, style: grayTextStyle.copyWith(fontSize: 12)),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              selectedProvince = newValue;
+              selectedCity = null;
+              cities = [];
+            });
+            if (newValue != null) {
+              _loadCities(newValue);
+            }
+          },
+        ),
       );
     }
 
-    Widget selectCity({
-      required String? selectedCity,
-      required ValueChanged<String?> onCityChanged,
-    }) {
-      List<String> cities = ['Jakpus', 'Jaksel', 'Jakut'];
-
-      return buildDropdownTextFormField(
-        labelText: 'Kota',
-        hintText: 'Pilih Kota',
-        dropdownItems: cities,
-        selectedValue: selectedCity,
-        onChanged: onCityChanged,
+    Widget cityInput() {
+      return Container(
+        margin: EdgeInsets.only(top: 18),
+        child: DropdownButtonFormField<String>(
+          decoration: InputDecoration(
+            labelText: 'Kota/Kabupaten',
+            labelStyle: grayTextStyle.copyWith(fontSize: 16),
+            border: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+            // prefixIcon dihapus
+          ),
+          value: selectedCity,
+          items: cities.map((String city) {
+            return DropdownMenuItem<String>(
+              value: city,
+              child: Text(city, style: grayTextStyle.copyWith(fontSize: 12)),
+            );
+          }).toList(),
+          onChanged: cities.isNotEmpty
+              ? (String? newValue) {
+            setState(() {
+              selectedCity = newValue;
+            });
+          }
+              : null,
+        ),
       );
     }
 
@@ -306,8 +362,8 @@ class CalendarAddEventState extends State<CalendarAddEvent> {
       children: [
         tanggalEvent(),
         venueEvent(),
-        selectProvince(selectedProvince: null, onProvinceChanged: onProvinceChanged),
-        selectCity(selectedCity: null, onCityChanged: onCityChanged),
+        provinceInput(),
+        cityInput(),
         alamatEvent(),
       ],
     );

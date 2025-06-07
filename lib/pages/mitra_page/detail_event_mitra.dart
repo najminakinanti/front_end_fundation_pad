@@ -11,6 +11,7 @@ import '../../API/profile_api.dart';
 import '../../models/event_fund.dart';
 import '../../models/kontraprestasi.dart';
 import '../../models/sponsor.dart';
+import 'daftar_sponsor_mitra.dart';
 
 class DetailEventMitra extends StatefulWidget {
 
@@ -327,7 +328,7 @@ class _DetailEventState extends State<DetailEventMitra> {
 
     Widget informationDetail() {
      return Container(
-       child: InformationDetailWidget(),
+       child: InformationDetailWidget(eventId: event.id.toString()),
      );
     }
 
@@ -365,7 +366,15 @@ class _DetailEventState extends State<DetailEventMitra> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/daftar-sponsor-mitra');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DaftarSponsorMitra(
+                      sponsors: event.sponsors,             // List<Sponsor> yang kamu punya
+                      kontraprestasis: event.kontraprestasis, // List<Kontraprestasi>
+                    ),
+                  ),
+                );
               },
               child: Text(
                 'Selengkapnya',

@@ -138,8 +138,8 @@ class EventApi {
 
       String? event_venue = prefs.getString('venue_event');
       String? address = prefs.getString('alamat_event');
-      String? city = prefs.getString('kota_event');
-      String? province = prefs.getString('provinsi_event');
+      String? city = prefs.getString('city');
+      String? province = prefs.getString('province');
       String? event_start_date = prefs.getString('tanggal_mulai');
       String? event_end_date = prefs.getString('tanggal_akhir');
 
@@ -276,6 +276,31 @@ class EventApi {
     }
   }
 
+  static Future<void> upsertKontraprestasi(int eventId, Map<String, dynamic> data) async {
+    final prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+
+    final url = Uri.parse('${ApiService.baseUrl}/kontraprestasi/$eventId');
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(data),
+    );
+
+    if (response.statusCode != 200) {
+      print("Gagal menyimpan kontraprestasi. Status: ${response.statusCode}");
+      print("Response body: ${response.body}");
+      throw Exception('Gagal menyimpan kontraprestasi: ${response.body}');
+    } else {
+      print("Kontraprestasi berhasil diupsert.");
+    }
+  }
+
   static Future<List<Event>> getEventsforEdit(int eventId) async {
     final url = '${ApiService.baseUrl}/events-full/$eventId';
     final response = await http.get(Uri.parse(url));
@@ -393,5 +418,32 @@ class EventApi {
       },
     );
   }
+
+  Future<List<String>> fetchEventGallery(String eventId) async {
+    final url = Uri.parse('${ApiService.baseUrl}/events/galeri/$eventId');
+    print('Fetching from URL: $url');
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      print('Response JSON: $json');
+
+      final List<dynamic> dataList = json['data'];
+
+      // Convert relative paths to full URLs
+      List<String> imageUrls = dataList
+          .map((item) => '${ApiService.photourl}${item['photo_file']}')
+          .cast<String>()
+          .toList();
+
+      return imageUrls;
+    } else {
+      print('Error response code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      throw Exception('Failed to load gallery');
+    }
+  }
+
 
 }

@@ -269,7 +269,7 @@ class _TambahBuktiKontraprestasiState extends State<TambahBuktiKontraprestasi> {
             child: TextFormField(
               controller: bukti.deskripsiController,
               decoration: InputDecoration(
-                labelText: 'Deskripsi Kontraprestasi',
+                labelText: 'Feedback Kontraprestasi',
                 labelStyle: grayTextStyle.copyWith(fontSize: 14),
                 hintText: 'Masukkan Deskripsi Kontraprestasi',
                 hintStyle: grayTextStyle.copyWith(

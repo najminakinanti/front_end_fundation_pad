@@ -35,9 +35,23 @@ class _EditKontraprestasiState extends State<EditKontraprestasi> {
 
   final List<String> iconOptions = ['Platinum', 'Diamond', 'Gold', 'Silver', 'Bronze'];
 
+  List<Kontraprestasi> kontraprestasiList = [];
+
+
   @override
   void initState() {
     super.initState();
+
+    // Cetak seluruh data kontraprestasi saat halaman dimuat
+    print('================================================');
+    print('Data Kontraprestasi yang diterima:');
+    print('ID: ${widget.kontraprestasi.id}');
+    print('Title: ${widget.kontraprestasi.title}');
+    print('Min Sponsor: ${widget.kontraprestasi.minSponsor}');
+    print('Max Sponsor: ${widget.kontraprestasi.maxSponsor}');
+    print('Feedback: ${widget.kontraprestasi.feedback}');
+    print('Icon Photo ID: ${widget.kontraprestasi.iconPhotoKontraprestasisId}');
+    print('Events ID: ${widget.kontraprestasi.eventsId}');
 
     String key = iconNameToId.entries
         .firstWhere(
@@ -51,7 +65,6 @@ class _EditKontraprestasiState extends State<EditKontraprestasi> {
     minSponsorController = TextEditingController(text: (widget.kontraprestasi.minSponsor ?? 0).toString());
     maxSponsorController = TextEditingController(text: (widget.kontraprestasi.maxSponsor ?? 0).toString());
     feedbackController = TextEditingController(text: widget.kontraprestasi.feedback ?? '');
-
     titleController = TextEditingController(text: widget.kontraprestasi.title ?? '');
   }
 
@@ -72,8 +85,6 @@ class _EditKontraprestasiState extends State<EditKontraprestasi> {
     print('saveKontraprestasi dipanggil');
 
     final prefs = await SharedPreferences.getInstance();
-
-    // Ambil list JSON dari SharedPreferences
     String? jsonString = prefs.getString('kontraprestasi_list');
     List<dynamic> jsonList = [];
 
@@ -82,7 +93,6 @@ class _EditKontraprestasiState extends State<EditKontraprestasi> {
         jsonList = jsonDecode(jsonString);
       } catch (e) {
         print('Error decoding kontraprestasi_list: $e');
-        // Kalau error decode, reset list jadi kosong
         jsonList = [];
       }
     }
@@ -91,38 +101,31 @@ class _EditKontraprestasiState extends State<EditKontraprestasi> {
 
     if (kontraprestasiId == null) {
       print('Error: ID tidak ditemukan, tidak bisa menyimpan.');
-      // Bisa tampilkan dialog error di sini jika perlu
       return;
     }
 
     int iconId = iconNameToId[selectedIcon.toLowerCase()] ?? 3;
 
-    // Data yang akan disimpan / diupdate
     Map<String, dynamic> updatedItem = {
       'id': kontraprestasiId,
-      'title': titleController.text.trim(),  // Ambil dari inputan judul
+      'title': titleController.text.trim(),
       'min_sponsor': int.tryParse(minSponsorController.text) ?? 0,
       'max_sponsor': int.tryParse(maxSponsorController.text) ?? 0,
       'icon_photo_kontraprestasis_id': iconId,
-      'feedback': feedbackController.text.trim(),
+      'feedback': feedbackController.text,
       'events_id': widget.kontraprestasi.eventsId,
     };
 
-    // Cari index berdasarkan id
-    int index = jsonList.indexWhere((element) => element['id'] == kontraprestasiId);
+    int index = jsonList.indexWhere((element) => element['id'].toString() == kontraprestasiId.toString());
 
     if (index != -1) {
-      // Update item existing
       jsonList[index] = updatedItem;
     } else {
-      // Kalau tidak ditemukan, tambah item baru
+      print('ID tidak ditemukan, menambahkan data baru');
       jsonList.add(updatedItem);
     }
 
-    // Simpan kembali ke SharedPreferences
     await prefs.setString('kontraprestasi_list', jsonEncode(jsonList));
-
-    // Tampilkan dialog konfirmasi
     showConfirmationDialog(context);
   }
 
@@ -260,7 +263,7 @@ class _EditKontraprestasiState extends State<EditKontraprestasi> {
       return Container(
         margin: const EdgeInsets.only(top: 20),
         child: buildTextFormField(
-          labelText: 'Detail Event',
+          labelText: 'Feedback Kontraprestasi',
           controller: feedbackController,
           maxLines: 4,
         ),
