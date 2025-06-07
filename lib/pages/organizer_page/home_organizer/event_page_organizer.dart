@@ -88,19 +88,19 @@ class _EventPageOrganizerState extends State<EventPageOrganizer> {
                       ),
                     ),
                     SizedBox(width: 5),
-                    TextButton(
-                      onPressed: () {
-                        showModalRightSheet(context);
-                      },
-                      style: TextButton.styleFrom(
-                        backgroundColor: textColor3,
-                        minimumSize: Size(50, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: Image.asset('assets/icon_filter.png', width: 24),
-                    ),
+                    // TextButton(
+                    //   onPressed: () {
+                    //     showModalRightSheet(context);
+                    //   },
+                    //   style: TextButton.styleFrom(
+                    //     backgroundColor: textColor3,
+                    //     minimumSize: Size(50, 50),
+                    //     shape: RoundedRectangleBorder(
+                    //       borderRadius: BorderRadius.circular(10),
+                    //     ),
+                    //   ),
+                    //   child: Image.asset('assets/icon_filter.png', width: 24),
+                    // ),
                   ],
                 ),
               ],

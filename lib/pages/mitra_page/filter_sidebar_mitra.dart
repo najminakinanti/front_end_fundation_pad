@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 
-class FilterSidebar extends StatefulWidget {
+class FilterSidebarMita extends StatefulWidget {
   final Function(Map<String, dynamic>) onApply;
 
-  const FilterSidebar({super.key, required this.onApply});
+  const FilterSidebarMita({super.key, required this.onApply});
 
   @override
-  _FilterSidebarState createState() => _FilterSidebarState();
+  _FilterSidebarMitaState createState() => _FilterSidebarMitaState();
 }
 
-class _FilterSidebarState extends State<FilterSidebar> {
+class _FilterSidebarMitaState extends State<FilterSidebarMita> {
   final List<String> categories = [
     'Kuliner',
     'Festival',
@@ -188,7 +188,7 @@ class _FilterSidebarState extends State<FilterSidebar> {
                         // Tutup modal dulu
                         Navigator.of(context).pop();
                         // Navigasi ke halaman filter-event, passing filters sebagai argument
-                        Navigator.pushNamed(context, '/filter-event', arguments: filters);
+                        Navigator.pushNamed(context, '/filter-event-mitra', arguments: filters);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryColor,

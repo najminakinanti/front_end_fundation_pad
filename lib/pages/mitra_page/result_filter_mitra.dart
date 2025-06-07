@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/filter_sidebar.dart';
+import 'package:pad_fundation/widgets/mitra/event_tile_mitra.dart';
 import 'package:pad_fundation/widgets/organizer/event_card_organizer.dart';
 import 'package:pad_fundation/widgets/organizer/event_tile_organizer.dart';
 
@@ -8,13 +9,13 @@ import '../../API/event_api.dart';
 import '../../API/filter_api.dart';
 import '../../models/event.dart';
 
-class ResultFilter extends StatefulWidget {
-  const ResultFilter ({Key? key}) : super(key: key);
+class ResultFilterMitra extends StatefulWidget {
+  const ResultFilterMitra ({Key? key}) : super(key: key);
   @override
-  _ResultFilterState createState() => _ResultFilterState();
+  _ResultFilterMitraState createState() => _ResultFilterMitraState();
 }
 
-class _ResultFilterState extends State<ResultFilter> {
+class _ResultFilterMitraState extends State<ResultFilterMitra> {
   List<Event> events = [];
   bool isLoading = true;
   String? errorMessage;
@@ -129,15 +130,8 @@ class _ResultFilterState extends State<ResultFilter> {
           child: Column(
             children: events
                 .map(
-                  (event) => EventTileOrganizer(
+                  (event) => EventTileMitra(
                 event: event,
-                onTap: () {
-                  Navigator.pushNamed(
-                    context,
-                    '/detail-my-event-organizer',
-                    arguments: event,
-                  );
-                },
               ),
             )
                 .toList(),

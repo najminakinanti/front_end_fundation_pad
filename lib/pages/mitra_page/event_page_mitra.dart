@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pad_fundation/pages/mitra_page/filter_sidebar_mitra.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/filter_sidebar.dart';
 import 'package:pad_fundation/widgets/mitra/event_card_mitra.dart';
@@ -415,7 +416,7 @@ class _EventPageMitraState extends State<EventPageMitra> {
       pageBuilder: (context, animation, secondaryAnimation) {
         return Align(
           alignment: Alignment.centerRight,
-          child: FilterSidebar(
+          child: FilterSidebarMita(
             onApply: (filters) {
               print('Selected Filters: $filters');
             },

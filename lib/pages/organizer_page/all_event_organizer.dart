@@ -71,13 +71,13 @@ class _AllEventOrganizerState extends State<AllEventOrganizer> {
 
     PreferredSize header() {
       return PreferredSize(
-        preferredSize: Size.fromHeight(140.0),
+        preferredSize: Size.fromHeight(120.0),
         child: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: backgroundColor,
           centerTitle: false,
           flexibleSpace: Container(
-            margin: EdgeInsets.fromLTRB(defaultMargin, defaultMargin, defaultMargin, 20),
+            margin: EdgeInsets.fromLTRB(defaultMargin, defaultMargin, defaultMargin, 0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -143,13 +143,7 @@ class _AllEventOrganizerState extends State<AllEventOrganizer> {
                     SizedBox(width: 5),
                     TextButton(
                       onPressed: () {
-                        showModalRightSheet(context, (filters) {
-                          Navigator.pushNamed(
-                            context,
-                            '/filter-event',
-                            arguments: filters,
-                          );
-                        });
+                        showModalRightSheet(context);
                       },
                       style: TextButton.styleFrom(
                         backgroundColor: textColor3,
@@ -472,6 +466,34 @@ class _AllEventOrganizerState extends State<AllEventOrganizer> {
       backgroundColor: backgroundColor,
       appBar: header(),
       body: content(),
+    );
+  }
+  void showModalRightSheet(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'Dismiss',
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Align(
+          alignment: Alignment.centerRight,
+          child: FilterSidebar(
+            onApply: (filters) {
+              print('Selected Filters: $filters');
+            },
+          ),
+        );
+      },
+      transitionDuration: Duration(milliseconds: 300),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final offsetAnimation = Tween<Offset>(
+          begin: Offset(1, 0),
+          end: Offset(0, 0),
+        ).animate(animation);
+        return SlideTransition(
+          position: offsetAnimation,
+          child: child,
+        );
+      },
     );
   }
 }

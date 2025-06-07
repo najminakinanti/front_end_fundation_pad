@@ -22,6 +22,7 @@ import 'package:pad_fundation/pages/mitra_page/event_by_category_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/home_mitra/main_page_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/home_mitra/profile_page_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/kirim_sponsor_mitra.dart';
+import 'package:pad_fundation/pages/mitra_page/result_filter_mitra.dart';
 import 'package:pad_fundation/pages/mitra_page/ubah_data_profile.dart';
 import 'package:pad_fundation/pages/mitra_page/ubah_email.dart';
 import 'package:pad_fundation/pages/mitra_page/ubah_nama.dart';
@@ -128,7 +129,7 @@ class MyApp extends StatelessWidget {
         '/edit-mitra': (context) => EditMitra(),
         '/edit-password-mitra': (context) => EditPasswordMitra(),
         '/create-new-password-mitra': (context) => CreateNewPasswordMitra(),
-
+        '/filter-event-mitra': (context) => ResultFilterMitra(),
 
 
         //role organizer
