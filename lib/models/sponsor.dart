@@ -33,11 +33,9 @@ class Sponsor {
       entrepreneur: json['entrepreneur'] != null
           ? Entrepreneur.fromJson(json['entrepreneur'])
           : null,
-      evidences: json['evidences'] != null
-          ? (json['evidences'] as List)
-          .map((e) => KontraprestasiEvidence.fromJson(e))
-          .toList()
-          : [],
+      evidences: (json['evidences'] as List<dynamic>?)
+          ?.map((e) => KontraprestasiEvidence.fromJson(e))
+          .toList() ?? [],
     );
   }
 

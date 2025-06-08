@@ -55,21 +55,21 @@ class Event {
       eventPhotos: (json['event_photos'] as List<dynamic>?)
           ?.map((e) => EventPhoto.fromJson(e))
           .toList() ?? [],
-      categories: (json['categories'] as List)
-          .map((c) => Category.fromJson(c))
-          .toList(),
+      categories: (json['categories'] as List<dynamic>?)
+          ?.map((c) => Category.fromJson(c))
+          .toList() ?? [],
       eventFund: json['event_fund'] != null
           ? EventFund.fromJson(json['event_fund'])
           : null,
       eventPlacement: json['event_placement'] != null
           ? EventPlacement.fromJson(json['event_placement'])
           : null,
-      kontraprestasis: (json['kontraprestasis'] as List)
-          .map((k) => Kontraprestasi.fromJson(k))
-          .toList(),
-      sponsors: (json['sponsors'] as List)
-          .map((s) => Sponsor.fromJson(s))
-          .toList(),
+      kontraprestasis: (json['kontraprestasis'] as List<dynamic>?)
+          ?.map((k) => Kontraprestasi.fromJson(k))
+          .toList() ?? [],
+      sponsors: (json['sponsors'] as List<dynamic>?)
+          ?.map((s) => Sponsor.fromJson(s))
+          .toList() ?? [],
     );
   }
 }

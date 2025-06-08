@@ -423,7 +423,11 @@ class _HomePageMitraState extends State<HomePageMitra> {
             Container(
               child: TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/populer-mitra');
+                  Navigator.pushNamed(
+                    context,
+                    '/event-by-category-mitra',
+                    arguments: 5,
+                  );
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,

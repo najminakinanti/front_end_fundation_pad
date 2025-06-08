@@ -34,6 +34,7 @@ class _EventByCategoryMitraState extends State<EventByCategoryMitra> {
     2: 'Festival',
     3: 'Pendidikan',
     4: 'Seniman',
+    5: 'Populer',
   };
 
 
@@ -61,7 +62,15 @@ class _EventByCategoryMitraState extends State<EventByCategoryMitra> {
     });
 
     try {
-      final events = await EventApi.getEventsByCategory(categoryId);
+      List<Event> events;
+      if (categoryId == 5) {
+        // Kategori Populer
+        events = await EventApi.fetchPopularEvents();
+      } else {
+        // Kategori lain berdasarkan ID
+        events = await EventApi.getEventsByCategory(categoryId);
+      }
+
       setState(() {
         _allEvents = events;
         _filteredEvents = events;

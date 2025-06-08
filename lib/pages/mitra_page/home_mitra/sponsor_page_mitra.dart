@@ -4,7 +4,9 @@ import 'package:pad_fundation/widgets/filter_sidebar.dart';
 import 'package:pad_fundation/widgets/mitra/sponsor_tile_mitra.dart';
 
 import '../../../API/event_api.dart';
+import '../../../API/sponsor_api.dart';
 import '../../../models/event.dart';
+import '../../../models/sponsored_event.dart';
 
 class SponsorPageMitra extends StatefulWidget {
   @override
@@ -13,11 +15,13 @@ class SponsorPageMitra extends StatefulWidget {
 
 class _SponsorPageMitraState extends State<SponsorPageMitra> {
   late Future<List<Event>> events;
+  late Future<List<SponsoredEvent>> futureSponsors;
 
   @override
   void initState() {
     super.initState();
     events = EventApi.fetchEvents();
+    futureSponsors = SponsorApi.getMySponsors(context);
   }
 
   @override
@@ -123,8 +127,9 @@ class _SponsorPageMitraState extends State<SponsorPageMitra> {
     Widget allSponsor() {
       return Container(
         margin: EdgeInsets.only(top: 10),
-        child: FutureBuilder<List<Event>>(
-          future: events,
+        height: MediaQuery.of(context).size.height * 0.7,
+        child: FutureBuilder<List<SponsoredEvent>>(
+          future: futureSponsors,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
@@ -133,24 +138,23 @@ class _SponsorPageMitraState extends State<SponsorPageMitra> {
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return Center(child: Text('No events found'));
             } else {
-              return SingleChildScrollView(
-                child: Column(
-                  children: snapshot.data!
-                      .take(4)
-                      .map(
-                        (event) => SponsorTileMitra(
-                      event: event,
-                      onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          '/detail-event-mitra',
-                          arguments: event,
-                        );
-                      },
-                    ),
-                  )
-                      .toList(),
-                ),
+              return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  final sponsoredEvent = snapshot.data![index];
+                  return SponsorTileMitra(
+                    event: sponsoredEvent.event,
+                    sponsor: sponsoredEvent.sponsor,
+                    evidences: sponsoredEvent.evidences,
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/detail-event-mitra',
+                        arguments: sponsoredEvent,
+                      );
+                    },
+                  );
+                },
               );
             }
           },

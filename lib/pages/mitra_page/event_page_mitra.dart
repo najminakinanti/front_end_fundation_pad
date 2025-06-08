@@ -122,6 +122,7 @@ class _EventPageMitraState extends State<EventPageMitra> {
 
     Widget categories() {
       return Container(
+        margin: EdgeInsets.only(top: 0, bottom: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -129,8 +130,15 @@ class _EventPageMitraState extends State<EventPageMitra> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/festival-mitra');
+                    Navigator.pushNamed(
+                      context,
+                      '/event-by-category-mitra',
+                      arguments: 2,
+                    );
                   },
+                  // onTap: () {
+                  //   Navigator.pushNamed(context, '/festival-mitra');
+                  // },
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -147,7 +155,7 @@ class _EventPageMitraState extends State<EventPageMitra> {
                 Text(
                   'Festival',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -158,8 +166,14 @@ class _EventPageMitraState extends State<EventPageMitra> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/kuliner-mitra');
+                    Navigator.pushNamed(
+                      context,
+                      '/event-by-category-mitra',
+                      arguments: 1,
+                    );
                   },
+                  // onTap: () {
+                  //   Navigator.pushNamed(context, '/kuliner-mitra');},
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -176,7 +190,7 @@ class _EventPageMitraState extends State<EventPageMitra> {
                 Text(
                   'Kuliner',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -187,8 +201,14 @@ class _EventPageMitraState extends State<EventPageMitra> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/pendidikan-mitra');
+                    Navigator.pushNamed(
+                      context,
+                      '/event-by-category-mitra',
+                      arguments: 3,
+                    );
                   },
+                  // onTap: () {
+                  //   Navigator.pushNamed(context, '/pendidikan-mitra');},
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -205,7 +225,7 @@ class _EventPageMitraState extends State<EventPageMitra> {
                 Text(
                   'Pendidikan',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -216,8 +236,14 @@ class _EventPageMitraState extends State<EventPageMitra> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/seniman-mitra');
+                    Navigator.pushNamed(
+                      context,
+                      '/event-by-category-mitra',
+                      arguments: 4,
+                    );
                   },
+                  // onTap: () {
+                  //   Navigator.pushNamed(context, '/seniman-mitra');},
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -234,7 +260,7 @@ class _EventPageMitraState extends State<EventPageMitra> {
                 Text(
                   'Seniman',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),
@@ -263,7 +289,7 @@ class _EventPageMitraState extends State<EventPageMitra> {
                 Text(
                   'Lainnya',
                   style: blackTextStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: regular,
                   ),
                 ),

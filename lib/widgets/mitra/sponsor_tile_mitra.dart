@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pad_fundation/API/api_service.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/category_button.dart';
 
 import '../../API/event_api.dart';
 import '../../models/event.dart';
+import '../../models/kontraprestasi_evidences.dart';
 import '../../models/sponsor.dart';
 import '../../pages/mitra_page/detail_event_mitra.dart';
 
 class SponsorTileMitra extends StatefulWidget {
   final Event event;
+  final Sponsor sponsor;
+  final List<KontraprestasiEvidence> evidences;
   final VoidCallback? onTap;
 
   const SponsorTileMitra({
     Key? key,
     required this.event,
+    required this.sponsor,
+    required this.evidences,
     this.onTap,
   }) : super(key: key);
 
@@ -25,9 +31,11 @@ class SponsorTileMitra extends StatefulWidget {
 class _SponsorTileMitraState extends State<SponsorTileMitra> {
 
   double getSponsorAmountByUser(Event event, int userId) {
-    return event.sponsors
-        .where((sponsor) => sponsor.entrepreneurId == userId)
-        .fold(0, (sum, sponsor) => sum + sponsor.amount);
+    final filteredSponsors = event.sponsors.where((sponsor) => sponsor.entrepreneurId == userId).toList();
+    print('Filtered sponsors for userId $userId: $filteredSponsors');
+    final amount = filteredSponsors.fold(0.0, (sum, sponsor) => sum + sponsor.amount);
+    print('Total sponsor amount for userId $userId: $amount');
+    return amount;
   }
 
   String getTotalAmount(List<Sponsor> sponsors) {
@@ -64,8 +72,9 @@ class _SponsorTileMitraState extends State<SponsorTileMitra> {
     final event = widget.event;
     final placement = event.eventPlacement;
 
-    final double sponsorAmount = getSponsorAmountByUser(event, 2);
-    final int sponsorAmountInJuta = (sponsorAmount / 1000000).round(); // untuk ditampilkan sebagai "juta"
+    final int userId = widget.sponsor.entrepreneurId;  // ambil dari data sponsor
+    final double sponsorAmount = getSponsorAmountByUser(event, userId);
+    final int sponsorAmountInJuta = (widget.sponsor.amount / 1000000).round();
 
     return GestureDetector(
       onTap: () async {
@@ -221,33 +230,44 @@ class _SponsorTileMitraState extends State<SponsorTileMitra> {
                           ),
                         ),
                         Spacer(),
-                        Container(
-                          height: 25,
-                          padding:
-                          EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                          decoration: BoxDecoration(
-                            color: lightYellow,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                'assets/icon_eye.png',
-                                width: 14,
-                                height: 14,
-                                color: textColor2,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                'Kontraprestasi',
-                                style: blackTextStyle.copyWith(
-                                  fontSize: 10,
-                                  fontWeight: regular,
+                        GestureDetector(
+                          onTap: () {
+                            final imagePaths = widget.evidences.map((e) => e.photoFile).toList();
+                            final descriptions = widget.evidences.map((e) => e.description ?? '').toList();
+
+                            print('Photo files: $imagePaths');
+                            print('Descriptions: $descriptions');
+
+                            _showLargeImage(context, imagePaths, descriptions, 0);
+                          },
+                          child: Container(
+                            height: 25,
+                            padding: EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: lightYellow,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Row(
+                              children: [
+                                Image.asset(
+                                  'assets/icon_eye.png',
+                                  width: 14,
+                                  height: 14,
+                                  color: textColor2,
                                 ),
-                              ),
-                            ],
+                                SizedBox(width: 5),
+                                Text(
+                                  'Kontraprestasi',
+                                  style: blackTextStyle.copyWith(
+                                    fontSize: 10,
+                                    fontWeight: regular,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
+                        )
+
                       ],
                     ),
                   ],
@@ -260,8 +280,7 @@ class _SponsorTileMitraState extends State<SponsorTileMitra> {
     );
   }
 
-  void _showLargeImage(
-      BuildContext context, List<String> imagePaths, int initialIndex) {
+  void _showLargeImage(BuildContext context, List<String> imagePaths, List<String> descriptions, int initialIndex,) {
     int currentIndex = initialIndex;
 
     showDialog(
@@ -271,99 +290,133 @@ class _SponsorTileMitraState extends State<SponsorTileMitra> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Stack(
+                clipBehavior: Clip.none,
                 children: [
-                  Container(
-                    margin: EdgeInsets.only(top: 20),
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Bukti Kontraprestasi MusicFest",
-                      style: blackTextStyle.copyWith(
-                        fontSize: 14,
-                        fontWeight: bold,
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(top: 20),
+                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Bukti Kontraprestasi",
+                          style: blackTextStyle.copyWith(
+                            fontSize: 14,
+                            fontWeight: bold,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Builder(
+                            builder: (context) {
+                              final imageUrl = imagePaths[currentIndex].startsWith('http')
+                                  ? imagePaths[currentIndex]
+                                  : '${ApiService.photourl}${imagePaths[currentIndex]}';
+
+                              print('Image URL: $imageUrl'); // ✅ Cetak URL ke debug console
+
+                              return SizedBox(
+                                width: 300,
+                                height: 300,
+                                child: Image.network(
+                                  imageUrl,
+                                  fit: BoxFit.cover, // ⬅️ Tidak memotong, menjaga proporsi
+                                  loadingBuilder: (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        value: loadingProgress.expectedTotalBytes != null
+                                            ? loadingProgress.cumulativeBytesLoaded /
+                                            (loadingProgress.expectedTotalBytes ?? 1)
+                                            : null,
+                                      ),
+                                    );
+                                  },
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      color: Colors.grey[300],
+                                      alignment: Alignment.center,
+                                      child: Text('Image not available'),
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.fromLTRB(20, 5, 20, 20),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          descriptions[currentIndex],
+                          style: blackTextStyle.copyWith(
+                            fontSize: 12,
+                            fontWeight: bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Positioned(
+                    top: -25,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: CircleAvatar(
+                          backgroundColor: textColor3,
+                          child: Image.asset(
+                            'assets/icon_x.png',
+                            width: 20,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.asset(
-                        imagePaths[currentIndex],
-                        height: 350,
-                        fit: BoxFit.contain,
+                  if (currentIndex > 0)
+                    Positioned(
+                      top: 190,
+                      left: 20,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            currentIndex--;
+                          });
+                        },
+                        child: Image.asset(
+                          'assets/icon_button_panah_kiri.png',
+                          width: 24,
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Umbul-Umbul Tampak Depan",
-                      style: blackTextStyle.copyWith(
-                        fontSize: 12,
-                        fontWeight: bold,
+                  if (currentIndex < imagePaths.length - 1)
+                    Positioned(
+                      top: 190,
+                      right: 20,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            currentIndex++;
+                          });
+                        },
+                        child: Image.asset(
+                          'assets/icon_button_panah_kanan.png',
+                          width: 24,
+                        ),
                       ),
                     ),
-                  ),
                 ],
-              ),
-              Positioned(
-                top: -25,
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: CircleAvatar(
-                      backgroundColor: textColor3,
-                      child: Image.asset(
-                        'assets/icon_x.png',
-                        width: 20,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              // Arrows
-              if (currentIndex > 0)
-                Positioned(
-                  top: 190,
-                  left: 20,
-                  child: GestureDetector(
-                    onTap: () {
-                      currentIndex--;
-                      Navigator.of(context).pop();
-                      _showLargeImage(context, imagePaths, currentIndex);
-                    },
-                    child: Image.asset(
-                      'assets/icon_button_panah_kiri.png',
-                      width: 24,
-                    ),
-                  ),
-                ),
-              if (currentIndex < imagePaths.length - 1)
-                Positioned(
-                  top: 190,
-                  right: 20,
-                  child: GestureDetector(
-                    onTap: () {
-                      currentIndex++;
-                      Navigator.of(context).pop();
-                      _showLargeImage(context, imagePaths, currentIndex);
-                    },
-                    child: Image.asset(
-                      'assets/icon_button_panah_kanan.png',
-                      width: 24,
-                    ),
-                  ),
-                ),
-            ],
+              );
+            },
           ),
         );
       },
