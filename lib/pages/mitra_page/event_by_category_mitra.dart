@@ -19,6 +19,12 @@ class EventByCategoryMitra extends StatefulWidget {
 }
 
 class _EventByCategoryMitraState extends State<EventByCategoryMitra> {
+  List<Event> _allEvents = [];
+  List<Event> _filteredEvents = [];
+  String _searchQuery = '';
+  bool _isLoading = true;
+  String? _error;
+
   late int categoryId;
   String categoryName = '';
 
@@ -37,16 +43,49 @@ class _EventByCategoryMitraState extends State<EventByCategoryMitra> {
     final args = ModalRoute.of(context)?.settings.arguments;
     if (args is int) {
       categoryId = args;
-      categoryName = categoryNames[categoryId] ?? 'Unknown'; // Ambil nama kategori sesuai id
+      categoryName = categoryNames[categoryId] ?? 'Unknown';
       print('Category ID from arguments: $categoryId');
       print('Category Name: $categoryName');
+      _fetchEvents();
     } else {
       categoryId = 0;
-      categoryName = 'Unknown'; // Default jika tidak ada kategori
+      categoryName = 'Unknown';
       print('Invalid categoryId, defaulted to 0');
     }
   }
 
+  Future<void> _fetchEvents() async {
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+
+    try {
+      final events = await EventApi.getEventsByCategory(categoryId);
+      setState(() {
+        _allEvents = events;
+        _filteredEvents = events;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _onSearchChanged(String query) {
+    _searchQuery = query.toLowerCase();
+    setState(() {
+      _filteredEvents = _allEvents.where((event) {
+        final nameLower = event.title.toLowerCase();
+        // final descriptionLower = event.description?.toLowerCase() ?? '';
+        // return nameLower.contains(_searchQuery) || descriptionLower.contains(_searchQuery);
+        return nameLower.contains(_searchQuery);
+      }).toList();
+    });
+  }
 
   PreferredSizeWidget buildHeader(BuildContext context) {
     return PreferredSize(
@@ -97,7 +136,7 @@ class _EventByCategoryMitraState extends State<EventByCategoryMitra> {
                           SizedBox(width: 10),
                           Expanded(
                             child: TextField(
-                              onChanged: widget.onSearchChanged,
+                              onChanged: _onSearchChanged,
                               style: veryLightGrayTextStyle.copyWith(
                                 fontSize: 16,
                                 fontWeight: medium,
@@ -160,35 +199,25 @@ class _EventByCategoryMitraState extends State<EventByCategoryMitra> {
             ),
             SizedBox(height: 17),
             Expanded(
-              child: FutureBuilder<List<Event>>(
-                future: EventApi.getEventsByCategory(categoryId),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  }
-                  final events = snapshot.data ?? [];
-                  if (events.isEmpty) {
-                    return Center(child: Text('No events found'));
-                  }
-
-                  return SingleChildScrollView(
-                    child: Column(
-                      children: events.map((event) {
-                        return EventCardBigMitra(
-                          event: event,
-                          onTap: () => Navigator.pushNamed(
-                            context,
-                            '/detail-event-mitra',
-                            arguments: event,
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  );
-                },
+              child: _isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : _error != null
+                  ? Center(child: Text('Error: $_error'))
+                  : _filteredEvents.isEmpty
+                  ? Center(child: Text('No events found'))
+                  : SingleChildScrollView(
+                child: Column(
+                  children: _filteredEvents.map((event) {
+                    return EventCardBigMitra(
+                      event: event,
+                      onTap: () => Navigator.pushNamed(
+                        context,
+                        '/detail-event-mitra',
+                        arguments: event,
+                      ),
+                    );
+                  }).toList(),
+                ),
               ),
             ),
           ],
