@@ -8,6 +8,7 @@ import 'package:pad_fundation/widgets/guess/event_tile.dart';
 
 import '../../../API/event_api.dart';
 import '../../../models/event.dart';
+import '../search_result_page.dart';
 
 class HomePage extends StatefulWidget {
   final VoidCallback onSeeAllPressed;
@@ -120,8 +121,20 @@ class _HomePageState extends State<HomePage> {
               SizedBox(width: 10),
               Expanded(
                 child: TextField(
-                  onChanged: (value) {
+                  onSubmitted: (value) async {
+                    if (value.trim().isNotEmpty) {
+                      final allEventsList = await events;
 
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SearchResultPage(
+                            allEvents: allEventsList,
+                            searchQuery: value.trim(),
+                          ),
+                        ),
+                      );
+                    }
                   },
                   style: veryLightGrayTextStyle.copyWith(
                     fontSize: 16,

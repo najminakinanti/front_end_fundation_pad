@@ -1,9 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 
-class VerificationMitra extends StatelessWidget{
+import '../../API/auth_api.dart';
+
+class VerificationMitra extends StatefulWidget {
+  @override
+  _VerificationMitraState createState() => _VerificationMitraState();
+}
+
+class _VerificationMitraState extends State<VerificationMitra> {
+  late String email;
+  List<TextEditingController> otpControllers = List.generate(6, (_) => TextEditingController());
+  bool isLoading = false;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final emailArg = ModalRoute.of(context)?.settings.arguments as String?;
+    email = emailArg ?? '';
+    print('Email argument in didChangeDependencies: $email');
+  }
+
+  @override
+  void dispose() {
+    for (var controller in otpControllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  Future<void> verifyOtp() async {
+    final otp = otpControllers.map((c) => c.text).join();
+    if (otp.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Mohon masukkan kode OTP lengkap (6 digit).')),
+      );
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      await AuthApi.verifyOtp(email, int.parse(otp));
+      Navigator.pushNamed(context, '/new-password', arguments: email);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Verifikasi gagal: ${e.toString()}')),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final emailArg = ModalRoute.of(context)?.settings.arguments as String?;
+    print('Email argument in build: $emailArg');
 
     Widget title() {
       return Container(
@@ -46,10 +101,11 @@ class VerificationMitra extends StatelessWidget{
       );
     }
 
-    Widget verifCode() {
+    Widget verifCode(int index) {
       return Container(
         width: 40,
         child: TextField(
+          controller: otpControllers[index],
           textAlign: TextAlign.center,
           keyboardType: TextInputType.number,
           maxLength: 1,
@@ -59,6 +115,14 @@ class VerificationMitra extends StatelessWidget{
               borderSide: BorderSide(color: primaryColor),
             ),
           ),
+          onChanged: (value) {
+            if (value.length == 1 && index < 5) {
+              FocusScope.of(context).nextFocus();
+            }
+            if (value.isEmpty && index > 0) {
+              FocusScope.of(context).previousFocus();
+            }
+          },
         ),
       );
     }
@@ -68,7 +132,7 @@ class VerificationMitra extends StatelessWidget{
         margin: EdgeInsets.only(top: 29),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: List.generate(6, (index) => verifCode()),
+          children: List.generate(6, (index) => verifCode(index)),
         ),
       );
     }
@@ -79,9 +143,7 @@ class VerificationMitra extends StatelessWidget{
         width: double.infinity,
         margin: EdgeInsets.only(top: 29),
         child: TextButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/new-password');
-          },
+          onPressed: isLoading ? null : verifyOtp,
           style: TextButton.styleFrom(
               backgroundColor: primaryColor,
               shape: RoundedRectangleBorder(

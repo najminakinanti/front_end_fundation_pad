@@ -4,12 +4,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/API/event_api.dart';
 import 'package:pad_fundation/models/event.dart';
+import 'package:pad_fundation/pages/mitra_page/search_result_page_mitra.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/mitra/event_card_mitra.dart';
 import 'package:pad_fundation/widgets/mitra/event_tile_mitra.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../API/profile_api.dart';
+import '../../not_logged_in/search_result_page.dart';
 
 class HomePageMitra extends StatefulWidget {
   @override
@@ -203,8 +205,20 @@ class _HomePageMitraState extends State<HomePageMitra> {
               SizedBox(width: 10),
               Expanded(
                 child: TextField(
-                  onChanged: (value) {
+                  onSubmitted: (value) async {
+                    if (value.trim().isNotEmpty) {
+                      final allEventsList = await events; // tunggu Future selesai
 
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SearchResultPageMitra(
+                            allEvents: allEventsList,
+                            searchQuery: value.trim(),
+                          ),
+                        ),
+                      );
+                    }
                   },
                   style: veryLightGrayTextStyle.copyWith(
                     fontSize: 16,

@@ -227,7 +227,7 @@ class EventApi {
 
 
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:8000/api/create-events'),
+        Uri.parse('https://backendfundation.my.id/api/create-events'),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token",
@@ -257,7 +257,7 @@ class EventApi {
     String? token = prefs.getString('token');
 
     final response = await http.put(
-      Uri.parse('http://10.0.2.2:8000/api/events/$eventId'),
+      Uri.parse('https://backendfundation.my.id/api/events/$eventId'),
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token",
@@ -335,7 +335,7 @@ class EventApi {
 
     try {
       final response = await http.delete(
-        Uri.parse('http://10.0.2.2:8000/api/events/$eventId'),
+        Uri.parse('https://backendfundation.my.id/api/events/$eventId'),
         headers: {
           "Authorization": "Bearer $token",
           "Accept": "application/json",
@@ -356,7 +356,7 @@ class EventApi {
   }
 
   static Future<void> incrementClick(int eventId) async {
-    const baseUrl = 'http://10.0.2.2:8000'; // Ganti sesuai IP backend jika di device
+    const baseUrl = 'https://backendfundation.my.id'; // Ganti sesuai IP backend jika di device
     final response = await http.post(
       Uri.parse('$baseUrl/api/events/$eventId/click'),
       headers: {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 
+import '../../API/auth_api.dart';
+
 class NewPasswordMitra extends StatefulWidget {
   @override
   _NewPasswordState createState() => _NewPasswordState();
@@ -9,6 +11,12 @@ class NewPasswordMitra extends StatefulWidget {
 class _NewPasswordState extends State<NewPasswordMitra> {
   bool _isPasswordObscured = true;
   bool _isConfirmPasswordObscured = true;
+
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+
+  bool _isLoading = false;
+  final _formKey = GlobalKey<FormState>();
 
   void _togglePasswordObscured() {
     setState(() {
@@ -20,6 +28,57 @@ class _NewPasswordState extends State<NewPasswordMitra> {
     setState(() {
       _isConfirmPasswordObscured = !_isConfirmPasswordObscured;
     });
+  }
+
+  Future<void> _resetPassword() async {
+    final email = ModalRoute.of(context)?.settings.arguments as String?;
+    if (email == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Email tidak ditemukan')),
+      );
+      return;
+    }
+
+    if (_passwordController.text != _confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Password dan konfirmasi harus sama')),
+      );
+      return;
+    }
+
+    if (_passwordController.text.length < 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Password minimal 8 karakter')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await AuthApi.resetPasswordWithOtp(email, _passwordController.text);
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text('Password berhasil direset')),
+      // );
+      Navigator.pushNamedAndRemoveUntil(context, '/login-mitra', (route) => false);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal reset password: $e')),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
   }
 
   Widget build(BuildContext context) {
@@ -84,6 +143,7 @@ class _NewPasswordState extends State<NewPasswordMitra> {
         child: SizedBox(
           height: 50,
           child: TextFormField(
+            controller: _passwordController,
             obscureText: _isPasswordObscured,
             decoration: InputDecoration(
               labelText: 'Kata sandi',
@@ -119,6 +179,7 @@ class _NewPasswordState extends State<NewPasswordMitra> {
         child: SizedBox(
           height: 50,
           child: TextFormField(
+            controller: _confirmPasswordController,
             obscureText: _isConfirmPasswordObscured,
             decoration: InputDecoration(
               labelText: 'Konfirmasi Kata sandi',
@@ -153,17 +214,15 @@ class _NewPasswordState extends State<NewPasswordMitra> {
         height: 40,
         width: double.infinity,
         margin: EdgeInsets.only(top: 29),
-        child: TextButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/login-mitra');
-          },
-          style: TextButton.styleFrom(
+        child: ElevatedButton(
+          onPressed: _isLoading ? null : _resetPassword,
+          style: ElevatedButton.styleFrom(
               backgroundColor: primaryColor,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)
-              )
-          ),
-          child: Text(
+                  borderRadius: BorderRadius.circular(15))),
+          child: _isLoading
+              ? CircularProgressIndicator(color: Colors.white)
+              : Text(
             'SIMPAN',
             style: whiteTextStyle.copyWith(
               fontSize: 15,

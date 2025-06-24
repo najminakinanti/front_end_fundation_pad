@@ -6,8 +6,8 @@ import 'package:pad_fundation/pages/mitra_page/home_mitra/main_page_mitra.dart';
 import 'package:pad_fundation/pages/organizer_page/home_organizer/main_page_organizer.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://10.0.2.2:8000/api';
-  static const String photourl= 'http://10.0.2.2:8000/';
+  static const String baseUrl = 'https://backendfundation.my.id/api';
+  static const String photourl= 'https://backendfundation.my.id/';
 
   static Future<http.Response> post(
       String endpoint,

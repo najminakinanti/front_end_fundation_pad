@@ -1,7 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 
-class ForgotPasswordMitra extends StatelessWidget {
+import '../../API/auth_api.dart';
+
+class ForgotPasswordMitra extends StatefulWidget {
+  @override
+  _ForgotPasswordMitraState createState() => _ForgotPasswordMitraState();
+}
+
+class _ForgotPasswordMitraState extends State<ForgotPasswordMitra> {
+  final TextEditingController emailController = TextEditingController();
+  bool isLoading = false;
+
+  Future<void> sendOtp(String email) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      await AuthApi.sendOtp(email);
+      Navigator.pushNamed(context, '/verification', arguments: emailController.text,);
+    } catch (e) {
+
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +81,8 @@ class ForgotPasswordMitra extends StatelessWidget {
             SizedBox(
               height: 48,
               child: TextFormField(
+                controller: emailController,
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   labelText: 'Masukkan email',
                   labelStyle: grayTextStyle.copyWith(
@@ -89,8 +117,17 @@ class ForgotPasswordMitra extends StatelessWidget {
         width: double.infinity,
         margin: EdgeInsets.only(top: 29),
         child: TextButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/verification');
+          onPressed: isLoading
+              ? null
+              : () {
+            final email = emailController.text.trim();
+            if (email.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Email tidak boleh kosong')),
+              );
+              return;
+            }
+            sendOtp(email);
           },
           style: TextButton.styleFrom(
               backgroundColor: primaryColor,

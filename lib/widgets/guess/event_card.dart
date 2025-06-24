@@ -77,13 +77,16 @@ class _EventCardState extends State<EventCard> {
 
     return GestureDetector(
       onTap: () async {
+        print('Event tapped: ${event.id}');
         await EventApi.incrementClick(event.id);
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (_) => DetailEvent(event: event),
+
           ),
         );
+        print('Navigated to DetailEvent');
       },
       child: Container(
         width: 225,

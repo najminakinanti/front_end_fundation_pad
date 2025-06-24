@@ -9,6 +9,7 @@ import 'package:pad_fundation/widgets/guess/event_tile.dart';
 import '../../../API/event_api.dart';
 import '../../../models/event.dart';
 import '../../../widgets/filter_sidebar.dart';
+import '../search_result_page.dart';
 
 class EventPage extends StatefulWidget {
   @override
@@ -105,8 +106,20 @@ class _EventPageState extends State<EventPage> {
                             SizedBox(width: 10),
                             Expanded(
                               child: TextField(
-                                onChanged: (value) {
+                                onSubmitted: (value) async {
+                                  if (value.trim().isNotEmpty) {
+                                    final allEventsList = await events; // tunggu Future selesai
 
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SearchResultPage(
+                                          allEvents: allEventsList,
+                                          searchQuery: value.trim(),
+                                        ),
+                                      ),
+                                    );
+                                  }
                                 },
                                 style: veryLightGrayTextStyle.copyWith(
                                   fontSize: 16,

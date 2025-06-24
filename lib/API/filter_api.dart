@@ -18,7 +18,7 @@ class FilterApi {
       if (fundRange != null) 'fund_range': fundRange,
     };
 
-    final uri = Uri.http('10.0.2.2:8000', '/api/filter-events', queryParams);
+    final uri = Uri.https('backendfundation.my.id', '/api/filter-events', queryParams);
 
     print('🌐 Requesting: $uri');
 

@@ -11,6 +11,7 @@ import '../../models/event.dart';
 import '../../models/event_fund.dart';
 import '../../models/kontraprestasi.dart';
 import '../../models/sponsor.dart';
+import '../mitra_page/daftar_sponsor_mitra.dart';
 
 class DetailEventOrganizer extends StatefulWidget {
 
@@ -120,37 +121,40 @@ class _DetailEventOrganizerState extends State<DetailEventOrganizer> {
           children: [
             Row(
               children: [
-                Text(
-                  event.title,
-                  style: blackTextStyle.copyWith(
-                      fontSize: 20, fontWeight: bold),
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Text(
+                      event.title,
+                      style: blackTextStyle.copyWith(fontSize: 20, fontWeight: bold),
+                    ),
+                  ),
                 ),
-                Spacer(),
+                const SizedBox(width: 20),
                 Image.asset('assets/icon_calendar.png', width: 16),
-                SizedBox(width: 5),
+                SizedBox(width: 4),
                 Text(
                   event.eventPlacement?.eventStartDate != null
                       ? DateFormat('dd MMM yyyy').format(DateTime.parse(event.eventPlacement!.eventStartDate))
                       : '-',
-                  style: greenTextStyle.copyWith(
-                    fontSize: 14,
-                    fontWeight: bold,
-                  ),
+                  style: greenTextStyle.copyWith(fontSize: 14, fontWeight: bold),
                 ),
               ],
             ),
             SizedBox(height: 3),
             Text(
               'dari ${event.organizer.organization.name}',
-              style: grayTextStyle.copyWith(
-                  fontSize: 14, fontWeight: regular),
+              style: grayTextStyle.copyWith(fontSize: 14, fontWeight: regular),
             ),
             SizedBox(height: 4),
             Text(
               'di $locationText',
               style: lighGrayTextStyle.copyWith(
-                  fontSize: 10, fontWeight: regular),
+                fontSize: 10,
+                fontWeight: regular,
+              ),
             ),
+
             SizedBox(height: 10),
             Text(
               '${getTotalAmount(event.sponsors)} terkumpul dari ${getTarget(event.eventFund)}',
@@ -189,29 +193,24 @@ class _DetailEventOrganizerState extends State<DetailEventOrganizer> {
                 Expanded(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: SizedBox(
-                      height: 8,
-                      child: LinearProgressIndicator(
-                        value: getProgress(event) / 100,
-                        backgroundColor: lineColor2,
-                        valueColor: AlwaysStoppedAnimation<Color>(lineColor),
-                      ),
+                    child: LinearProgressIndicator(
+                      value: getProgress(event) / 100,
+                      backgroundColor: lineColor2,
+                      valueColor: AlwaysStoppedAnimation<Color>(lineColor),
                     ),
                   ),
                 ),
                 SizedBox(width: 5),
                 Text(
                   '${getProgress(event).toStringAsFixed(2)}%',
-                  style: blackTextStyle.copyWith(
-                    fontSize: 10,
-                    fontWeight: bold,
-                  ),
+                  style: blackTextStyle.copyWith(fontSize: 10, fontWeight: regular),
                 ),
               ],
             ),
           ],
         ),
       );
+
     }
 
     Widget whiteLine() {
@@ -364,7 +363,15 @@ class _DetailEventOrganizerState extends State<DetailEventOrganizer> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/daftar-sponsor-mitra');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DaftarSponsorMitra(
+                      sponsors: event.sponsors,
+                      kontraprestasis: event.kontraprestasis,
+                    ),
+                  ),
+                );
               },
               child: Text(
                 'Selengkapnya',

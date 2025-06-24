@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/pages/mitra_page/filter_sidebar_mitra.dart';
+import 'package:pad_fundation/pages/mitra_page/search_result_page_mitra.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/filter_sidebar.dart';
 import 'package:pad_fundation/widgets/mitra/event_card_mitra.dart';
@@ -76,8 +77,20 @@ class _EventPageMitraState extends State<EventPageMitra> {
                               SizedBox(width: 10),
                               Expanded(
                                 child: TextField(
-                                  onChanged: (value) {
+                                  onSubmitted: (value) async {
+                                    if (value.trim().isNotEmpty) {
+                                      final allEventsList = await events; // tunggu Future selesai
 
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SearchResultPageMitra(
+                                            allEvents: allEventsList,
+                                            searchQuery: value.trim(),
+                                          ),
+                                        ),
+                                      );
+                                    }
                                   },
                                   style: veryLightGrayTextStyle.copyWith(
                                     fontSize: 16,

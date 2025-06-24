@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pad_fundation/pages/organizer_page/search_result_page_org.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/organizer/event_card_organizer.dart';
 import 'package:pad_fundation/widgets/organizer/event_tile_organizer.dart';
@@ -212,8 +213,20 @@ class _HomePageOrganizerState extends State<HomePageOrganizer> {
               SizedBox(width: 10),
               Expanded(
                 child: TextField(
-                  onChanged: (value) {
+                  onSubmitted: (value) async {
+                    if (value.trim().isNotEmpty) {
+                      final allEventsList = await events; // tunggu Future selesai
 
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SearchResultPageOrg(
+                            allEvents: allEventsList,
+                            searchQuery: value.trim(),
+                          ),
+                        ),
+                      );
+                    }
                   },
                   style: veryLightGrayTextStyle.copyWith(
                     fontSize: 16,

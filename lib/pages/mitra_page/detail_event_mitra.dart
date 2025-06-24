@@ -370,8 +370,8 @@ class _DetailEventState extends State<DetailEventMitra> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => DaftarSponsorMitra(
-                      sponsors: event.sponsors,             // List<Sponsor> yang kamu punya
-                      kontraprestasis: event.kontraprestasis, // List<Kontraprestasi>
+                      sponsors: event.sponsors,
+                      kontraprestasis: event.kontraprestasis,
                     ),
                   ),
                 );

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/api/api_service.dart';
+import 'package:http/http.dart' as http;
 import 'package:pad_fundation/pages/mitra_page/home_mitra/main_page_mitra.dart';
 import 'package:pad_fundation/pages/organizer_page/home_organizer/main_page_organizer.dart';
 import 'package:pad_fundation/pages/splash_screen/choose_role.dart';
@@ -417,6 +418,140 @@ class AuthApi {
     } catch (e) {
       print("❌ Error saat registrasi: $e");
       _showErrorDialog(context, "Terjadi kesalahan. Silakan coba lagi.");
+    }
+  }
+
+  static Future<void> sendOtp(String email) async {
+    final url = Uri.parse('${ApiService.baseUrl}/password/send-otp');
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'email': email,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print('Response message: ${data['message']}');
+    } else {
+      print('Request failed with status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    }
+  }
+
+  static Future<void> verifyOtp(String email, int otp) async {
+    final url = Uri.parse('${ApiService.baseUrl}/password/verify-otp');
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'email': email,
+        'otp': otp,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print('Response message: ${data['message']}');
+    } else {
+      final data = jsonDecode(response.body);
+      throw Exception(data['message'] ?? 'Failed to verify OTP');
+    }
+  }
+
+  static Future<void> resetPasswordWithOtp(String email, String newPassword) async {
+    final url = Uri.parse('${ApiService.baseUrl}/password/reset-with-otp');
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'email': email,
+        'password': newPassword,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print('Response message: ${data['message']}');
+    } else {
+      final data = jsonDecode(response.body);
+      throw Exception(data['message'] ?? 'Failed to reset password');
+    }
+  }
+
+  static Future<void> verifyPassword(String currentPassword) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+
+      if (token == null) {
+        throw Exception('Token tidak ditemukan. Harap login ulang.');
+      }
+
+      final url = Uri.parse('${ApiService.baseUrl}/verify-password');
+
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'current_password': currentPassword,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print('Verifikasi berhasil: ${data['message']}');
+      } else {
+        final errorData = jsonDecode(response.body);
+        throw Exception(errorData['message'] ?? 'Verifikasi gagal');
+      }
+    } catch (e) {
+      print('Terjadi kesalahan saat verifikasi password: $e');
+      rethrow;
+    }
+  }
+
+  static Future<void> changePassword(String newPassword) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+
+      if (token == null) {
+        throw Exception('Token tidak ditemukan. Harap login ulang.');
+      }
+
+      final url = Uri.parse('${ApiService.baseUrl}/password/change');
+
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'password': newPassword,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print('Password berhasil diubah: ${data['message']}');
+      } else {
+        final errorData = jsonDecode(response.body);
+        throw Exception(errorData['message'] ?? 'Gagal mengubah password');
+      }
+    } catch (e) {
+      print('Terjadi kesalahan saat mengubah password: $e');
+      rethrow;
     }
   }
 

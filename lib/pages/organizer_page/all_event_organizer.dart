@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pad_fundation/pages/organizer_page/search_result_page_org.dart';
 // import 'package:pad_fundation/pages/mitra_page/event_by_category_mitra.dart';
 import 'package:pad_fundation/theme.dart';
 import 'package:pad_fundation/widgets/filter_sidebar.dart';
@@ -119,8 +120,20 @@ class _AllEventOrganizerState extends State<AllEventOrganizer> {
                             SizedBox(width: 10),
                             Expanded(
                               child: TextField(
-                                onChanged: (value) {
+                                onSubmitted: (value) async {
+                                  if (value.trim().isNotEmpty) {
+                                    final allEventsList = await events; // tunggu Future selesai
 
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SearchResultPageOrg(
+                                          allEvents: allEventsList,
+                                          searchQuery: value.trim(),
+                                        ),
+                                      ),
+                                    );
+                                  }
                                 },
                                 style: veryLightGrayTextStyle.copyWith(
                                   fontSize: 16,
