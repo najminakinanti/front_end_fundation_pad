@@ -15,6 +15,10 @@ class EventPageOrganizer extends StatefulWidget {
 class _EventPageOrganizerState extends State<EventPageOrganizer> {
   late Future<List<Event>> popularEvents;
   late Future<List<Event>> myEvents;
+  List<Event> _allEvents = [];
+  List<Event> _filteredEvents = [];
+  String _searchQuery = '';
+
 
   @override
   void initState() {
@@ -67,8 +71,15 @@ class _EventPageOrganizerState extends State<EventPageOrganizer> {
                             Expanded(
                               child: TextField(
                                 onChanged: (value) {
-
+                                  setState(() {
+                                    _searchQuery = value.toLowerCase();
+                                    _filteredEvents = _allEvents.where((event) {
+                                      final title = event.title.toLowerCase();
+                                      return title.contains(_searchQuery);
+                                    }).toList();
+                                  });
                                 },
+
                                 style: veryLightGrayTextStyle.copyWith(
                                   fontSize: 16,
                                   fontWeight: medium,
@@ -166,12 +177,25 @@ class _EventPageOrganizerState extends State<EventPageOrganizer> {
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return Center(child: Text('No events found'));
             } else {
+              if (_allEvents.isEmpty) {
+                _allEvents = snapshot.data!;
+                _filteredEvents = _allEvents;
+              }
+
+              final displayEvents = _searchQuery.isEmpty
+                  ? _allEvents
+                  : _filteredEvents;
+
+              if (displayEvents.isEmpty) {
+                return Center(child: Text('Event tidak ditemukan'));
+              }
+
               return ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: snapshot.data!.length,
+                itemCount: displayEvents.length,
                 itemBuilder: (context, index) {
-                  final event = snapshot.data![index];
+                  final event = displayEvents[index];
                   return MyEventCardOrganizer(
                     event: event,
                     onTap: () {

@@ -9,6 +9,14 @@ import '../../../models/event.dart';
 import '../../../models/sponsored_event.dart';
 
 class SponsorPageMitra extends StatefulWidget {
+  final Function(String)? onSearchChanged;
+  final Function(BuildContext)? onFilterPressed;
+
+  SponsorPageMitra({
+    this.onSearchChanged,
+    this.onFilterPressed,
+  });
+
   @override
   _SponsorPageMitraState createState() => _SponsorPageMitraState();
 }
@@ -16,12 +24,28 @@ class SponsorPageMitra extends StatefulWidget {
 class _SponsorPageMitraState extends State<SponsorPageMitra> {
   late Future<List<Event>> events;
   late Future<List<SponsoredEvent>> futureSponsors;
+  List<SponsoredEvent> _allSponsors = [];
+  List<SponsoredEvent> _filteredSponsors = [];
+  List<Event> _filteredEvents = [];
+  String _searchQuery = '';
+  bool _isLoading = true;
+  String? _error;
 
   @override
   void initState() {
     super.initState();
     events = EventApi.fetchEvents();
     futureSponsors = SponsorApi.getMySponsors(context);
+  }
+
+  void _onSearchChanged(String query) {
+    setState(() {
+      _searchQuery = query.toLowerCase();
+      _filteredSponsors = _allSponsors.where((event) {
+        final titleLower = event.event.title.toLowerCase();
+        return titleLower.contains(_searchQuery);
+      }).toList();
+    });
   }
 
   @override
@@ -67,9 +91,8 @@ class _SponsorPageMitraState extends State<SponsorPageMitra> {
                             SizedBox(width: 10),
                             Expanded(
                               child: TextField(
-                                onChanged: (value) {
+                                onChanged: _onSearchChanged,
 
-                                },
                                 style: veryLightGrayTextStyle.copyWith(
                                   fontSize: 16,
                                   fontWeight: medium,
@@ -138,10 +161,29 @@ class _SponsorPageMitraState extends State<SponsorPageMitra> {
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return Center(child: Text('No events found'));
             } else {
+              // Simpan data awal hanya sekali
+              if (_allSponsors.isEmpty) {
+                _allSponsors = snapshot.data!;
+                _filteredSponsors = _searchQuery.isEmpty
+                    ? _allSponsors
+                    : _allSponsors.where((event) {
+                  final titleLower = event.event.title.toLowerCase();
+                  return titleLower.contains(_searchQuery);
+                }).toList();
+              }
+
+              final sponsorsToDisplay = _searchQuery.isEmpty
+                  ? _allSponsors
+                  : _filteredSponsors;
+
+              if (sponsorsToDisplay.isEmpty) {
+                return Center(child: Text('Sponsor tidak ditemukan'));
+              }
+
               return ListView.builder(
-                itemCount: snapshot.data!.length,
+                itemCount: sponsorsToDisplay.length,
                 itemBuilder: (context, index) {
-                  final sponsoredEvent = snapshot.data![index];
+                  final sponsoredEvent = sponsorsToDisplay[index];
                   return SponsorTileMitra(
                     event: sponsoredEvent.event,
                     sponsor: sponsoredEvent.sponsor,

@@ -239,7 +239,7 @@ class _DetailEventState extends State<DetailEvent> {
             Image.asset('assets/icon_audiens.png', width: 24),
             SizedBox(width: 10),
             Text(
-              event.targetParticipant.toString(),
+              '${event.targetParticipant.toString()} ${event.participantName}',
               style: lighGrayTextStyle.copyWith(
                 fontSize: 14,
                 fontWeight: regular,

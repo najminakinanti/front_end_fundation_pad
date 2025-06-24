@@ -50,9 +50,6 @@ import 'package:pad_fundation/pages/organizer_page/edit_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/edit_password_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/event_by_category_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/event_page_by_category_organizer.dart';
-import 'package:pad_fundation/pages/organizer_page/forgot_password_new_password_organizer.dart';
-import 'package:pad_fundation/pages/organizer_page/forgot_password_organizer.dart';
-import 'package:pad_fundation/pages/organizer_page/forgot_password_verification_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/home_organizer/main_page_organizer.dart';
 import 'package:pad_fundation/pages/organizer_page/list_transaksi.dart';
 import 'package:pad_fundation/pages/organizer_page/login_page_organizer.dart';
@@ -134,9 +131,6 @@ class MyApp extends StatelessWidget {
 
         //role organizer
         '/login-organizer': (context) => LoginPageOrganizer(),
-        '/forgot-password-organizer': (context) => ForgotPasswordOrganizer(),
-        '/verification-organizer': (context) => VerificationOrganizer(),
-        '/new-password-organizer': (context) => NewPasswordOrganizer(),
         '/register-organizer': (context) => RegisterPageOrganizer(),
         '/add-organizer': (context) => AddOrganizer(),
         '/home-organizer': (context) {

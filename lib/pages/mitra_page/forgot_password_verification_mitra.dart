@@ -31,8 +31,18 @@ class _VerificationMitraState extends State<VerificationMitra> {
   Future<void> verifyOtp() async {
     final otp = otpControllers.map((c) => c.text).join();
     if (otp.length < 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Mohon masukkan kode OTP lengkap (6 digit).')),
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Kode Tidak Lengkap'),
+          content: Text('Mohon masukkan kode OTP lengkap (6 digit).'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
       );
       return;
     }
@@ -45,8 +55,18 @@ class _VerificationMitraState extends State<VerificationMitra> {
       await AuthApi.verifyOtp(email, int.parse(otp));
       Navigator.pushNamed(context, '/new-password', arguments: email);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Verifikasi gagal: ${e.toString()}')),
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Verifikasi Gagal'),
+          // content: Text('Verifikasi gagal: ${e.toString()}'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
       );
     } finally {
       setState(() {

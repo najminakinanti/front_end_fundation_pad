@@ -241,7 +241,7 @@ class _ProfilePageOrganizerState extends State<ProfilePageOrganizer> {
         width: double.infinity,
         child: TextButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/edit-password-organizer');
+            Navigator.pushNamed(context, '/edit-password-mitra');
           },
           style: TextButton.styleFrom(
             backgroundColor: sageGreen4,
