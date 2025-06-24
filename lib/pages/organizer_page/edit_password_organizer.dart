@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 
+import '../../API/auth_api.dart';
+
 class EditPasswordOrganizer extends StatefulWidget {
   @override
   _EditPasswordOrganizerState createState() => _EditPasswordOrganizerState();
@@ -8,12 +10,63 @@ class EditPasswordOrganizer extends StatefulWidget {
 
 class _EditPasswordOrganizerState extends State<EditPasswordOrganizer> {
   bool _isPasswordObscured = true;
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
 
   void _togglePasswordObscured() {
     setState(() {
       _isPasswordObscured = !_isPasswordObscured;
     });
   }
+
+  Future<void> _verifyPassword() async {
+    if (_passwordController.text.isEmpty) {
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Peringatan'),
+          content: Text('Kata sandi tidak boleh kosong.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            )
+          ],
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await AuthApi.verifyPassword(_passwordController.text);
+
+      // Jika berhasil, langsung navigasi tanpa dialog
+      Navigator.pushNamed(context, '/create-new-password-organizer');
+    } catch (e) {
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Gagal'),
+          content: Text('Verifikasi gagal'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -77,6 +130,7 @@ class _EditPasswordOrganizerState extends State<EditPasswordOrganizer> {
         child: SizedBox(
           height: 50,
           child: TextFormField(
+            controller: _passwordController,
             obscureText: _isPasswordObscured,
             decoration: InputDecoration(
               labelText: 'Kata sandi',
@@ -112,16 +166,16 @@ class _EditPasswordOrganizerState extends State<EditPasswordOrganizer> {
         width: double.infinity,
         margin: EdgeInsets.only(top: 29),
         child: TextButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/create-new-password-organizer');
-          },
+          onPressed: _isLoading ? null : _verifyPassword,
           style: TextButton.styleFrom(
               backgroundColor: primaryColor,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)
               )
           ),
-          child: Text(
+          child: _isLoading
+              ? CircularProgressIndicator(color: Colors.white)
+              : Text(
             'LANJUT',
             style: whiteTextStyle.copyWith(
               fontSize: 15,

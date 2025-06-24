@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pad_fundation/theme.dart';
 
+import '../../API/auth_api.dart';
+
 class CreateNewPasswordOrganizer extends StatefulWidget {
   @override
   _CreateNewPasswordOrganizerState createState() => _CreateNewPasswordOrganizerState();
@@ -9,6 +11,9 @@ class CreateNewPasswordOrganizer extends StatefulWidget {
 class _CreateNewPasswordOrganizerState extends State<CreateNewPasswordOrganizer> {
   bool _isPasswordObscured = true;
   bool _isConfirmPasswordObscured = true;
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  bool _isLoading = false;
 
   void _togglePasswordObscured() {
     setState(() {
@@ -20,6 +25,57 @@ class _CreateNewPasswordOrganizerState extends State<CreateNewPasswordOrganizer>
     setState(() {
       _isConfirmPasswordObscured = !_isConfirmPasswordObscured;
     });
+  }
+
+  Future<void> _savePassword() async {
+    final password = _passwordController.text;
+    final confirmPassword = _confirmPasswordController.text;
+
+    if (password.isEmpty || confirmPassword.isEmpty) {
+      _showMessage('Kata sandi tidak boleh kosong');
+      return;
+    }
+
+    if (password.length < 8) {
+      _showMessage('Kata sandi harus terdiri dari minimal 8 karakter');
+      return;
+    }
+
+    if (password != confirmPassword) {
+      _showMessage('Kata sandi dan konfirmasi tidak cocok');
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await AuthApi.changePassword(password);
+      Navigator.pushNamed(context, '/home-organizer', arguments: 3);
+    } catch (e) {
+      _showMessage('Gagal mengubah password: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _showMessage(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Peringatan'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('OK'),
+          )
+        ],
+      ),
+    );
   }
 
   @override
@@ -85,6 +141,7 @@ class _CreateNewPasswordOrganizerState extends State<CreateNewPasswordOrganizer>
         child: SizedBox(
           height: 50,
           child: TextFormField(
+            controller: _passwordController,
             obscureText: _isPasswordObscured,
             decoration: InputDecoration(
               labelText: 'Kata sandi',
@@ -120,6 +177,7 @@ class _CreateNewPasswordOrganizerState extends State<CreateNewPasswordOrganizer>
         child: SizedBox(
           height: 50,
           child: TextFormField(
+            controller: _confirmPasswordController,
             obscureText: _isConfirmPasswordObscured,
             decoration: InputDecoration(
               labelText: 'Konfirmasi Kata sandi',
@@ -155,20 +213,16 @@ class _CreateNewPasswordOrganizerState extends State<CreateNewPasswordOrganizer>
         width: double.infinity,
         margin: EdgeInsets.only(top: 29),
         child: TextButton(
-          onPressed: () {
-            Navigator.pushNamed(
-              context,
-              '/home-organizer',
-              arguments: 3,
-            );
-          },
+          onPressed: _isLoading ? null : _savePassword,
           style: TextButton.styleFrom(
               backgroundColor: primaryColor,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)
               )
           ),
-          child: Text(
+          child: _isLoading
+              ? CircularProgressIndicator(color: Colors.white)
+              : Text(
             'SIMPAN',
             style: whiteTextStyle.copyWith(
               fontSize: 15,
