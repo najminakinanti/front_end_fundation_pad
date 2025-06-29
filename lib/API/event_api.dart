@@ -268,7 +268,7 @@ class EventApi {
 
     if (response.statusCode == 200) {
       print("Event berhasil diupdate!");
-      showSuccessDialog(context);
+      showSuccessDialog2(context);
     } else {
       print("Gagal update event. Status: ${response.statusCode}");
       print("Response body: ${response.body}");
@@ -397,6 +397,35 @@ class EventApi {
         return AlertDialog(
           content: Text(
             'Event berhasil ditambahkan!',
+            style: blackTextStyle.copyWith(fontSize: 12, fontWeight: regular),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pushNamed(context, '/home-organizer', arguments: 1); // Atau navigasi sesuai kebutuhanmu
+              },
+              child: Text(
+                'OK',
+                style: navyTextStyle.copyWith(fontSize: 12, fontWeight: bold),
+              ),
+            ),
+          ],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+        );
+      },
+    );
+  }
+
+  static void showSuccessDialog2(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text(
+            'Event berhasil diperbarui!',
             style: blackTextStyle.copyWith(fontSize: 12, fontWeight: regular),
           ),
           actions: [
